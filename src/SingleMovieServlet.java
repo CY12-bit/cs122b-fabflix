@@ -40,17 +40,6 @@ public class SingleMovieServlet extends HttpServlet {
 
         // Get a connection from dataSource and let resource manager close the connection after usage.
         try (Connection conn = dataSource.getConnection()) {
-//            String star_query = "SELECT m.id, m.title, m.year, m.director, r.rating, r.numVotes," +
-//                                    "GROUP_CONCAT(DISTINCT g.name) AS genres," +
-//                                    "GROUP_CONCAT(DISTINCT CONCAT_WS(':', s.id, s.name)) AS stars " +
-//                                    "FROM movies AS m " +
-//                                    "LEFT JOIN genres_in_movies AS gim ON m.id = gim.movieId " +
-//                                    "LEFT JOIN genres AS g ON gim.genreId = g.id " +
-//                                    "LEFT JOIN stars_in_movies AS sim ON m.id = sim.movieId " +
-//                                    "LEFT JOIN stars AS s ON sim.starId = s.id " +
-//                                    "LEFT JOIN ratings AS r ON m.id = r.movieId " +
-//                                    "WHERE m.id = ? " +
-//                                    "GROUP BY m.id, m.title, m.year, m.director, r.rating, r.numVotes";
 
             String star_query = "SELECT * FROM movies " +
                     "LEFT JOIN ratings ON movies.id = ratings.movieId " +
