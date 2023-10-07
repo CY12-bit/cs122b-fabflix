@@ -57,7 +57,7 @@ public class SingleStarServlet extends HttpServlet {
             PreparedStatement star_statement = conn.prepareStatement(star_query);
             star_statement.setString(1, id);
 
-            String movie_query = "SELECT M.id, M.title FROM stars AS S " +
+            String movie_query = "SELECT * FROM stars AS S " +
                     "LEFT JOIN stars_in_movies AS SIM ON S.id = SIM.starId " +
                     "LEFT JOIN movies AS M ON M.id = SIM.movieId " +
                     "WHERE S.id = ?";
@@ -81,9 +81,13 @@ public class SingleStarServlet extends HttpServlet {
                 JsonObject movieObj = new JsonObject();
                 String movie_id = movie_data.getString("id");
                 String movie_title = movie_data.getString("title");
+                int movie_year = movie_data.getInt("year");
+                String movie_director = movie_data.getString("director");
 
                 movieObj.addProperty("id", movie_id);
                 movieObj.addProperty("title", movie_title);
+                movieObj.addProperty("year", movie_year);
+                movieObj.addProperty("director", movie_director);
                 movie_list.add(movieObj);
             }
 
