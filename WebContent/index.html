@@ -17,26 +17,30 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <title>Star List</title>
+    <title>Movie List Page</title>
 </head>
 <body>
 
 
-<h1>stars</h1>
+<h1>Movies</h1>
 
-<!-- Id "star_table" is useful for jQuery to find the html element with id, class here is mapping to Bootstrap defined class CSS -->
-<table id=star_table class="table table-striped">
+<!-- Id "movie_table" is useful for jQuery to find the html element with id, class here is mapping to Bootstrap defined class CSS -->
+<table id=movies_table class="table table-striped">
     <!-- Create a table header -->
     <thead>
     <tr>
         <!-- Titles of each column-->
-        <th>Name</th>
-        <th>Birth Year</th>
+        <th>Title</th>
+        <th>Year</th>
+        <th>Director</th>
+        <th>Genres</th>
+        <th>Stars</th>
+        <th>Rating</th>
     </tr>
     </thead>
     <!-- Table body is left empty here, will be populated with the data retrieved with index.js -->
-    <!-- Again, id "star_table_body" is useful for jQuery to find this html element -->
-    <tbody id=star_table_body></tbody>
+    <!-- Again, id "movie_table_body" is useful for jQuery to find this html element -->
+    <tbody id=movie_table_body></tbody>
 </table>
 
 <!-- Load jQuery and Bootstrap JS -->
