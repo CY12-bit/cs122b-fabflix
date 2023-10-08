@@ -57,7 +57,7 @@ public class SingleStarServlet extends HttpServlet {
             PreparedStatement star_statement = conn.prepareStatement(star_query);
             star_statement.setString(1, id);
 
-            String movie_query = "SELECT * FROM stars AS S " +
+            String movie_query = "SELECT m.id, m.title, m.director, m.year FROM stars AS S " +
                     "LEFT JOIN stars_in_movies AS SIM ON S.id = SIM.starId " +
                     "LEFT JOIN movies AS M ON M.id = SIM.movieId " +
                     "WHERE S.id = ?";
@@ -67,12 +67,12 @@ public class SingleStarServlet extends HttpServlet {
             ResultSet star_data = star_statement.executeQuery();
             while(star_data.next()) {
                 String name = star_data.getString("name");
-                int birthYear = -1;
-                if (!star_data.wasNull())
-                    birthYear = star_data.getInt("birthYear");
+                int birthYear = star_data.getInt("birthYear");
+                boolean yearIsNull = star_data.wasNull();
 
                 starObj.addProperty("name", name);
-                starObj.addProperty("birthYear", birthYear);
+                if (!yearIsNull)
+                    starObj.addProperty("birthYear", birthYear);
             }
 
             ResultSet movie_data = movie_statement.executeQuery();

@@ -25,16 +25,15 @@ function handleStarResult(resultData) {
         const genres = resultData[i]["movie_genres"];
         const stars = resultData[i]["movie_stars"];
 
-        let genresHTML = "<th>";
+        let genresHTML = '';
         for (let i = 0; i < genres.length; i++) {
             genresHTML += genres[i];   // display star_name for the link text
             if (i < genres.length - 1) {
                 genresHTML += ", ";
             }
         }
-        genresHTML += "</th>";
 
-        let starsHTML = "<th>";
+        let starsHTML = '';
         for (let i= 0; i < stars.length; i++) {
             starsHTML += '<a href="single-star.html?id=' + stars[i]['star_id'] + '">'
                 + stars[i]["star_name"] + '</a>';
@@ -42,7 +41,6 @@ function handleStarResult(resultData) {
                 starsHTML += ", ";
             }
         }
-        starsHTML += "</th>"
 
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "";

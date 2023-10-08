@@ -53,8 +53,8 @@ public class SingleMovieServlet extends HttpServlet {
             PreparedStatement genre_statement = conn.prepareStatement(movie_genre_query);
             genre_statement.setString(1, id);
 
-            String movie_star_query = "SELECT stars.name, stars.id FROM stars_in_movies AS sim " +
-                    "JOIN stars ON sim.starId = stars.id " +
+            String movie_star_query = "SELECT s.id, s.name, s.birthYear FROM stars_in_movies AS sim " +
+                    "JOIN stars AS s ON sim.starId = s.id " +
                     "WHERE movieId = ?";
             PreparedStatement star_statement = conn.prepareStatement(movie_star_query);
             star_statement.setString(1, id);
@@ -86,17 +86,21 @@ public class SingleMovieServlet extends HttpServlet {
                 genre_list.add(genre_name);
             }
             if (!genre_list.isEmpty())
-                jsonObj.add("genre", genre_list);
+                jsonObj.add("genres", genre_list);
 
             ResultSet star_data = star_statement.executeQuery();
             JsonArray star_list = new JsonArray();
             while (star_data.next()) {
                 String star_id = star_data.getString("id");
                 String star_name = star_data.getString("name");
+                int star_birth_year = star_data.getInt("birthYear");
+                boolean yearIsNull = star_data.wasNull();
 
                 JsonObject single_star_obj = new JsonObject();
                 single_star_obj.addProperty("id", star_id);
                 single_star_obj.addProperty("name", star_name);
+                if (!yearIsNull)
+                    single_star_obj.addProperty("birthYear", star_birth_year);
                 star_list.add(single_star_obj);
             }
             if (!star_list.isEmpty())
