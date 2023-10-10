@@ -1,5 +1,4 @@
 
-
 /* Navigation Bar (with Logo) */
 .navigation-bar {
     height: 65px;
@@ -45,6 +44,7 @@ body {
 }
 .website-body #movies_table {
     border-collapse: collapse;
+    border:hidden;
     background: white;
     border-radius: 6px;
     overflow: hidden;
@@ -53,6 +53,14 @@ body {
     margin-right: auto;
     font-family: 'Gabarito', sans-serif;
 }
+.website-body #movies_table .badge {
+    font-size: 14px;
+}
 .website-body #movies_table thead {
     text-align: center;
+    color:#f6b33e;
+    text-decoration:underline;
+    font-size: 18px;
+    background:black;
 }
+
