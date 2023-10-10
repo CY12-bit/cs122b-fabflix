@@ -1,0 +1,58 @@
+
+
+/* Navigation Bar (with Logo) */
+.navigation-bar {
+    height: 65px;
+    margin-bottom: 25px;
+}
+.navigation-bar #website_title { /* Fablix Logo */
+    float: left;
+    font-family: 'Allerta Stencil', sans-serif;
+    color: #ee4a46;
+    font-size: 30px;
+    line-height: 60px;
+    padding: 1px 15px;
+}
+.navigation-bar ul { /* Navigation Bar Button Container */
+    padding: 0px;
+    margin: 0px;
+    text-align: center;
+    display:inline-block;
+    vertical-align:top;
+    float: left;
+}
+.navigation-bar li { /* Navigation Bar Button */
+    list-style-type: none;
+    padding: 0px;
+    height: 24px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    display: inline;
+}
+.navigation-bar li a { /* Navigation Bar Button Link */
+    color: white;
+    font-size: 16px;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    text-decoration: none;
+    line-height: 70px;
+    padding: 5px 15px;
+    opacity: 0.7;
+}
+
+/*  Body (with Table) */
+body {
+    background-color: #241503;
+}
+.website-body #movies_table {
+    border-collapse: collapse;
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: 'Gabarito', sans-serif;
+}
+.website-body #movies_table thead {
+    text-align: center;
+}
