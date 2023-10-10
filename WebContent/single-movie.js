@@ -41,19 +41,27 @@ function handleResult(resultData) {
     console.log("handleResult: populating star info from resultData");
     console.log("result data: ", resultData);
 
-    // populate the star info h3
-    // find the empty h3 body by id "star_info"
-    let starInfoElement = jQuery("#movie_info");
+    document.title = resultData[0]["title"];
+
+    let movieHeadingElement = jQuery('#movie_heading');
+    movieHeadingElement.text(resultData[0]["title"]);
+
+    let movieInfoElement = jQuery("#movie_info");
 
     // append two html <p> created to the h3 body, which will refresh the page
-    starInfoElement.append("<p>Movie Name: " + resultData[0]["title"] + "</p>" +
-        "<p>Year: " + resultData[0]["year"] + "</p>" +
-        "<p>Director: " + resultData[0]["director"] + "</p>" +
-        "<p>Genres: " + resultData[0]['genres'].join(', ') + "</p>" +
-        "<p>Rating: " + resultData[0]["rating"] + "</p>" +
-        "<p>NumVotes: " + resultData[0]["numVotes"] + "</p>"
+    // movieInfoElement.append(
+    //     "<p>Year: " + resultData[0]["year"] + "</p>" +
+    //     "<p>Director: " + resultData[0]["director"] + "</p>" +
+    //     "<p>Genres: " + resultData[0]['genres'].join(', ') + "</p>" +
+    //     "<p>Rating: " + resultData[0]["rating"] + "</p>" +
+    //     "<p>NumVotes: " + resultData[0]["numVotes"] + "</p>"
+    // );
+    let genreBadges = resultData[0]['genres'].map(genre => "<span class='badge badge-pill badge-secondary'>" + genre + "</span>")
+    movieInfoElement.append(
+        "<p>" + resultData[0]["director"] + "  •  " + resultData[0]["year"] + " </p>" +
+        "<p>" + genreBadges.join('  ') + "</p>" +
+        "<p>" + resultData[0]["rating"] + "/10 (#votes: " + resultData[0]["numVotes"] + ") </p>"
     );
-
     console.log("handleResult: populating movie table from resultData");
 
     // Populate the star table

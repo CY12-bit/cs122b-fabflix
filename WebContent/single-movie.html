@@ -16,26 +16,48 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Allerta+Stencil&family=Gabarito&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="single-movie.css">
 
-    <title>Single Star</title>
+
+    <title></title>
 </head>
 <body>
-<h1>Single Movie Page</h1>
 
-<!-- H3 body is left empty here, will be populated with the data retrieved with single-star.js -->
-<!-- single-star.js will find this html element by it's id "star_info" -->
-<h3 id="movie_info"></h3>
-<table id=stars_table class="table table-striped">
-    <thead>
-    <tr>
-        <th>Star Name</th>
-        <th>Birth Year</th>
-        <th>
-    </tr>
-    </thead>
+<div class="navigation-bar">
+    <h1 id="website_title">Fablix</h1>
+    <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Stars</a></li>
+        <li><a href="#">Genres</a></li>
+        <li><a href="#">Contact Us</a></li>
+    </ul>
+</div>
 
-    <tbody id=stars_table_body></tbody>
-</table>
+<div class="website_content">
+
+    <h1 id="movie_heading"></h1>
+    <!-- H3 body is left empty here, will be populated with the data retrieved with single-star.js -->
+    <!-- single-star.js will find this html element by it's id "star_info" -->
+    <div id="movie_info"></div>
+
+    <table id=stars_table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Star Name</th>
+            <th>Birth Year</th>
+        </tr>
+        </thead>
+
+        <tbody id=stars_table_body></tbody>
+    </table>
+</div>
+
+
 
 <!-- Load jQuery and Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
