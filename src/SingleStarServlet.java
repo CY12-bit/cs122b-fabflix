@@ -59,7 +59,7 @@ public class SingleStarServlet extends HttpServlet {
 
             String movie_query = "SELECT m.id, m.title, m.director, m.year FROM stars AS S " +
                     "LEFT JOIN stars_in_movies AS SIM ON S.id = SIM.starId " +
-                    "LEFT JOIN movies AS M ON M.id = SIM.movieId " +
+                    "LEFT JOIN movies AS m ON m.id = SIM.movieId " +
                     "WHERE S.id = ?";
             PreparedStatement movie_statement = conn.prepareStatement(movie_query);
             movie_statement.setString(1, id);
