@@ -25,6 +25,7 @@
     background: white;
     border-radius: 6px;
     overflow: hidden;
+    font-family: 'Gabarito', sans-serif;
 }
 
 #stars_table thead {
