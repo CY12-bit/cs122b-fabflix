@@ -48,14 +48,6 @@ function handleResult(resultData) {
 
     let movieInfoElement = jQuery("#movie_info");
 
-    // append two html <p> created to the h3 body, which will refresh the page
-    // movieInfoElement.append(
-    //     "<p>Year: " + resultData[0]["year"] + "</p>" +
-    //     "<p>Director: " + resultData[0]["director"] + "</p>" +
-    //     "<p>Genres: " + resultData[0]['genres'].join(', ') + "</p>" +
-    //     "<p>Rating: " + resultData[0]["rating"] + "</p>" +
-    //     "<p>NumVotes: " + resultData[0]["numVotes"] + "</p>"
-    // );
     let genreBadges = resultData[0]['genres'].map(genre => "<span class='badge badge-pill badge-secondary'>" + genre + "</span>")
     movieInfoElement.append(
         "<p>" + resultData[0]["director"] + "  •  " + resultData[0]["year"] + " </p>" +

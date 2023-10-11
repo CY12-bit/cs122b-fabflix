@@ -29,9 +29,9 @@ function handleStarResult(resultData) {
         for (let i = 0; i < genres.length; i++) {
             genresHTML += '<span class="badge badge-pill badge-secondary' + '">';
             genresHTML += genres[i];   // display star_name for the link text
-            genresHTML += '</span>'
+            genresHTML += '</span>';
             if (i < genres.length - 1) {
-                genresHTML += ", ";
+                genresHTML += " ";
             }
         }
 
@@ -40,7 +40,7 @@ function handleStarResult(resultData) {
             starsHTML += '<a href="single-star.html?id=' + stars[i]['star_id'] + '"' + ' class="badge badge-primary"' + '>'
                 + stars[i]["star_name"] + '</a>';
             if (i < stars.length - 1) {
-                starsHTML += ", ";
+                starsHTML += " ";
             }
         }
 

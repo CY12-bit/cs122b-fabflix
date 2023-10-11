@@ -41,6 +41,8 @@ function handleResult(resultData) {
     console.log("handleResult: populating star info from resultData");
     console.log("result data: ", resultData);
 
+    document.title = resultData[0]["name"];
+
     // populate the star info h3
     // find the empty h3 body by id "star_info"
     let movieHeadingElement = jQuery('#star_heading');
