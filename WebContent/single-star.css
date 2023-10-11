@@ -1,0 +1,35 @@
+.website_content {
+    width: 70%;
+    margin: auto;
+}
+
+#star_heading {
+    color: #f6b33e;
+    font-family: 'Gabarito', sans-serif;
+}
+
+#star_info {
+    color: #f9e1c7;
+    font-family: 'Gabarito', sans-serif;
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+
+#star_info p {
+    margin-bottom: 0.5rem;
+}
+
+#movie_table {
+    border-collapse: collapse;
+    border:hidden;
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    font-family: 'Gabarito', sans-serif;
+}
+
+#movie_table thead {
+    color:#f6b33e;
+    font-size: 18px;
+    background:black;
+}
