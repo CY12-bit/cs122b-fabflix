@@ -27,9 +27,8 @@ function handleStarResult(resultData) {
 
         let genresHTML = '';
         for (let i = 0; i < genres.length; i++) {
-            genresHTML += '<span class="badge badge-pill badge-secondary' + '">';
-            genresHTML += genres[i];   // display star_name for the link text
-            genresHTML += '</span>';
+            genresHTML += '<a href="#' + '"' + ' class="badge badge-secondary"' + '>'
+            genresHTML += genres[i]['genre_name']  + '</a>';   // display genre_name for the link text
             if (i < genres.length - 1) {
                 genresHTML += " ";
             }

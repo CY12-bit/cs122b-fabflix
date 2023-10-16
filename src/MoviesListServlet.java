@@ -1,20 +1,23 @@
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
-@WebServlet(name="MoviesServlet",urlPatterns="/api/movielist")
-public class MoviesServlet extends HttpServlet {
+@WebServlet(name="MoviesListServlet",urlPatterns="/api/movielist")
+public class MoviesListServlet extends HttpServlet {
     // IDK man
     private static final long serialVersionUID = 1L; // This does nothing
 
@@ -53,9 +56,20 @@ public class MoviesServlet extends HttpServlet {
             JsonArray movieList = new JsonArray();
 
             String genre_query = "SELECT * FROM genres JOIN genres_in_movies ON genres.id = genres_in_movies.genreId" +
-                    " WHERE movieId = ? LIMIT 3";
-            String stars_query = "SELECT * FROM stars JOIN stars_in_movies ON stars.id = stars_in_movies.starId" +
-                    " WHERE movieId = ? LIMIT 3";
+                    " WHERE movieId = ? ORDER BY name ASC LIMIT 3";
+
+            String stars_query = "SELECT a.id, a.name, a.birthYear, COUNT(*) AS numMovies\n" +
+                    "FROM stars a\n" +
+                    "JOIN stars_in_movies ON a.id = stars_in_movies.starId\n" +
+                    "WHERE EXISTS (\n" +
+                    "\tSELECT b.movieId\n" +
+                    "    FROM stars_in_movies b\n" +
+                    "    WHERE b.movieId = ? \n" +
+                    "    AND a.id = b.starId\n" +
+                    ")\n" +
+                    "GROUP BY a.id, a.name, a.birthYear\n" +
+                    "ORDER BY numMovies DESC\n" +
+                    "LIMIT 3";
 
             while (movie_rs.next()) {
                 String movie_id = movie_rs.getString("id");
@@ -66,7 +80,10 @@ public class MoviesServlet extends HttpServlet {
 
                 JsonArray genre_array = new JsonArray();
                 while (temp_set.next()) {
-                    genre_array.add(temp_set.getString("name"));
+                    JsonObject temp_object = new JsonObject();
+                    temp_object.addProperty("genre_id",temp_set.getString("id"));
+                    temp_object.addProperty("genre_name",temp_set.getString("name"));
+                    genre_array.add(temp_object);
                 }
 
                 prep_query = conn.prepareStatement(stars_query);
