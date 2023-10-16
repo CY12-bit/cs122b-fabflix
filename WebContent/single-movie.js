@@ -48,7 +48,8 @@ function handleResult(resultData) {
 
     let movieInfoElement = jQuery("#movie_info");
 
-    let genreBadges = resultData[0]['genres'].map(genre => "<span class='badge badge-pill badge-secondary'>" + genre + "</span>")
+    // TODO: link to genre browse page
+    let genreBadges = resultData[0]['genres'].map(genre => "<span class='badge badge-pill badge-secondary'>" + genre['name'] + "</span>")
     movieInfoElement.append(
         "<p>" + resultData[0]["director"] + "  •  " + resultData[0]["year"] + " </p>" +
         "<p>" + genreBadges.join('  ') + "</p>" +

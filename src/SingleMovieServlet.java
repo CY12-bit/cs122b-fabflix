@@ -47,15 +47,21 @@ public class SingleMovieServlet extends HttpServlet {
             PreparedStatement movie_statement = conn.prepareStatement(star_query);
             movie_statement.setString(1, id);
 
-            String movie_genre_query = "SELECT genres.name FROM genres_in_movies AS gim " +
-                    "JOIN genres ON gim.genreId = genres.id " +
-                    "WHERE gim.movieId = ?";
+            String movie_genre_query = "SELECT g.id, g.name FROM genres_in_movies AS gim " +
+                    "JOIN genres AS g ON gim.genreId = g.id " +
+                    "WHERE gim.movieId = ? " +
+                    "ORDER BY g.name";
             PreparedStatement genre_statement = conn.prepareStatement(movie_genre_query);
             genre_statement.setString(1, id);
 
+
             String movie_star_query = "SELECT s.id, s.name, s.birthYear FROM stars_in_movies AS sim " +
                     "JOIN stars AS s ON sim.starId = s.id " +
-                    "WHERE movieId = ?";
+                    "WHERE EXISTS (" +
+                        "SELECT movieId FROM stars_in_movies AS sim2 " +
+                        "WHERE sim2.movieId = ? AND s.id = sim2.starId )" +
+                    "GROUP BY s.id, s.name, s.birthYear " +
+                    "ORDER BY COUNT(*) DESC, s.name";
             PreparedStatement star_statement = conn.prepareStatement(movie_star_query);
             star_statement.setString(1, id);
 
@@ -82,11 +88,14 @@ public class SingleMovieServlet extends HttpServlet {
             ResultSet genre_data = genre_statement.executeQuery();
             JsonArray genre_list = new JsonArray();
             while(genre_data.next()) {
+                JsonObject genreObj = new JsonObject();
+                String genre_id = genre_data.getString("id");
                 String genre_name = genre_data.getString("name");
-                genre_list.add(genre_name);
+
+                genreObj.addProperty("id", genre_id);
+                genreObj.addProperty("name", genre_name);
+                genre_list.add(genreObj);
             }
-            if (!genre_list.isEmpty())
-                jsonObj.add("genres", genre_list);
 
             ResultSet star_data = star_statement.executeQuery();
             JsonArray star_list = new JsonArray();
@@ -103,10 +112,10 @@ public class SingleMovieServlet extends HttpServlet {
                     single_star_obj.addProperty("birthYear", star_birth_year);
                 star_list.add(single_star_obj);
             }
-            if (!star_list.isEmpty())
-                jsonObj.add("stars", star_list);
 
             if (!jsonObj.isEmpty()) {
+                jsonObj.add("genres", genre_list);
+                jsonObj.add("stars", star_list);
                 jsonArray.add(jsonObj);
             }
 
