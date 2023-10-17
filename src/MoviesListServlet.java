@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import jakarta.servlet.ServletConfig;
@@ -15,6 +16,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Map;
 
 @WebServlet(name="MoviesListServlet",urlPatterns="/api/movielist")
 public class MoviesListServlet extends HttpServlet {
@@ -43,14 +45,37 @@ public class MoviesListServlet extends HttpServlet {
         // Output stream to STDOUT
         PrintWriter out = response.getWriter(); // This will stream out static html code.
 
+
         // Get a connection from dataSource and let resource manager close the connection after usage.
         try (Connection conn = dataSource.getConnection()) {
             Statement statement = conn.createStatement();
 
-            final String movie_query = "SELECT * FROM movies" +
-                    " LEFT JOIN ratings ON ratings.movieId = movies.id " +
-                    "ORDER BY rating DESC LIMIT 20";
+            String movie_query = "SELECT * FROM movies"
+                    + " LEFT JOIN ratings ON ratings.movieId = movies.id";
 
+            // Find the correct WHERE CLAUSE filters
+            Map<String,String[]> search_parameters = request.getParameterMap();
+            ArrayList<String> where_cause = new ArrayList<String>();
+            where_cause.add("\nWHERE ");
+            System.out.println(search_parameters.size());
+            for (Map.Entry<String,String[]> entry : search_parameters.entrySet() ) {
+                if (!entry.getKey().equals("genre") && !entry.getKey().equals("star")) {
+                    where_cause.add(String.format("%1$s LIKE '%2$s%%'", entry.getKey(), entry.getValue()[0]));
+                }
+                else {
+                    where_cause.add(String.format("EXISTS (SELECT * FROM %1$ss_in_movies JOIN %1$ss ON %1$ss.id = %1$ss_in_movies.%1$sId WHERE movieId = movies.id AND %1$ss.name LIKE '%2$s%%')",
+                            entry.getKey(), entry.getValue()[0]));
+                }
+                where_cause.add(" AND ");
+            }
+
+            if (where_cause.size() != 1) {
+                where_cause.remove(where_cause.size()-1);
+                movie_query += String.join("",where_cause);
+            }
+
+            movie_query += " ORDER BY rating DESC LIMIT 20";
+            System.out.println(movie_query);
             ResultSet movie_rs = statement.executeQuery(movie_query);
 
             JsonArray movieList = new JsonArray();
