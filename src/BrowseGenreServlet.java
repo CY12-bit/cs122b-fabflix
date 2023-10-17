@@ -12,12 +12,11 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
 @WebServlet(name="AllGenresServlet",urlPatterns="/api/allGenres")
-public class AllGenresServlet extends HttpServlet {
+public class BrowseGenreServlet extends HttpServlet {
     // IDK man
     private static final long serialVersionUID = 1L; // This does nothing
 
