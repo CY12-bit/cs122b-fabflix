@@ -4,6 +4,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -65,6 +66,8 @@ public class LoginServlet extends HttpServlet {
             if (currUser != null && actualPw.equals(password)) {
                 responseJsonObject.addProperty("status", "success");
                 responseJsonObject.addProperty("message", "success");
+                // adding user to session
+                request.getSession().setAttribute("user", currUser);
                 request.getServletContext().log("Login success");
             } else if (currUser == null) {
                 responseJsonObject.addProperty("status", "fail");
