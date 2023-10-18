@@ -1,3 +1,5 @@
+package WebPages;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -15,7 +17,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-@WebServlet(name = "SingleMovieServlet", urlPatterns = "/api/single-movie")
+@WebServlet(name = "WebPages.SingleMovieServlet", urlPatterns = "/api/single-movie")
 public class SingleMovieServlet extends HttpServlet {
     private static final long serialVersionUID = 2L;
 
@@ -125,6 +127,7 @@ public class SingleMovieServlet extends HttpServlet {
             genre_statement.close();
             star_data.close();
             star_statement.close();
+            conn.close();
 
             // Write JSON string to output
             out.write(jsonArray.toString());

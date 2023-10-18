@@ -1,3 +1,5 @@
+package WebPages;
+
 import java.util.ArrayList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -18,7 +20,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Map;
 
-@WebServlet(name="MoviesListServlet",urlPatterns="/api/movielist")
+@WebServlet(name="WebPages.MoviesListServlet",urlPatterns="/api/movielist")
 public class MoviesListServlet extends HttpServlet {
     // IDK man
     private static final long serialVersionUID = 1L; // This does nothing
@@ -55,12 +57,15 @@ public class MoviesListServlet extends HttpServlet {
 
             // Find the correct WHERE CLAUSE filters
             Map<String,String[]> search_parameters = request.getParameterMap();
+            System.out.println(search_parameters.size());
             ArrayList<String> where_cause = new ArrayList<String>();
             where_cause.add("\nWHERE ");
-            System.out.println(search_parameters.size());
             for (Map.Entry<String,String[]> entry : search_parameters.entrySet() ) {
-                if (!entry.getKey().equals("genre") && !entry.getKey().equals("star")) {
+                if (!entry.getKey().equals("genre") && !entry.getKey().equals("star") && !entry.getKey().equals("year")) {
                     where_cause.add(String.format("%1$s LIKE '%2$s%%'", entry.getKey(), entry.getValue()[0]));
+                }
+                else if (entry.getKey().equals("year")) {
+                    where_cause.add(String.format("%1$s = %2$s", entry.getKey(), entry.getValue()[0]));
                 }
                 else {
                     where_cause.add(String.format("EXISTS (SELECT * FROM %1$ss_in_movies JOIN %1$ss ON %1$ss.id = %1$ss_in_movies.%1$sId WHERE movieId = movies.id AND %1$ss.name LIKE '%2$s%%')",
@@ -143,12 +148,11 @@ public class MoviesListServlet extends HttpServlet {
                 temp_set.close();
             }
             movie_rs.close();
-
+            conn.close();
             // Write JSON string to output
             out.write(movieList.toString());
             // Set response status to 200 (OK)
             response.setStatus(200);
-
         } catch (Exception e) {
                 // Write error message JSON object to output
                 JsonObject jsonObject = new JsonObject();
@@ -159,8 +163,11 @@ public class MoviesListServlet extends HttpServlet {
                 request.getServletContext().log("Error:", e);
                 // Set response status to 500 (Internal Server Error)
                 response.setStatus(500);
+
+
             } finally {
                 out.close();
+
             }
     }
 }

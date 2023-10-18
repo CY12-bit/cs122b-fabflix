@@ -1,25 +1,19 @@
-import com.google.gson.JsonArray;
+package ShoppingCart;
+
+import Login.User;
 import com.google.gson.JsonObject;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import jakarta.servlet.ServletConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import javax.sql.DataSource;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.Map;
 
-// Declaring a WebServlet called SingleStarServlet, which maps to url "/api/single-star"
-@WebServlet(name = "SingleStarServlet", urlPatterns = "/api/shopping-cart")
+// Declaring a WebServlet called WebPages.SingleStarServlet, which maps to url "/api/single-star"
+@WebServlet(name = "Login.ShoppingCartServlet", urlPatterns = "/api/shopping-cart") // Why is it SingleStarServlet before?
 public class ShoppingCartServlet extends HttpServlet {
     private static final long serialVersionUID = 2L;
 

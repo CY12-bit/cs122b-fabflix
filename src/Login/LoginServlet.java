@@ -1,10 +1,11 @@
+package Login;
+
 import com.google.gson.JsonObject;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -15,7 +16,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-@WebServlet(name = "LoginServlet", urlPatterns = "/api/login")
+@WebServlet(name = "Login.LoginServlet", urlPatterns = "/api/login")
 public class LoginServlet extends HttpServlet {
 
     private DataSource dataSource;
@@ -67,7 +68,7 @@ public class LoginServlet extends HttpServlet {
                 responseJsonObject.addProperty("status", "success");
                 responseJsonObject.addProperty("message", "success");
                 // adding user to session
-                request.getSession().setAttribute("user", currUser);
+                request.getSession().setAttribute("user", currUser); // Creates a new session
                 request.getServletContext().log("Login success");
             } else if (currUser == null) {
                 responseJsonObject.addProperty("status", "fail");
@@ -81,7 +82,7 @@ public class LoginServlet extends HttpServlet {
 
             user_data.close();
             user_statement.close();
-
+            conn.close();
             out.write(responseJsonObject.toString());
             response.setStatus(200);
 

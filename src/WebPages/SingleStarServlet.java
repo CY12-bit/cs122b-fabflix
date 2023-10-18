@@ -1,3 +1,5 @@
+package WebPages;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -15,8 +17,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-// Declaring a WebServlet called SingleStarServlet, which maps to url "/api/single-star"
-@WebServlet(name = "SingleStarServlet", urlPatterns = "/api/single-star")
+// Declaring a WebServlet called WebPages.SingleStarServlet, which maps to url "/api/single-star"
+@WebServlet(name = "WebPages.SingleStarServlet", urlPatterns = "/api/single-star")
 public class SingleStarServlet extends HttpServlet {
     private static final long serialVersionUID = 2L;
 
@@ -101,6 +103,7 @@ public class SingleStarServlet extends HttpServlet {
             star_data.close();
             movie_statement.close();
             movie_data.close();
+            conn.close();
 
             // Write JSON string to output
             out.write(resArray.toString());
