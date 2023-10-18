@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This User class only has the username field in this example.
@@ -6,26 +7,31 @@ import java.util.HashMap;
  */
 public class User {
     private final String uid;
-    private HashMap<String, Integer> shoppingCart;
+    private Map<String, Integer> shoppingCart;
 
     public User(String uid) {
         this.uid = uid;
+        this.shoppingCart = new HashMap<>();
     }
 
-    public void addItem(String itemId) {
-        if (shoppingCart.containsKey(itemId)) {
-            shoppingCart.put(itemId, shoppingCart.get(itemId) + 1);
+    public void addMovie(String movieId) {
+        if (shoppingCart.containsKey(movieId)) {
+            shoppingCart.put(movieId, shoppingCart.get(movieId) + 1);
         } else {
-            shoppingCart.put(itemId, 1);
+            shoppingCart.put(movieId, 1);
         }
     }
 
-    public void removeItem(String itemId) {
-        if (shoppingCart.containsKey(itemId) && shoppingCart.get(itemId) > 1) {
-            shoppingCart.put(itemId, shoppingCart.get(itemId) - 1);
+    public void removeMovie(String movieId) {
+        if (shoppingCart.containsKey(movieId) && shoppingCart.get(movieId) > 1) {
+            shoppingCart.put(movieId, shoppingCart.get(movieId) - 1);
         } else {
-            shoppingCart.remove(itemId);
+            shoppingCart.remove(movieId);
         }
+    }
+
+    public Map<String, Integer> getShoppingCart() {
+        return shoppingCart;
     }
 
 }
