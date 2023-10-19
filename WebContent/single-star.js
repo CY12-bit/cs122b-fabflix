@@ -77,12 +77,40 @@ function handleResult(resultData) {
             "</th>";
         rowHTML += "<th>" + movieInfo[i]["year"] + "</th>";
         rowHTML += "<th>" + movieInfo[i]["director"] + "</th>";
+        rowHTML += "<th>" + '<button id = ' + '\'' + movieInfo[i]['id'] + '\'' + ' onclick = handleMovieAdd(\'' + movieInfo[i]['id'] + '\')>' + 'Add' + '</button></th>';
         rowHTML += "</tr>";
 
         // Append the row created to the table body, which will refresh the page
         movieTableBodyElement.append(rowHTML);
     }
 }
+
+
+function indicateMovieAdd(resultData) {
+    console.log(resultData);
+    alert("Successfully Added to Cart!")
+}
+
+
+// 1. Fill out the function so that it sends a POST request to ShoppingCartServlet.java with movieId=...&value=inc
+// 2. Indicate whether adding it to the cart is a success or failure
+function handleMovieAdd(movieId) {
+   // ajax request
+    // given buttons a general class name
+    // also label buttons with id of movie ie id=movieId
+    // use js to get the id of element clicked
+    // you might need a param in the function, use google
+    console.log("Clicked on Add Cart Button in Single Star Page");
+    jQuery.ajax( "api/shopping-cart", {
+        method: "POST",
+        data : "movieId=" + movieId + "&value=inc",
+        success: indicateMovieAdd
+    })
+
+
+}
+
+// jQuery('.button-classname').click(handleMovieAdd)
 
 /**
  * Once this .js is loaded, following scripts will be executed by the browser\

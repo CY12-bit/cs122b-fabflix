@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Map;
 
-// Declaring a WebServlet called WebPages.SingleStarServlet, which maps to url "/api/single-star"
+
 @WebServlet(name = "Login.ShoppingCartServlet", urlPatterns = "/api/shopping-cart") // Why is it SingleStarServlet before?
 public class ShoppingCartServlet extends HttpServlet {
     private static final long serialVersionUID = 2L;
