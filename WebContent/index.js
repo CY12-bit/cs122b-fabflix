@@ -56,6 +56,16 @@ function handleGenreData(genreData) {
     });
 }
 
+function populateTitleBrowse () {
+    let options = ["A","B","C","D","E","F","G","H","I","J","K","L","M",
+                            "N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
+                            "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    const title_browse_list = $('#title-browse');
+    options.forEach(o => title_browse_list.append(`<li><a href="movielist.html?title=${o}">${o}</a></li>`))
+}
+
+populateTitleBrowse();
+
 $.ajax(
     "api/allGenres", {
         method: "GET",

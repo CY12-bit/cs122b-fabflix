@@ -44,7 +44,7 @@ public class BrowseGenreServlet extends HttpServlet{
                     "JOIN genres_in_movies gim ON m.id = gim.movieId " +
                     "JOIN ratings r ON r.movieId = m.id " +
                     "WHERE gim.genreId = ? " +
-                    "ORDER BY m.title, r.rating " +
+                    "ORDER BY r.rating DESC, m.title " +
                     "LIMIT 20";
 
             PreparedStatement movie_statement = conn.prepareStatement(movie_query);
