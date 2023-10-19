@@ -35,6 +35,17 @@ public class BrowseGenreServlet extends HttpServlet{
 
         String genreId = request.getParameter("genre");
         request.getServletContext().log("getting id: " + genreId);
+        String page = request.getParameter("page");
+        String records = request.getParameter("records");
+
+        int pageNum = 0;
+        int limit = 25;
+        try {
+            if (page != null)
+                pageNum = Integer.parseInt(page);
+            if (records != null)
+                limit = Integer.parseInt(records);
+        } catch (Exception e) {System.out.println(e.getMessage());}
 
         PrintWriter out = response.getWriter();
 
@@ -45,12 +56,15 @@ public class BrowseGenreServlet extends HttpServlet{
                     "JOIN ratings r ON r.movieId = m.id " +
                     "WHERE gim.genreId = ? " +
                     "ORDER BY r.rating DESC, m.title " +
-                    "LIMIT 20";
+                    "LIMIT ? OFFSET ?";
 
             PreparedStatement movie_statement = conn.prepareStatement(movie_query);
 
 //          // TODO: change to int
             movie_statement.setString(1, genreId);
+            movie_statement.setInt(2, limit);
+            movie_statement.setInt(3, limit*pageNum);
+            System.out.println(movie_statement.toString());
 
             ResultSet movie_data = movie_statement.executeQuery();
             while (movie_data.next()) {

@@ -29,6 +29,54 @@ function getParameterByName(target) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+function buildDataQuery() {
+    const params = ['star', 'title', 'genre', 'year', 'director'];
+    let url_query = [];
+    params.forEach(p => {
+        if (getParameterByName(p)) {
+            url_query.push(p + '=' + getParameterByName(p));
+        }
+    })
+
+    return url_query.join('&');
+}
+
+function buildPaginationQuery() {
+    const params = ['page', 'records'];
+    let url_query = [];
+    params.forEach(param => {
+        let val = getParameterByName(param);
+        if (val && !isNaN(val)) {
+            url_query.push(param + '=' + val);
+        }
+    })
+
+    return url_query.join('&');
+}
+
+function createPaginationButtons() {
+    let paginationEl = $('#pagination');
+    let pageNum = getParameterByName('page');
+    let records = getParameterByName('records');
+
+    let prevPageLink = 'movielist.html?' + buildDataQuery();
+    let nextPageLink = 'movielist.html?' + buildDataQuery();
+
+    let currPage = (pageNum && !isNaN(pageNum)) ? parseInt(pageNum) : 0;
+    if (currPage > 0)
+        prevPageLink += '&page=' + (currPage - 1);
+    nextPageLink += '&page=' + (currPage + 1);
+
+    if (records && !isNaN(records)) {
+        prevPageLink += '&records=' + (parseInt(records));
+        nextPageLink += '&records=' + (parseInt(records));
+    }
+
+    paginationEl.append(`<a href="${prevPageLink}"><< previous </a>`)
+    paginationEl.append(`<a href="${nextPageLink}"> next >></a>`)
+
+}
+
 /**
  * Handles the data returned by the API, read the jsonObject and populate data into html elements
  * @param resultData jsonObject
@@ -82,21 +130,14 @@ function handleStarResult(resultData) {
     }
 }
 
-
 /**
  * Once this .js is loaded, following scripts will be executed by the browser
  */
-const params = ['star', 'title', 'genre', 'year', 'director'];
-let url_query = [];
-params.forEach(p => {
-    if (getParameterByName(p)) {
-        url_query.push(p + '=' + getParameterByName(p));
-    }
-})
+createPaginationButtons();
 
-let apiEndpoint = "api/movielist?" + url_query.join('&');
+let apiEndpoint = "api/movielist?" + buildDataQuery();
 if (getParameterByName('genre')) {
-    apiEndpoint = "api/movie-genre?genre=" + getParameterByName('genre');
+    apiEndpoint = "api/movie-genre?" + buildDataQuery() + '&' + buildPaginationQuery();
 }
 
 console.log(apiEndpoint);
@@ -108,3 +149,4 @@ jQuery.ajax({
     url: apiEndpoint, // Setting request url, which is mapped by StarsServlet in Stars.java
     success: (resultData) => handleStarResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
 });
+
