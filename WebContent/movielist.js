@@ -34,7 +34,7 @@ function getParameterByName(target) {
  * @param resultData jsonObject
  */
 function handleStarResult(resultData) {
-    console.log("movielist: populating movielist table from resultData");
+    console.log("movielist: populating movielist table from resultData", resultData);
 
     // Populate the movielist table
     // Find the empty table body by id "movie_table_body"
@@ -47,7 +47,7 @@ function handleStarResult(resultData) {
 
         let genresHTML = '';
         for (let i = 0; i < genres.length; i++) {
-            genresHTML += '<a href="#' + '"' + ' class="badge badge-secondary"' + '>'
+            genresHTML += '<a href="movielist.html?genre=' + genres[i]['genre_id'] + '"' + ' class="badge badge-secondary"' + '>'
             genresHTML += genres[i]['genre_name']  + '</a>';   // display genre_name for the link text
             if (i < genres.length - 1) {
                 genresHTML += " ";
@@ -94,13 +94,17 @@ params.forEach(p => {
     }
 })
 
-console.log("api/movielist?" + url_query.join('&'))
+let apiEndpoint = "api/movielist?" + url_query.join('&');
+if (getParameterByName('genre')) {
+    apiEndpoint = "api/movie-genre?genre=" + getParameterByName('genre');
+}
 
+console.log(apiEndpoint);
 
 // Makes the HTTP GET request and registers on success callback function handleStarResult
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
-    url: "api/movielist?" + url_query.join('&'), // Setting request url, which is mapped by StarsServlet in Stars.java
+    url: apiEndpoint, // Setting request url, which is mapped by StarsServlet in Stars.java
     success: (resultData) => handleStarResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
 });
