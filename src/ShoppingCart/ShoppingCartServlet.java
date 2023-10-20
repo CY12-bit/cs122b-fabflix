@@ -1,6 +1,7 @@
 package ShoppingCart;
 
 import Login.User;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import jakarta.servlet.annotation.WebServlet;
@@ -10,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Map;
 
 
@@ -17,20 +19,40 @@ import java.util.Map;
 public class ShoppingCartServlet extends HttpServlet {
     private static final long serialVersionUID = 2L;
 
-    // Create a dataSource which registered in web.xml
-//    private DataSource dataSource;
-//
-//    public void init(ServletConfig config) {
-//        try {
-//            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb");
-//        } catch (NamingException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    /**
+     * Function returns current contents of the cart
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("application/json"); // Response mime type
+
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+
+        PrintWriter out = response.getWriter();
+
+        JsonArray cart = new JsonArray();
+
+        Map<String, Integer> cart_quantities = user.getShoppingCart();
+        Map<String, String> cart_titles = user.getCartTitles();
+
+        for (Map.Entry<String, Integer> item: cart_quantities.entrySet()) {
+            JsonObject cart_item = new JsonObject();
+            cart_item.addProperty("Id",item.getKey());
+            cart_item.addProperty("Title",cart_titles.get(item.getKey()));
+            cart_item.addProperty("Quantity", item.getValue());
+
+            cart.add(cart_item);
+        }
+
+        // Write JSON string to output
+        out.write(cart.toString());
+        // Set response status to 200 (OK)
+        response.setStatus(200);
+    }
 
     /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-     * response)
+     * Function increases or decreases movie amount from cart
+     * depending on value
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -38,15 +60,18 @@ public class ShoppingCartServlet extends HttpServlet {
 
         // Retrieve parameter id from url request.
         String id = request.getParameter("movieId");
+        String title = request.getParameter("movieTitle");
         String value = request.getParameter("value");
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
         if (value.equals("inc"))
-            user.addMovie(id);
+            user.addMovie(id,title);
         else if (value.equals("dec"))
             user.removeMovie(id);
+        else if (value.equals("remove"))
+            user.clearMovie(id);
 
         JsonObject cart = new JsonObject();
         for (Map.Entry<String, Integer> item: user.getShoppingCart().entrySet()) {

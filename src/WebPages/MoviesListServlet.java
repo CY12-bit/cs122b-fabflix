@@ -62,13 +62,13 @@ public class MoviesListServlet extends HttpServlet {
             where_cause.add("\nWHERE ");
             for (Map.Entry<String,String[]> entry : search_parameters.entrySet() ) {
                 if (!entry.getKey().equals("genre") && !entry.getKey().equals("star") && !entry.getKey().equals("year")) {
-                    where_cause.add(String.format("%1$s LIKE '%2$s%%'", entry.getKey(), entry.getValue()[0]));
+                    where_cause.add(String.format("%1$s LIKE '%%%2$s%%'", entry.getKey(), entry.getValue()[0]));
                 }
                 else if (entry.getKey().equals("year")) {
                     where_cause.add(String.format("%1$s = %2$s", entry.getKey(), entry.getValue()[0]));
                 }
                 else {
-                    where_cause.add(String.format("EXISTS (SELECT * FROM %1$ss_in_movies JOIN %1$ss ON %1$ss.id = %1$ss_in_movies.%1$sId WHERE movieId = movies.id AND %1$ss.name LIKE '%2$s%%')",
+                    where_cause.add(String.format("EXISTS (SELECT * FROM %1$ss_in_movies JOIN %1$ss ON %1$ss.id = %1$ss_in_movies.%1$sId WHERE movieId = movies.id AND %1$ss.name LIKE '%%%2$s%%')",
                             entry.getKey(), entry.getValue()[0]));
                 }
                 where_cause.add(" AND ");

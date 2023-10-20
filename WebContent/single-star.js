@@ -77,7 +77,7 @@ function handleResult(resultData) {
             "</th>";
         rowHTML += "<th>" + movieInfo[i]["year"] + "</th>";
         rowHTML += "<th>" + movieInfo[i]["director"] + "</th>";
-        rowHTML += "<th>" + '<button id = ' + '\'' + movieInfo[i]['id'] + '\'' + ' onclick = handleMovieAdd(\'' + movieInfo[i]['id'] + '\')>' + 'Add' + '</button></th>';
+        rowHTML += "<th>" + '<button id = ' + '\'' + movieInfo[i]['id'] + '\'' + ' onclick = handleMovieAdd(\'' + movieInfo[i]['id'] + '\',\''+ encodeURIComponent(movieInfo[i]["title"])+ '\')>' + 'Add' + '</button></th>';
         rowHTML += "</tr>";
 
         // Append the row created to the table body, which will refresh the page
@@ -94,7 +94,7 @@ function indicateMovieAdd(resultData) {
 
 // 1. Fill out the function so that it sends a POST request to ShoppingCartServlet.java with movieId=...&value=inc
 // 2. Indicate whether adding it to the cart is a success or failure
-function handleMovieAdd(movieId) {
+function handleMovieAdd(movieId,movieTitle) {
    // ajax request
     // given buttons a general class name
     // also label buttons with id of movie ie id=movieId
@@ -103,7 +103,7 @@ function handleMovieAdd(movieId) {
     console.log("Clicked on Add Cart Button in Single Star Page");
     jQuery.ajax( "api/shopping-cart", {
         method: "POST",
-        data : "movieId=" + movieId + "&value=inc",
+        data : "movieId=" + movieId + "&movieTitle="+movieTitle+"&value=inc",
         success: indicateMovieAdd
     })
 
