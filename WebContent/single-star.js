@@ -94,7 +94,7 @@ function indicateMovieAdd(resultData) {
 
 // 1. Fill out the function so that it sends a POST request to ShoppingCartServlet.java with movieId=...&value=inc
 // 2. Indicate whether adding it to the cart is a success or failure
-function handleMovieAdd(movieId,movieTitle) {
+function handleMovieAdd(movieId, movieTitle) {
    // ajax request
     // given buttons a general class name
     // also label buttons with id of movie ie id=movieId

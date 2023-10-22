@@ -31,6 +31,62 @@ function getParameterByName(target) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+
+function handleStarResult(resultData) {
+    console.log("movielist: populating movielist table from resultData", resultData);
+
+    // Populate the movielist table
+    // Find the empty table body by id "movie_table_body"
+    let starTableBodyElement = jQuery("#movie_table_body");
+
+    // Iterate through resultData, no more than 10 entries
+    for (let i = 0; i < resultData.length; i++) {
+        const genres = resultData[i]["movie_genres"];
+        const stars = resultData[i]["movie_stars"];
+
+        let genresHTML = '';
+        for (let i = 0; i < genres.length; i++) {
+            genresHTML += '<a href="movielist.html?genre=' + genres[i]['genre_id'] + '"' + ' class="badge badge-secondary"' + '>'
+            genresHTML += genres[i]['genre_name']  + '</a>';   // display genre_name for the link text
+            if (i < genres.length - 1) {
+                genresHTML += " ";
+            }
+        }
+
+        let starsHTML = '';
+        for (let i= 0; i < stars.length; i++) {
+            starsHTML += '<a href="single-star.html?id=' + stars[i]['star_id'] + '"' + ' class="badge badge-primary"' + '>'
+                + stars[i]["star_name"] + '</a>';
+            if (i < stars.length - 1) {
+                starsHTML += " ";
+            }
+        }
+
+        // Concatenate the html tags with resultData jsonObject
+        let rowHTML = "";
+        rowHTML += "<tr>";
+        rowHTML +=
+            "<th>" +
+            '<a href="single-movie.html?id=' + resultData[i]['movie_id'] + '">'
+            + resultData[i]["movie_title"] + '</a>' + "</th>" +
+            "<th>" + resultData[i]["movie_year"] + "</th>" +
+            "<th>" + resultData[i]["movie_director"] + "</th>" +
+            "<th>" + genresHTML + "</th>" +
+            "<th>" + starsHTML + "</th>" +
+            "<th>" + resultData[i]["movie_rating"] + "</th>";
+        rowHTML += "<th>" + '<button id = ' + '\'' + resultData[i]["movie_title"] + '\'' + ' onclick = handleMovieAdd(\'' + resultData[i]['movie_id'] + '\',\''+ encodeURIComponent(resultData[i]["movie_title"])+ '\')>' + 'Add' + '</button></th>';
+        rowHTML += "</tr>";
+
+        // Append the row created to the table body, which will refresh the page
+        starTableBodyElement.append(rowHTML);
+    }
+}
+
+function indicateMovieAdd(resultData) {
+    console.log(resultData);
+    alert("Successfully Added to Cart!")
+}
+
 /**
  * Handles the data returned by the API, read the jsonObject and populate data into html elements
  * @param resultData jsonObject
@@ -92,6 +148,9 @@ function handleResult(resultData) {
 
 // Get id from URL
 let starId = getParameterByName('id');
+
+// ASSIGN 'ADD CART' functionality to add_cart button
+
 
 // Makes the HTTP GET request and registers on success callback function handleResult
 jQuery.ajax({

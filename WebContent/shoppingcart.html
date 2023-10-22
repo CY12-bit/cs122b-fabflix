@@ -14,29 +14,38 @@
     <link href="https://fonts.googleapis.com/css2?family=Allerta+Stencil&family=Gabarito&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="movielist.css">
-    <link rel="stylesheet" href="single-movie.css">
+    <link rel="stylesheet" href="shoppingcart.css">
 
 
     <title></title>
 </head>
 <body>
 
-<div class="navigation-bar">
-    <h1><a id="website_title" href="index.html">Fablix</a></h1>
-    <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="#">Stars</a></li>
-        <li><a href="#">Genres</a></li>
-        <li><a href="#">Contact Us</a></li>
-    </ul>
+<div id="header-bar">
+    <div class="navigation-bar">
+        <h1><a id="website_title" href="index.html">Fablix</a></h1>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="movielist.html">Top 20</a></li>
+            <li><a href="#">Contact Us</a></li>
+        </ul>
+    </div>
+</div>
+
+
 </div>
 
 <div class="website_content">
+    <div id="Shopping_Cart_Header">
+        <h2 id="Shopping_Cart">Your Cart</h2>
+        <a id = "payment_button" href="payment.html">
+            <button>Proceed to Payment</button>
+        </a>
+    </div>
 
-    <h1 id="Shopping Cart"></h1>
     <!-- H3 body is left empty here, will be populated with the data retrieved with single-star.js -->
     <!-- single-star.js will find this html element by it's id "star_info" -->
-    <div id="Cart Info"></div>
+    <div id="Cart_Info"></div>
 
     <table id=cart_table class="table table-striped">
         <thead>

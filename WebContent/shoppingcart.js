@@ -44,11 +44,12 @@ function populateCartTable(resultData) {
         cartHTML +=
             "<th>" + title + "</th>" +
             "<th id=" + '\'' + resultData[i]['Id'] + '_price\'' + '>' + price + "</th>" +
-            "<th>" + '<button' + ' onclick = changeQuantity(\'' + resultData[i]['Id'] + '\','+ '\'dec' + '\')>' + '-' + '</button>'
+            "<th>" + "<div class='quantity_wrapper'>" +
+            '<button' + ' onclick = changeQuantity(\'' + resultData[i]['Id'] + '\','+ '\'dec' + '\')>' + '-' + '</button>'
             + "<h3 id=" +  '\'' + resultData[i]['Id'] + '\'>' + start_quantity
             + '</h3>'
-            + '<button' + ' onclick = changeQuantity(\'' + resultData[i]['Id'] + '\',' + '\'inc' + '\')>' + '-' + '</button>'
-            + "</th>" + // HAVE TO ADD BUTTONS TO CHANGE QUANTITY
+            + '<button' + ' onclick = changeQuantity(\'' + resultData[i]['Id'] + '\',' + '\'inc' + '\')>' + '+' + '</button>'
+            + "</div>" + "</th>" + // HAVE TO ADD BUTTONS TO CHANGE QUANTITY
             "<th id=" + '\'' + resultData[i]['Id'] + '_total_price\'' + '>' + start_quantity * price + "</th>" +
             "<th>" + '<button' + ' onclick = removeFromCart(\'' + resultData[i]['Id'] + '\')>' + 'Remove' + '</button></th>';
         cartHTML += "</tr>";

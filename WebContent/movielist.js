@@ -29,6 +29,22 @@ function getParameterByName(target) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+function handleMovieAdd(movieId, movieTitle) {
+    // ajax request
+    // given buttons a general class name
+    // also label buttons with id of movie ie id=movieId
+    // use js to get the id of element clicked
+    // you might need a param in the function, use google
+    console.log("Clicked on Add Cart Button in Single Star Page");
+    jQuery.ajax( "api/shopping-cart", {
+        method: "POST",
+        data : "movieId=" + movieId + "&movieTitle="+movieTitle+"&value=inc",
+        success: indicateMovieAdd
+    })
+
+
+}
+
 function buildDataQuery() {
     const params = ['star', 'title', 'genre', 'year', 'director'];
     let url_query = [];
@@ -80,6 +96,8 @@ function createPaginationButtons() {
 /**
  * Handles the data returned by the API, read the jsonObject and populate data into html elements
  * @param resultData jsonObject
+ *
+ * NEED TO FIGURE OUT HOW TO REMOVE DUPLICATE FUNCTIONS!!!
  */
 function handleStarResult(resultData) {
     console.log("movielist: populating movielist table from resultData", resultData);
@@ -123,6 +141,7 @@ function handleStarResult(resultData) {
             "<th>" + genresHTML + "</th>" +
             "<th>" + starsHTML + "</th>" +
             "<th>" + resultData[i]["movie_rating"] + "</th>";
+        rowHTML += "<th>" + '<button id = ' + '\'' + resultData[i]["movie_title"] + '\'' + ' onclick = handleMovieAdd(\'' + resultData[i]['movie_id'] + '\',\''+ encodeURIComponent(resultData[i]["movie_title"])+ '\')>' + 'Add' + '</button></th>';
         rowHTML += "</tr>";
 
         // Append the row created to the table body, which will refresh the page
@@ -130,9 +149,15 @@ function handleStarResult(resultData) {
     }
 }
 
+function indicateMovieAdd(resultData) {
+    console.log(resultData);
+    alert("Successfully Added to Cart!")
+}
+
 /**
  * Once this .js is loaded, following scripts will be executed by the browser
  */
+
 createPaginationButtons();
 
 let apiEndpoint = "api/movielist?" + buildDataQuery();

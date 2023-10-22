@@ -1,8 +1,10 @@
-
 /* Navigation Bar (with Logo) */
 .navigation-bar {
+    display:flex;
     height: 65px;
-    margin-bottom: 25px;
+    align-items: center;
+    margin-top: 8px;
+    margin-bottom: 15px;
 }
 .navigation-bar #website_title { /* Fablix Logo */
     float: left;
