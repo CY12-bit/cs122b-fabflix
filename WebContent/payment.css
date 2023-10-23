@@ -5,6 +5,18 @@
     margin:auto;
 }
 
+#final_payment {
+    margin:auto;
+    color:black;
+    font-size: 18px;
+    background-color:lightgray;
+    border-radius: 12px;
+    padding-left:10px;
+    padding-right:10px;
+    padding-bottom:1px;
+}
+
+
 #expireDateContainer {
     display: flex;
     margin-left:auto;
