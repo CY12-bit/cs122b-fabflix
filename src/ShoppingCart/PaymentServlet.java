@@ -43,8 +43,6 @@ public class PaymentServlet extends HttpServlet {
 
         response.setContentType("application/json"); // Response mime type
 
-
-
         final String creditCard = request.getParameter("card_num");
         final String firstName = request.getParameter("firstName");
         final String lastName = request.getParameter("lastName");
