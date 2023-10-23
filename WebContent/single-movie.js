@@ -32,6 +32,7 @@ function getParameterByName(target) {
 }
 
 
+/**
 function handleStarResult(resultData) {
     console.log("movielist: populating movielist table from resultData", resultData);
 
@@ -81,9 +82,15 @@ function handleStarResult(resultData) {
         starTableBodyElement.append(rowHTML);
     }
 }
+*/
 
-function indicateMovieAdd(resultData) {
-    console.log(resultData);
+function addMovieToCart() {
+    jQuery.ajax(
+        "api/shopping-cart", {
+            method: "POST",
+            data : "movieId="+getParameterByName('id')+"&movieTitle="+document.title+"&value=inc"
+        }
+    )
     alert("Successfully Added to Cart!")
 }
 
@@ -147,7 +154,7 @@ function handleResult(resultData) {
  */
 
 // Get id from URL
-let starId = getParameterByName('id');
+let movieId = getParameterByName('id');
 
 // ASSIGN 'ADD CART' functionality to add_cart button
 
@@ -156,6 +163,6 @@ let starId = getParameterByName('id');
 jQuery.ajax({
     dataType: "json",  // Setting return data type
     method: "GET",// Setting request method
-    url: "api/single-movie?id=" + starId, // Setting request url, which is mapped by StarsServlet in Stars.java
+    url: "api/single-movie?id=" + movieId, // Setting request url, which is mapped by StarsServlet in Stars.java
     success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the SingleStarServlet
 });
