@@ -42,6 +42,35 @@
 </div>
 
 <div class="website-body">
+    <form id="display_form" class="form-inline">
+        <div class="form-group">
+            <label for="records">Movies Per Page</label>
+            <select id="records" name="records" class="form-control">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="sortOrder">Display Order:</label>
+            <select id="sortOrder" name="sortOrder" class="form-control">
+                <option value="tara">&#8593;title, &#8593;rating</option>
+                <option value="tard">&#8593;title, &darr;rating</option>
+                <option value="tdra">&darr;title, &#8593;rating</option>
+                <option value="tdrd">&darr;title, &darr;rating</option>
+
+                <option value="rata">&#8593;rating, &#8593;title</option>
+                <option value="ratd">&#8593;rating, &darr;title</option>
+                <option value="rdta">&darr;rating, &#8593;title</option>
+                <option value="rdtd">&darr;rating, &darr;title</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-info">Update</button>
+    </form>
+
     <!-- Id "movie_table" is useful for jQuery to find the html element with id, class here is mapping to Bootstrap defined class CSS -->
     <table id=movies_table class="table table-striped">
         <!-- Create a table header -->

@@ -1,0 +1,77 @@
+/* Navigation Bar (with Logo) */
+.navigation-bar {
+    height: 65px;
+    margin-bottom: 25px;
+}
+.navigation-bar #website_title { /* Fablix Logo */
+    float: left;
+    font-family: 'Allerta Stencil', sans-serif;
+    color: #ee4a46;
+    font-size: 30px;
+    line-height: 60px;
+    padding: 1px 15px;
+}
+
+#website_title:hover{
+    text-decoration: none;
+}
+
+.navigation-bar ul { /* Navigation Bar Button Container */
+    padding: 0px;
+    margin: 0px;
+    text-align: center;
+    display:inline-block;
+    vertical-align:top;
+    float: left;
+}
+.navigation-bar li { /* Navigation Bar Button */
+    list-style-type: none;
+    padding: 0px;
+    height: 24px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    display: inline;
+}
+.navigation-bar li a { /* Navigation Bar Button Link */
+    color: white;
+    font-size: 16px;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    text-decoration: none;
+    line-height: 70px;
+    padding: 5px 15px;
+    opacity: 0.7;
+}
+
+/*  Body (with Table) */
+body {
+    background-color: #241503;
+}
+
+.website_content {
+    font-family: 'Gabarito', sans-serif;
+    width: 70%;
+    margin: auto;
+    text-align: center;
+}
+
+.website_content div {
+    margin-bottom: 24px;
+}
+
+.genre-badge {
+    margin: 7px;
+    font-size: 15px;
+}
+
+h2 {
+    color: #f6b33e;
+}
+
+.form-group {
+    margin: 12px;
+}
+
+.form-group label {
+    color: #f9e1c7;
+    font-size: 18px;
+}

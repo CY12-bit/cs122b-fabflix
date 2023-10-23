@@ -52,16 +52,20 @@ function handleGenreData(genreData) {
     console.log('genres', genreData)
     let genreList = $('#genre-list')
     genreData.forEach(g => {
-        genreList.append(`<li><a href="movielist.html?genre=${g['genre_id']}">${g['genre_name']}</a></li>`)
+        genreList.append(`<a href="movielist.html?genre=${g['genre_id']}" class="badge badge-secondary genre-badge">${g['genre_name']}</a>`)
     });
 }
 
 function populateTitleBrowse () {
-    let options = ["A","B","C","D","E","F","G","H","I","J","K","L","M",
-                            "N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
-                            "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-    const title_browse_list = $('#title-browse');
-    options.forEach(o => title_browse_list.append(`<li><a href="movielist.html?title=${o}">${o}</a></li>`))
+    let alpha = ["A","B","C","D","E","F","G","H","I","J","K","L","M",
+                            "N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+    const title_alpha = $('#title-alpha');
+    alpha.forEach(o => title_alpha.append(`<a href="movielist.html?beginsWith=${o}">${o}</a>&nbsp;&nbsp;`));
+
+    let num = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "*"];
+    const title_num = $('#title-num');
+    num.forEach(o => title_num.append(`<a href="movielist.html?beginsWith=${o}">${o}</a>&nbsp;&nbsp;`));
+
 }
 
 populateTitleBrowse();
