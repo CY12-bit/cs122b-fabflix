@@ -1,3 +1,4 @@
+let payment_form = jQuery("#payment_form");
 
 // Function outputs correct response to user depending on
 // whether they entered valid credit card info or not
@@ -21,7 +22,6 @@ function handlePaymentResult(resultData) {
 // Function sends HTTP Post request to SQL database with order information if it's correct
 function submitPaymentForm(formSubmitEvent) {
     formSubmitEvent.preventDefault();
-
     jQuery.ajax(
         "api/payment", {
             method: "POST",

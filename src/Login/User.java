@@ -47,5 +47,9 @@ public class User {
         return shoppingCart_quantities;
     }
 
+    public String getUserId() {
+        return this.uid;
+    }
+
     public Map<String, String> getCartTitles() { return shoppingCart_titles; }
 }
