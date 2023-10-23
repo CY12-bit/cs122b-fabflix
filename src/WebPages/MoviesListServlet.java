@@ -56,30 +56,75 @@ public class MoviesListServlet extends HttpServlet {
                     + " LEFT JOIN ratings ON ratings.movieId = movies.id";
 
             // Find the correct WHERE CLAUSE filters
-            Map<String,String[]> search_parameters = request.getParameterMap();
-            System.out.println(search_parameters.size());
             ArrayList<String> where_cause = new ArrayList<String>();
-            where_cause.add("\nWHERE ");
-            for (Map.Entry<String,String[]> entry : search_parameters.entrySet() ) {
-                if (!entry.getKey().equals("genre") && !entry.getKey().equals("star") && !entry.getKey().equals("year")) {
-                    where_cause.add(String.format("%1$s LIKE '%%%2$s%%'", entry.getKey(), entry.getValue()[0]));
+
+            String[] categories = {"title", "year", "director", "star"};
+            for (String c: categories) {
+                String val = request.getParameter(c);
+                if (val == null) {
+                    continue;
                 }
-                else if (entry.getKey().equals("year")) {
-                    where_cause.add(String.format("%1$s = %2$s", entry.getKey(), entry.getValue()[0]));
+                if (c.equals("director") || c.equals("title")) {
+                    where_cause.add(String.format("%1$s LIKE '%%%2$s%%'", c, val));
+                } else if (c.equals("year")) {
+                    where_cause.add(String.format("%1$s = %2$s", c, val));
                 }
                 else {
                     where_cause.add(String.format("EXISTS (SELECT * FROM %1$ss_in_movies JOIN %1$ss ON %1$ss.id = %1$ss_in_movies.%1$sId WHERE movieId = movies.id AND %1$ss.name LIKE '%%%2$s%%')",
-                            entry.getKey(), entry.getValue()[0]));
+                            c, val));
                 }
-                where_cause.add(" AND ");
             }
 
-            if (where_cause.size() != 1) {
-                where_cause.remove(where_cause.size()-1);
-                movie_query += String.join("",where_cause);
+            if (!where_cause.isEmpty()) {
+                movie_query += "\nWHERE " + String.join(" AND ",where_cause);
             }
 
-            movie_query += " ORDER BY rating DESC LIMIT 20";
+            String sortOrder = request.getParameter("sortOrder");
+            String orderByStr = " ORDER BY rating DESC, title ";
+            // t = title, r = rating, a = ascending, d = descending
+            // [primary][direction][secondary][direction]
+            if (sortOrder != null) {
+                switch (sortOrder) {
+                    case "tara":
+                        orderByStr = " ORDER BY title, rating ";
+                        break;
+                    case "tard":
+                        orderByStr = " ORDER BY title, rating DESC ";
+                        break;
+                    case "tdra":
+                        orderByStr = " ORDER BY title DESC, rating ";
+                        break;
+                    case "tdrd":
+                        orderByStr = " ORDER BY title DESC, rating DESC ";
+                        break;
+                    case "rata":
+                        orderByStr = " ORDER BY rating, title ";
+                        break;
+                    case "ratd":
+                        orderByStr = " ORDER BY rating, title DESC ";
+                        break;
+                    case "rdta":
+                        orderByStr = " ORDER BY rating DESC, title ";
+                        break;
+                    case "rdtd":
+                        orderByStr = " ORDER BY rating DESC, title DESC ";
+                        break;
+                }
+            }
+
+            String page = request.getParameter("page");
+            String records = request.getParameter("records");
+
+            int pageNum = 0;
+            int limit = 25;
+            try {
+                if (page != null)
+                    pageNum = Integer.parseInt(page);
+                if (records != null)
+                    limit = Integer.parseInt(records);
+            } catch (Exception e) {System.out.println(e.getMessage());}
+
+            movie_query += orderByStr + " LIMIT " + limit + " OFFSET " + (limit*pageNum);
             System.out.println(movie_query);
             ResultSet movie_rs = statement.executeQuery(movie_query);
 
