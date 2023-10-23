@@ -46,7 +46,7 @@ function handleMovieAdd(movieId, movieTitle) {
 }
 
 function buildDataQuery() {
-    const params = ['star', 'title', 'genre', 'year', 'director'];
+    const params = ['star', 'title', 'genre', 'year', 'director', 'beginsWith'];
     let url_query = [];
     params.forEach(p => {
         if (getParameterByName(p)) {
@@ -57,12 +57,12 @@ function buildDataQuery() {
     return url_query.join('&');
 }
 
-function buildPaginationQuery() {
-    const params = ['page', 'records'];
+function buildDisplayQuery() {
+    const params = ['page', 'records', 'sortOrder'];
     let url_query = [];
     params.forEach(param => {
         let val = getParameterByName(param);
-        if (val && !isNaN(val)) {
+        if (val && (!isNaN(val) || param === 'sortOrder')) {
             url_query.push(param + '=' + val);
         }
     })
@@ -76,11 +76,10 @@ function createPaginationButtons() {
     let records = getParameterByName('records');
 
     let prevPageLink = 'movielist.html?' + buildDataQuery();
-    let nextPageLink = 'movielist.html?' + buildDataQuery();
+    let nextPageLink = prevPageLink;
 
     let currPage = (pageNum && !isNaN(pageNum)) ? parseInt(pageNum) : 0;
-    if (currPage > 0)
-        prevPageLink += '&page=' + (currPage - 1);
+    prevPageLink += '&page=' + (currPage - 1);
     nextPageLink += '&page=' + (currPage + 1);
 
     if (records && !isNaN(records)) {
@@ -88,8 +87,9 @@ function createPaginationButtons() {
         nextPageLink += '&records=' + (parseInt(records));
     }
 
-    paginationEl.append(`<a href="${prevPageLink}"><< previous </a>`)
-    paginationEl.append(`<a href="${nextPageLink}"> next >></a>`)
+    if (currPage > 0)
+        paginationEl.append(`<a href="${prevPageLink}"> <button class="btn btn-info">previous</button></a>`)
+    paginationEl.append(`<a href="${nextPageLink}"> <button class="btn btn-info">next</button></a>`)
 
 }
 
@@ -141,12 +141,26 @@ function handleStarResult(resultData) {
             "<th>" + genresHTML + "</th>" +
             "<th>" + starsHTML + "</th>" +
             "<th>" + resultData[i]["movie_rating"] + "</th>";
-        rowHTML += "<th>" + '<button id = ' + '\'' + resultData[i]["movie_title"] + '\'' + ' onclick = handleMovieAdd(\'' + resultData[i]['movie_id'] + '\',\''+ encodeURIComponent(resultData[i]["movie_title"])+ '\')>' + 'Add' + '</button></th>';
+        rowHTML += "<th>" + '<button class="btn btn-outline-dark" id = ' + '\'' + resultData[i]["movie_title"] + '\'' + ' onclick = handleMovieAdd(\'' + resultData[i]['movie_id'] + '\',\''+ encodeURIComponent(resultData[i]["movie_title"])+ '\')>' + 'Add' + '</button></th>';
         rowHTML += "</tr>";
 
         // Append the row created to the table body, which will refresh the page
         starTableBodyElement.append(rowHTML);
     }
+    createPaginationButtons();
+}
+
+let display_form = $("#display_form");
+function handleDisplayForm(formSubmitEvent) {
+    console.log("submit display form");
+    /**
+     * When users click the submit button, the browser will not direct
+     * users to the url defined in HTML form. Instead, it will call this
+     * event handler when the event is triggered.
+     */
+    formSubmitEvent.preventDefault();
+    let page = getParameterByName('page') ? getParameterByName('page') : 0;
+    location.href = "movielist.html?" + buildDataQuery() + '&page=' + page + '&' + display_form.serialize();
 }
 
 function indicateMovieAdd(resultData) {
@@ -158,20 +172,22 @@ function indicateMovieAdd(resultData) {
  * Once this .js is loaded, following scripts will be executed by the browser
  */
 
-createPaginationButtons();
-
-let apiEndpoint = "api/movielist?" + buildDataQuery();
+let query = '?' + buildDataQuery() + '&' + buildDisplayQuery();
+let apiEndpoint = "api/movielist";
 if (getParameterByName('genre')) {
-    apiEndpoint = "api/movie-genre?" + buildDataQuery() + '&' + buildPaginationQuery();
+    apiEndpoint = "api/browse-genre";
+} else if (getParameterByName('beginsWith')) {
+    apiEndpoint = "api/browse-title";
 }
 
-console.log(apiEndpoint);
+console.log(apiEndpoint+query);
 
 // Makes the HTTP GET request and registers on success callback function handleStarResult
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
-    url: apiEndpoint, // Setting request url, which is mapped by StarsServlet in Stars.java
+    url: apiEndpoint + query, // Setting request url, which is mapped by StarsServlet in Stars.java
     success: (resultData) => handleStarResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
 });
 
+display_form.submit(handleDisplayForm);

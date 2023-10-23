@@ -17,8 +17,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-@WebServlet(name="Browse.BrowseGenreServlet",urlPatterns="/api/browse-genre")
-public class BrowseGenreServlet extends HttpServlet{
+@WebServlet(name="Browse.BrowseTitleServlet",urlPatterns="/api/browse-title")
+public class BrowseTitleServlet extends HttpServlet{
     private static final long serialVersionUID = 1L; // This does nothing
     private DataSource dataSource;
 
@@ -33,11 +33,22 @@ public class BrowseGenreServlet extends HttpServlet{
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
 
-        String genreId = request.getParameter("genre");
-        request.getServletContext().log("getting id: " + genreId);
+        String beginsWith = request.getParameter("beginsWith");
+        request.getServletContext().log("searching by title: " + beginsWith);
         String page = request.getParameter("page");
         String records = request.getParameter("records");
         String sortOrder = request.getParameter("sortOrder");
+
+        String alphaNum = "LIKE ";
+        if (beginsWith != null) {
+            if (beginsWith.equals("*"))
+            {
+                alphaNum = "REGEXP ";
+                beginsWith = "^[^a-zA-Z0-9]";
+            } else {
+                beginsWith += "%";
+            }
+        }
 
         int pageNum = 0;
         int limit = 25;
@@ -78,6 +89,7 @@ public class BrowseGenreServlet extends HttpServlet{
                     orderByStr = "ORDER BY r.rating DESC, m.title DESC ";
                     break;
             }
+
         }
 
         PrintWriter out = response.getWriter();
@@ -85,19 +97,17 @@ public class BrowseGenreServlet extends HttpServlet{
         try (Connection conn = dataSource.getConnection()) {
             JsonArray resArray = new JsonArray();
             String movie_query = "SELECT m.id, m.title, m.year, m.director, r.rating FROM movies m " +
-                    "JOIN genres_in_movies gim ON m.id = gim.movieId " +
                     "JOIN ratings r ON r.movieId = m.id " +
-                    "WHERE gim.genreId = ? " +
+                    "WHERE m.title " + alphaNum + " ? " +
                     orderByStr +
                     "LIMIT ? OFFSET ?";
 
             PreparedStatement movie_statement = conn.prepareStatement(movie_query);
 
-//          // TODO: change to int
-            movie_statement.setString(1, genreId);
+            movie_statement.setString(1, beginsWith);
             movie_statement.setInt(2, limit);
             movie_statement.setInt(3, limit*pageNum);
-            System.out.println(movie_statement.toString());
+            System.out.println("browse title: " + movie_statement.toString());
 
             ResultSet movie_data = movie_statement.executeQuery();
             while (movie_data.next()) {

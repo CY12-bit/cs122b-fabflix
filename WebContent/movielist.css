@@ -49,15 +49,33 @@
 body {
     background-color: #241503;
 }
+
+.website-body {
+    width: 70%;
+    margin: auto;
+}
+
+#display_form {
+    float: right;
+}
+
+.form-group label{
+    color: #f9e1c7;
+    font-size: 18px;
+    font-weight: 500;
+    margin-right: 6px;
+}
+
+.form-group {
+    padding: 10px;
+}
+
 .website-body #movies_table {
     border-collapse: collapse;
     border:hidden;
     background: white;
     border-radius: 6px;
     overflow: hidden;
-    width: 70%;
-    margin-left: auto;
-    margin-right: auto;
     font-family: 'Gabarito', sans-serif;
 }
 .website-body #movies_table .badge {
@@ -70,3 +88,6 @@ body {
     background:black;
 }
 
+#pagination {
+    text-align: center;
+}
