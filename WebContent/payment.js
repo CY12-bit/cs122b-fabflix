@@ -8,7 +8,7 @@ function calculateTotalCost(resultData) {
     let total_cost_display = jQuery("#final_payment");
     let total_cost = 0;
     for (let i = 0; i < resultData.length;i++) {
-        total_cost += resultData[i]["Quantity"] * 10; // NEED TO UN-HARDCODE PRICE LATER
+        total_cost += resultData[i]["Quantity"] * resultData[i]["Price"]; // NEED TO UN-HARDCODE PRICE LATER
     }
     total_cost_display.append(`Final Cart Cost: $${total_cost}`);
     console.log("Finished Calculating Total Cart Cost");
@@ -20,9 +20,10 @@ function handlePaymentResult(resultData) {
     console.log("handle payment response");
     console.log(resultData);
     console.log(resultData["status"]);
-
     // If login succeeds, it will redirect the user to index.html
     if (resultData["status"] === "success") {
+        console.log("Processed Payment. Cleared Cart");
+
         window.location.replace("confirmation.html");
     } else {
         // If login fails, the web page will display

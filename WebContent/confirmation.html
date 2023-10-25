@@ -14,10 +14,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Allerta+Stencil&family=Gabarito&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="movielist.css">
-    <link rel="stylesheet" href="shoppingcart.css">
+    <link rel="stylesheet" href="confirmation.css">
 
 
-    <title>Your Shopping Cart</title>
+    <title>Order Confirmation</title>
 </head>
 <body>
 
@@ -36,34 +36,31 @@
 </div>
 
 <div class="website_content">
-    <div id="Shopping_Cart_Header">
-        <h2 id="Shopping_Cart">Your Cart</h2>
-        <!-- How do I make sure the button only appears when there is actual stuff in the cart? -->
-        <a id = "payment_button" href="payment.html">
-            <button>Proceed to Payment</button>
-        </a>
-    </div>
+    <h2 id="confirmation_cart_header">Confirmation</h2>
+    <!-- How do I make sure the button only appears when there is actual stuff in the cart? -->
 
     <!-- H3 body is left empty here, will be populated with the data retrieved with single-star.js -->
     <!-- single-star.js will find this html element by it's id "star_info" -->
-    <div id="Cart_Info"></div>
 
-    <table id=cart_table class="table table-striped">
+    <table id=confirmation_cart class="table table-striped">
         <thead>
         <tr>
             <th>Title</th>
             <th>Price</th>
             <th>Quantity</th>
-            <th>Subtotal</th>
-            <th>Action</th>
+            <th>SubTotal</th>
         </tr>
         </thead>
-        <tbody id=cart_table_body></tbody>
+
+        <tbody id=confirmation_cart_body></tbody>
     </table>
     <div id="total_price_display">
         <p>Total: $</p>
         <p id="total_price"></p>
     </div>
+    <a href="index.html">
+        <button>Go to Home</button>
+    </a>
 
 </div>
 
@@ -78,7 +75,7 @@
 <!-- The path is relative to single-star.html, since these two files are in the same directory -->
 <!-- Note the url does not contain a "/" in the beginning, which means the url is relative to current path
      otherwise the url is relative to the root path-->
-<script src="shoppingcart.js"></script>
+<script src="confirmation.js"></script>
 </body>
 
 

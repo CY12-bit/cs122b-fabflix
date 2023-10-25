@@ -1,3 +1,17 @@
+#total_price_display {
+    display: flex;
+    float: right;
+    color:black;
+    font-size: 15px;
+    background-color:lightgray;
+    border-radius: 12px;
+    padding-left:10px;
+    padding-right:10px;
+}
+#total_price_display p {
+    margin:auto;
+}
+
 #Shopping_Cart_Header {
     display: flex;
     justify-content: space-between;

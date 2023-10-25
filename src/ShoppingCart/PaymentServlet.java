@@ -1,5 +1,6 @@
 package ShoppingCart;
 
+import Login.Movie;
 import Login.User;
 import com.google.gson.JsonObject;
 import jakarta.servlet.ServletConfig;
@@ -73,21 +74,18 @@ public class PaymentServlet extends HttpServlet {
             if (credit_id != null) {
                 responseJsonObject.addProperty("status", "success");
                 responseJsonObject.addProperty("message", "success");
-                // INSERTING DATA INTO SALES TABLE
+
                 HttpSession session = request.getSession();
                 User user = (User) session.getAttribute("user");
 
                 Statement insert_statement = conn.createStatement();
                 JsonObject confirmation_cart = new JsonObject();
 
-                for (Map.Entry<String, Integer> item: user.getShoppingCart().entrySet()) {
-                    for (int counter = 0; counter < item.getValue(); counter++) {
-                        String insert_query = "INSERT INTO sales(customerId,movieId,saleDate) VALUES (\'" +
-                                user.getUserId() + "\',\'" + item.getKey() + "\'," + "CURRENT_DATE())";
-                        System.out.println(insert_query);
-                        insert_statement.executeUpdate(insert_query);
-                    }
-                    confirmation_cart.addProperty(item.getKey(), item.getValue());
+                for (Map.Entry<String, Movie> item: user.getShoppingCart().entrySet()) {
+                    String insert_query = "INSERT INTO sales(customerId,movieId,quantity,saleDate) VALUES (\'" +
+                            user.getUserId() + "\',\'" + item.getKey() + "\'," + item.getValue().getMovieQuantity() + "," + "CURRENT_DATE())";
+                    insert_statement.executeUpdate(insert_query);
+                    confirmation_cart.addProperty(item.getKey(), item.getValue().getMovieQuantity());
                 }
                 insert_statement.close();
                 responseJsonObject.add("confirmation_cart",confirmation_cart);
