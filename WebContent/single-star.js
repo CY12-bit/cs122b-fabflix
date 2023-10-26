@@ -106,8 +106,6 @@ function handleMovieAdd(movieId, movieTitle) {
         data : "movieId=" + movieId + "&movieTitle="+movieTitle+"&value=inc",
         success: indicateMovieAdd
     })
-
-
 }
 
 // jQuery('.button-classname').click(handleMovieAdd)

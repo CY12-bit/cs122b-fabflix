@@ -181,6 +181,7 @@ if (getParameterByName('genre')) {
 }
 
 console.log(apiEndpoint+query);
+console.log(location.href)
 
 // Makes the HTTP GET request and registers on success callback function handleStarResult
 jQuery.ajax({
@@ -189,5 +190,14 @@ jQuery.ajax({
     url: apiEndpoint + query, // Setting request url, which is mapped by StarsServlet in Stars.java
     success: (resultData) => handleStarResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
 });
+
+jQuery.ajax({
+    dataType: "json", // Setting return data type
+    method: "POST", // Setting request method
+    url: 'api/movielist-jump?curr-movielist=' + location.href.replaceAll('&', '%26'), // Setting request url, which is mapped by StarsServlet in Stars.java
+    success: (resultData) => console.log(resultData, location.href) // Setting callback function to handle data returned successfully by the StarsServlet
+});
+
+
 
 display_form.submit(handleDisplayForm);
