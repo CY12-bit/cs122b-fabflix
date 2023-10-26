@@ -7,8 +7,8 @@ function calculateTotalCost(resultData) {
     console.log("Calculating Total Cart Cost");
     let total_cost_display = jQuery("#final_payment");
     let total_cost = 0;
-    for (let i = 0; i < resultData.length;i++) {
-        total_cost += resultData[i]["Quantity"] * resultData[i]["Price"]; // NEED TO UN-HARDCODE PRICE LATER
+    for (let i = 0; i < resultData["cart"].length;i++) {
+        total_cost += resultData["cart"][i]["Quantity"] * resultData["cart"][i]["Price"];
     }
     total_cost_display.append(`Final Cart Cost: $${total_cost}`);
     console.log("Finished Calculating Total Cart Cost");
