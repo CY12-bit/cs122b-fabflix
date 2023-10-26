@@ -15,6 +15,7 @@
 #Shopping_Cart_Header {
     display: flex;
     justify-content: space-between;
+    color: #f9e1c7;
 }
 
 .website_content {

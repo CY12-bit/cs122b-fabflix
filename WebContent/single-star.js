@@ -77,7 +77,7 @@ function handleResult(resultData) {
             "</th>";
         rowHTML += "<th>" + movieInfo[i]["year"] + "</th>";
         rowHTML += "<th>" + movieInfo[i]["director"] + "</th>";
-        rowHTML += "<th>" + '<button id = ' + '\'' + movieInfo[i]['id'] + '\'' + ' onclick = handleMovieAdd(\'' + movieInfo[i]['id'] + '\',\''+ encodeURIComponent(movieInfo[i]["title"])+ '\')>' + 'Add' + '</button></th>';
+        rowHTML += "<th>" + '<button class="btn btn-outline-dark" id = ' + '\'' + movieInfo[i]['id'] + '\'' + ' onclick = handleMovieAdd(\'' + movieInfo[i]['id'] + '\',\''+ encodeURIComponent(movieInfo[i]["title"])+ '\')>' + 'Add' + '</button></th>';
         rowHTML += "</tr>";
 
         // Append the row created to the table body, which will refresh the page

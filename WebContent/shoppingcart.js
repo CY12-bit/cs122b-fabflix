@@ -32,24 +32,25 @@ function populateCartTable(resultData) {
     let totalPriceElement = jQuery("#total_price");
     let cartHTML = "";
     let total_price = 0;
+    let cart = resultData['cart'];
     // Iterate through the movie Information.
-    for (let i = 0; i < resultData.length; i++) {
-        cartHTML += "<tr id=" + '\'' + resultData[i]['Id'] + '_row\'' + '>';
-        const title = resultData[i]["Title"];
-        const start_quantity = resultData[i]["Quantity"];
-        const price = resultData[i]['Price'];
+    for (let i = 0; i < cart.length; i++) {
+        cartHTML += "<tr id=" + '\'' + cart[i]['Id'] + '_row\'' + '>';
+        const title = cart[i]["Title"];
+        const start_quantity = cart[i]["Quantity"];
+        const price = cart[i]['Price'];
         total_price += (price * start_quantity);
         cartHTML +=
             "<th>" + title + "</th>" +
-            "<th id=" + '\'' + resultData[i]['Id'] + '_price\'' + '>' + price + "</th>" +
+            "<th id=" + '\'' + cart[i]['Id'] + '_price\'' + '>' + price + "</th>" +
             "<th>" + "<div class='quantity_wrapper'>" +
-            '<button' + ' onclick = changeQuantity(\'' + resultData[i]['Id'] + '\','+ '\'dec' + '\')>' + '-' + '</button>'
-            + "<h3 id=" +  '\'' + resultData[i]['Id'] + '\'>' + start_quantity
+            '<button class="btn btn-outline-dark"' + ' onclick = changeQuantity(\'' + cart[i]['Id'] + '\','+ '\'dec' + '\')>' + '-' + '</button>'
+            + "<h3 id=" +  '\'' + cart[i]['Id'] + '\'>' + start_quantity
             + '</h3>'
-            + '<button' + ' onclick = changeQuantity(\'' + resultData[i]['Id'] + '\',' + '\'inc' + '\')>' + '+' + '</button>'
+            + '<button class="btn btn-outline-dark"' + ' onclick = changeQuantity(\'' + cart[i]['Id'] + '\',' + '\'inc' + '\')>' + '+' + '</button>'
             + "</div>" + "</th>" + // HAVE TO ADD BUTTONS TO CHANGE QUANTITY
-            "<th id=" + '\'' + resultData[i]['Id'] + '_subtotal\'' + '>' + start_quantity * price + "</th>" +
-            "<th>" + '<button' + ' onclick = removeFromCart(\'' + resultData[i]['Id'] + '\')>' + 'Remove' + '</button></th>';
+            "<th id=" + '\'' + cart[i]['Id'] + '_subtotal\'' + '>' + start_quantity * price + "</th>" +
+            "<th>" + '<button class="btn btn-outline-dark"' + ' onclick = removeFromCart(\'' + cart[i]['Id'] + '\')>' + 'Remove' + '</button></th>';
         cartHTML += "</tr>";
     }
     cartTableBodyElement.append(cartHTML);

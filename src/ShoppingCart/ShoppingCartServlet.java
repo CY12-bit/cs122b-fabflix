@@ -23,7 +23,7 @@ import java.sql.ResultSet;
 import java.util.Map;
 
 
-@WebServlet(name = "Login.ShoppingCartServlet", urlPatterns = "/api/shopping-cart") // Why is it SingleStarServlet before?
+@WebServlet(name = "Login.ShoppingCartServlet", urlPatterns = "/api/shopping-cart")
 public class ShoppingCartServlet extends HttpServlet {
     private static final long serialVersionUID = 2L;
 
@@ -43,6 +43,7 @@ public class ShoppingCartServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json"); // Response mime type
+        System.out.println("ShoppingCart Servlet GET");
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
@@ -50,11 +51,23 @@ public class ShoppingCartServlet extends HttpServlet {
         // DO WE NEED TO SOLVE SYNCHRONIZATION?!? synchronized for adding to session?
 
         PrintWriter out = response.getWriter();
-
+        JsonObject saleData = new JsonObject();
         JsonArray cart = new JsonArray();
 
         // MAKE A SQL QUERY TO EXTRACT THE PRICES FROM MOVIES IN THE CART
         try (Connection conn = dataSource.getConnection()) {
+            // getting the number sales to calculate the id
+            String count_query = "SELECT COUNT(*) AS count FROM sales";
+            PreparedStatement count_statement = conn.prepareStatement(count_query);
+            ResultSet count_data = count_statement.executeQuery();
+            int count = 0;
+            while (count_data.next()) {
+                count = count_data.getInt("count");
+            }
+            count_statement.close();
+            count_data.close();
+            saleData.addProperty("starting_id", count+1);
+
             for (Map.Entry<String, Movie> item : user.getShoppingCart().entrySet()) {
                 JsonObject cart_item = new JsonObject();
                 cart_item.addProperty("Id", item.getKey());
@@ -82,7 +95,8 @@ public class ShoppingCartServlet extends HttpServlet {
             conn.close();
 
             // Write JSON string to output
-            out.write(cart.toString());
+            saleData.add("cart", cart);
+            out.write(saleData.toString());
             // Set response status to 200 (OK)
             response.setStatus(200);
 

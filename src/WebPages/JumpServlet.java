@@ -41,7 +41,7 @@ public class JumpServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         String prev_movielist = (String) session.getAttribute("prev-movielist");
-        System.out.println("getting prev url: " + prev_movielist);
+        // System.out.println("getting prev url: " + prev_movielist);
         if (prev_movielist == null) {
             prev_movielist = "";
         }
@@ -60,7 +60,7 @@ public class JumpServlet extends HttpServlet {
         if (currMovielist != null) {
             HttpSession session = request.getSession();
             session.setAttribute("prev-movielist", currMovielist);
-            System.out.println("setting prev-movielist: " + session.getAttribute("prev-movielist"));
+            // System.out.println("setting prev-movielist: " + session.getAttribute("prev-movielist"));
             responseJsonObject.addProperty("prev-movielist", currMovielist);
         }
         response.getWriter().write(responseJsonObject.toString());

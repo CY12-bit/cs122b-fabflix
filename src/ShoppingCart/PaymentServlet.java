@@ -15,10 +15,6 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.Map;
 
 @WebServlet(name="ShoppingCart.PaymentServlet",urlPatterns = "/api/payment")
@@ -78,16 +74,19 @@ public class PaymentServlet extends HttpServlet {
                 HttpSession session = request.getSession();
                 User user = (User) session.getAttribute("user");
 
-                Statement insert_statement = conn.createStatement();
                 JsonObject confirmation_cart = new JsonObject();
 
                 for (Map.Entry<String, Movie> item: user.getShoppingCart().entrySet()) {
-                    String insert_query = "INSERT INTO sales(customerId,movieId,quantity,saleDate) VALUES (\'" +
-                            user.getUserId() + "\',\'" + item.getKey() + "\'," + item.getValue().getMovieQuantity() + "," + "CURRENT_DATE())";
+                    String insert_query = "INSERT INTO sales(customerId,movieId,quantity,saleDate) VALUES (?, ?, ?, CURRENT_DATE())";
+                    PreparedStatement insert_statement = conn.prepareStatement(insert_query);
+                    insert_statement.setString(1, user.getUserId());
+                    insert_statement.setString(2, item.getKey());
+                    insert_statement.setInt(3,  item.getValue().getMovieQuantity());
                     insert_statement.executeUpdate(insert_query);
                     confirmation_cart.addProperty(item.getKey(), item.getValue().getMovieQuantity());
+                    insert_statement.close();
                 }
-                insert_statement.close();
+
                 responseJsonObject.add("confirmation_cart",confirmation_cart);
             }
             else {
