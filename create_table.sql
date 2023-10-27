@@ -7,6 +7,7 @@ CREATE TABLE movies (
     title VARCHAR(100) NOT NULL,
     year INTEGER NOT NULL,
     director VARCHAR(100) NOT NULL,
+    price FLOAT DEFAULT NULL,
     PRIMARY KEY(id)
 );
 CREATE TABLE stars (
@@ -55,6 +56,7 @@ CREATE TABLE sales (
     customerId INTEGER NOT NULL,
     movieId VARCHAR(10) NOT NULL,
     saleDate date NOT NULL,
+    quantity INTEGER DEFAULT 1,
     PRIMARY KEY(id),
     FOREIGN KEY(customerId) REFERENCES customers(id),
     FOREIGN KEY(movieId) REFERENCES movies(id)
@@ -64,4 +66,16 @@ CREATE TABLE ratings (
     rating FLOAT NOT NULL,
     numVotes INTEGER NOT NULL,
     FOREIGN KEY(movieId) REFERENCES movies(id)
-)
+);
+
+DROP TRIGGER IF EXISTS Create_Movie_Price;
+DELIMITER $$
+CREATE TRIGGER Create_Movie_Price BEFORE
+INSERT ON movies
+FOR EACH ROW
+    BEGIN
+    IF NEW.price = NULL
+    THEN SET NEW.price = FLOOR(RAND()*(10-5+1)+5);
+    END IF;
+END $$
+DELIMITER ;

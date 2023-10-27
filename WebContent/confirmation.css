@@ -1,0 +1,32 @@
+body {
+    background-color: #241503;
+}
+
+#confirmation_cart_header, #total_price_display {
+    color:#f9e1c7
+}
+
+.website_content {
+    width: 70%;
+    margin: auto;
+}
+
+#confirmation_cart {
+    border-collapse: collapse;
+    border:hidden;
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    font-family: 'Gabarito', sans-serif;
+}
+
+#confirmation_cart thead {
+    text-align: center;
+    color:#f6b33e;
+    font-size: 18px;
+    background:black;
+}
+
+#confirmation_cart td {
+    text-align: center;
+}

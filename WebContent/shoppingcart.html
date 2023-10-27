@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Allerta+Stencil&family=Gabarito&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="movielist.css">
+    <link rel="stylesheet" href="shoppingcart.css">
+
+
+    <title>Your Shopping Cart</title>
+</head>
+<body>
+
+<div id="header-bar">
+    <div class="navigation-bar">
+        <h1><a id="website_title" href="index.html">Fablix</a></h1>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a id="movielist_url">Movie List</a></li>
+            <li><a href="movielist.html">Top 20</a></li>
+            <li><a href="#">Checkout</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="website_content">
+    <div id="Shopping_Cart_Header">
+        <h2 id="Shopping_Cart">Your Cart</h2>
+
+        <a id="payment-link" href="payment.html">
+            <button id="payment-button" class="btn btn-info">Proceed to Payment</button>
+        </a>
+    </div>
+
+    <!-- H3 body is left empty here, will be populated with the data retrieved with single-star.js -->
+    <!-- single-star.js will find this html element by it's id "star_info" -->
+    <div id="Cart_Info"></div>
+
+    <table id=cart_table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>SubTotal</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody id=cart_table_body></tbody>
+    </table>
+    <div id="total_price_display">
+        <p>Total: $<span id="total_price"></span></p>
+    </div>
+
+</div>
+
+
+
+<!-- Load jQuery and Bootstrap JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<!-- Load our own JS file -->
+<!-- The path is relative to single-star.html, since these two files are in the same directory -->
+<!-- Note the url does not contain a "/" in the beginning, which means the url is relative to current path
+     otherwise the url is relative to the root path-->
+<script src="shoppingcart.js"></script>
+<script src="jump-movielist.js"></script>
+</body>
+
+
+</html>

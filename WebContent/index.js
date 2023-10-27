@@ -1,77 +1,81 @@
-/**
- * This example is following frontend and backend separation.
- *
- * Before this .js is loaded, the html skeleton is created.
- *
- * This .js performs two steps:
- *      1. Use jQuery to talk to backend API to get the json data.
- *      2. Populate the data to correct html elements.
- */
+// let search_form = $("#search_form");
+//
+// /**
+//  * Handle the data returned by ...
+//  * @param resultDataString jsonObject
+//  */
+// function handleSearchResult(resultDataString) {
+//     console.log(resultDataString);
+//     let resultDataJson = JSON.parse(resultDataString);
+//
+//     console.log("handle search response");
+//     console.log(resultDataJson);
+//     console.log(resultDataJson["status"]);
+//
+//     // If login succeeds, it will redirect the user to index.html
+//     if (resultDataJson["status"] === "success") {
+//         window.location.replace("movielist.html");
+//     } else {
+//         // If login fails, the web page will display
+//         // error messages on <div> with id "login_error_message"
+//         console.log("show error message");
+//         console.log(resultDataJson["message"]);
+//         $("#search_error_message").text(resultDataJson["message"]);
+//     }
+// }
+//
+//
+// /**
+//  * Submit the form content with POST method
+//  * @param formSubmitEvent
+//  */
+// function submitSearchForm(formSubmitEvent) {
+//     console.log("submit search form");
+//     /**
+//      * When users click the submit button, the browser will not direct
+//      * users to the url defined in HTML form. Instead, it will call this
+//      * event handler when the event is triggered.
+//      */
+//     formSubmitEvent.preventDefault();
+//     console.log(search_form.serialize());
+//     $.ajax(
+//         "api/movielist", {
+//             method: "GET",
+//             // Serialize the login form to the data sent by POST request
+//             url: "api/movielist?" + search_form.serialize(), // Setting request url, which is mapped by StarsServlet in Stars.java
+//             success: (resultData) => handleSearchResult(resultData) // Setting callback function to handle data returned successfully by the SingleStarServlet
+//         }
+//     );
+// }
 
-
-/**
- * Handles the data returned by the API, read the jsonObject and populate data into html elements
- * @param resultData jsonObject
- */
-function handleStarResult(resultData) {
-    console.log("handleStarResult: populating star table from resultData");
-
-    // Populate the star table
-    // Find the empty table body by id "movie_table_body"
-    let starTableBodyElement = jQuery("#movie_table_body");
-
-    // Iterate through resultData, no more than 10 entries
-    for (let i = 0; i < resultData.length; i++) {
-        const genres = resultData[i]["movie_genres"];
-        const stars = resultData[i]["movie_stars"];
-
-        let genresHTML = '';
-        for (let i = 0; i < genres.length; i++) {
-            genresHTML += '<span class="badge badge-pill badge-secondary' + '">';
-            genresHTML += genres[i];   // display star_name for the link text
-            genresHTML += '</span>';
-            if (i < genres.length - 1) {
-                genresHTML += " ";
-            }
-        }
-
-        let starsHTML = '';
-        for (let i= 0; i < stars.length; i++) {
-            starsHTML += '<a href="single-star.html?id=' + stars[i]['star_id'] + '"' + ' class="badge badge-primary"' + '>'
-                + stars[i]["star_name"] + '</a>';
-            if (i < stars.length - 1) {
-                starsHTML += " ";
-            }
-        }
-
-        // Concatenate the html tags with resultData jsonObject
-        let rowHTML = "";
-        rowHTML += "<tr>";
-        rowHTML +=
-            "<th>" +
-            '<a href="single-movie.html?id=' + resultData[i]['movie_id'] + '">'
-            + resultData[i]["movie_title"] + '</a>' + "</th>" +
-            "<th>" + resultData[i]["movie_year"] + "</th>" +
-            "<th>" + resultData[i]["movie_director"] + "</th>" +
-            "<th>" + genresHTML + "</th>" +
-            "<th>" + starsHTML + "</th>" +
-            "<th>" + resultData[i]["movie_rating"] + "</th>";
-        rowHTML += "</tr>";
-
-        // Append the row created to the table body, which will refresh the page
-        starTableBodyElement.append(rowHTML);
-    }
+function handleGenreData(genreData) {
+    console.log('genres', genreData)
+    let genreList = $('#genre-list')
+    genreData.forEach(g => {
+        genreList.append(`<a href="movielist.html?genre=${g['genre_id']}" class="badge badge-secondary genre-badge">${g['genre_name']}</a>`)
+    });
 }
 
+function populateTitleBrowse () {
+    let alpha = ["A","B","C","D","E","F","G","H","I","J","K","L","M",
+                            "N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+    const title_alpha = $('#title-alpha');
+    alpha.forEach(o => title_alpha.append(`<a href="movielist.html?beginsWith=${o}">${o}</a>&nbsp;&nbsp;`));
 
-/**
- * Once this .js is loaded, following scripts will be executed by the browser
- */
+    let num = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "*"];
+    const title_num = $('#title-num');
+    num.forEach(o => title_num.append(`<a href="movielist.html?beginsWith=${o}">${o}</a>&nbsp;&nbsp;`));
 
-// Makes the HTTP GET request and registers on success callback function handleStarResult
-jQuery.ajax({
-    dataType: "json", // Setting return data type
-    method: "GET", // Setting request method
-    url: "api/movielist", // Setting request url, which is mapped by StarsServlet in Stars.java
-    success: (resultData) => handleStarResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
-});
+}
+
+populateTitleBrowse();
+
+$.ajax(
+    "api/allGenres", {
+        method: "GET",
+        url: "api/allGenres",
+        success: (resultData) => handleGenreData(resultData)
+    }
+);
+// Bind the submit action of the form to a handler function
+// search_form.submit(submitSearchForm);

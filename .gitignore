@@ -68,7 +68,7 @@ local.properties
 
 .idea/
 
-# User-specific stuff:
+# Login.User-specific stuff:
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/dictionaries

@@ -1,0 +1,72 @@
+#total_price_display {
+    display: flex;
+    float: right;
+    color:black;
+    font-size: 15px;
+    background-color:lightgray;
+    border-radius: 12px;
+    padding-left:10px;
+    padding-right:10px;
+}
+#total_price_display p {
+    margin:auto;
+}
+
+#Shopping_Cart_Header {
+    display: flex;
+    justify-content: space-between;
+    color: #f9e1c7;
+}
+
+.website_content {
+    width: 70%;
+    margin: auto;
+}
+
+.quantity_wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+.quantity_wrapper button {
+    max-width:35px;
+    width: 100%;
+    text-align: center;
+    font-size: 15px;
+    border-radius:5px;
+}
+
+.quantity_wrapper h3 {
+    max-width:45px;
+    width:100%;
+    text-align:center;
+    font-size: 16px;
+    margin-top:5px;
+    margin-left:3px;
+    margin-right:3px;
+}
+
+
+#Cart_Info {
+    color: #f9e1c7;
+    font-family: 'Gabarito', sans-serif;
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+
+#cart_table {
+    border-collapse: collapse;
+    text-align:center;
+    border:hidden;
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    font-family: 'Gabarito', sans-serif;
+}
+
+#cart_table thead {
+    color:#f6b33e;
+    font-size: 18px;
+    background:black;
+}

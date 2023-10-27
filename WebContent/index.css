@@ -1,4 +1,3 @@
-
 /* Navigation Bar (with Logo) */
 .navigation-bar {
     height: 65px;
@@ -47,24 +46,32 @@
 body {
     background-color: #241503;
 }
-.website-body #movies_table {
-    border-collapse: collapse;
-    border:hidden;
-    background: white;
-    border-radius: 6px;
-    overflow: hidden;
-    width: 70%;
-    margin-left: auto;
-    margin-right: auto;
+
+.website_content {
     font-family: 'Gabarito', sans-serif;
-}
-.website-body #movies_table .badge {
-    font-size: 14px;
-}
-.website-body #movies_table thead {
+    width: 70%;
+    margin: auto;
     text-align: center;
-    color:#f6b33e;
-    font-size: 18px;
-    background:black;
 }
 
+.website_content div {
+    margin-bottom: 24px;
+}
+
+.genre-badge {
+    margin: 7px;
+    font-size: 15px;
+}
+
+h2 {
+    color: #f6b33e;
+}
+
+.form-group {
+    margin: 12px;
+}
+
+.form-group label {
+    color: #f9e1c7;
+    font-size: 18px;
+}

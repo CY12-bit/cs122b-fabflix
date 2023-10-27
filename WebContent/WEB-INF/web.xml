@@ -4,7 +4,7 @@
          version="3.1">
     <display-name>cs122b-spring21-project1-api-example</display-name>
     <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
+        <welcome-file>login.html</welcome-file>
     </welcome-file-list>
 
     <!-- Register the DataSource which defined in META-INF/context.xml-->
