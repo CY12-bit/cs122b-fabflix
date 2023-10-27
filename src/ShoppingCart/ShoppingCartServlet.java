@@ -47,6 +47,7 @@ public class ShoppingCartServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
+        Boolean paid = (Boolean) session.getAttribute("paid");
 
         // DO WE NEED TO SOLVE SYNCHRONIZATION?!? synchronized for adding to session?
 
@@ -96,6 +97,7 @@ public class ShoppingCartServlet extends HttpServlet {
 
             // Write JSON string to output
             saleData.add("cart", cart);
+            saleData.addProperty("paid", paid);
             out.write(saleData.toString());
             // Set response status to 200 (OK)
             response.setStatus(200);
@@ -123,7 +125,7 @@ public class ShoppingCartServlet extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-         response.setContentType("application/json"); // Response mime type
+        response.setContentType("application/json"); // Response mime type
 
         // Retrieve parameter id from url request.
         String id = request.getParameter("movieId");
@@ -142,6 +144,8 @@ public class ShoppingCartServlet extends HttpServlet {
         else if (value.equals("clearCart")) {
             user.clearCart();
         }
+
+        session.setAttribute("paid", false);
 
         JsonObject cart = new JsonObject();
         for (Map.Entry<String, Movie> item: user.getShoppingCart().entrySet()) {

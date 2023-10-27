@@ -1,0 +1,46 @@
+/* Navigation Bar (with Logo) */
+.navigation-bar {
+    display:flex;
+    height: 65px;
+    align-items: center;
+    margin-top: 8px;
+    margin-bottom: 15px;
+}
+.navigation-bar #website_title { /* Fablix Logo */
+    float: left;
+    font-family: 'Allerta Stencil', sans-serif;
+    color: #ee4a46;
+    font-size: 30px;
+    line-height: 60px;
+    padding: 1px 15px;
+}
+
+#website_title:hover{
+    text-decoration: none;
+}
+
+.navigation-bar ul { /* Navigation Bar Button Container */
+    padding: 0px;
+    margin: 0px;
+    text-align: center;
+    display:inline-block;
+    vertical-align:top;
+    float: left;
+}
+.navigation-bar li { /* Navigation Bar Button */
+    list-style-type: none;
+    padding: 0px;
+    height: 24px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    display: inline;
+}
+.navigation-bar li a { /* Navigation Bar Button Link */
+    color: white;
+    font-size: 16px;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    text-decoration: none;
+    line-height: 70px;
+    padding: 5px 15px;
+    opacity: 0.7;
+}

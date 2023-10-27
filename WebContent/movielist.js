@@ -194,8 +194,8 @@ jQuery.ajax({
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "POST", // Setting request method
-    url: 'api/movielist-jump?curr-movielist=' + location.href.replaceAll('&', '%26'), // Setting request url, which is mapped by StarsServlet in Stars.java
-    success: (resultData) => console.log(resultData, location.href) // Setting callback function to handle data returned successfully by the StarsServlet
+    data: JSON.stringify({'curr-movielist': location.href}),
+    url: 'api/movielist-jump', // Setting request url, which is mapped by StarsServlet in Stars.java
 });
 
 

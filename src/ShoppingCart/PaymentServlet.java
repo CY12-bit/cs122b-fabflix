@@ -74,6 +74,7 @@ public class PaymentServlet extends HttpServlet {
 
                 HttpSession session = request.getSession();
                 User user = (User) session.getAttribute("user");
+                session.setAttribute("paid", true);
 
                 JsonObject confirmation_cart = new JsonObject();
 

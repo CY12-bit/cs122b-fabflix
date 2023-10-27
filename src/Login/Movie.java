@@ -2,9 +2,7 @@ package Login;
 
 public class Movie {
     private final String mid;
-
-    private Integer quantity;
-
+    private int quantity;
     private final String title;
 
     public Movie(String mid, String title) {
@@ -12,7 +10,7 @@ public class Movie {
         this.quantity = 1;
         this.title = title;
     }
-    public Movie(String mid, String title, Integer quantity) {
+    public Movie(String mid, String title, int quantity) {
         this.mid = mid;
         this.quantity = quantity;
         this.title = title;
@@ -22,7 +20,7 @@ public class Movie {
         quantity += change;
     }
 
-    public Integer getMovieQuantity() {
+    public int getMovieQuantity() {
         return this.quantity;
     }
 

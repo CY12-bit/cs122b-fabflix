@@ -23,6 +23,14 @@ function updateCartRow(movieId, change) {
     // Change the total cart price
     document.getElementById("total_price").innerHTML =
         (parseFloat(document.getElementById("total_price").innerText) + movie_price).toString();
+
+    // check the number of rows
+    let numRows = $('#cart_table_body tr').length;
+    if (numRows === 0) {
+        let paymentButton = jQuery('#payment_button');
+        paymentButton.attr('disabled', true);
+    }
+
 }
 
 function populateCartTable(resultData) {
@@ -33,6 +41,12 @@ function populateCartTable(resultData) {
     let cartHTML = "";
     let total_price = 0;
     let cart = resultData['cart'];
+
+    if (cart.length === 0) {
+        let paymentButton = jQuery('#payment_button');
+        paymentButton.attr('disabled', true);
+    }
+
     // Iterate through the movie Information.
     for (let i = 0; i < cart.length; i++) {
         cartHTML += "<tr id=" + '\'' + cart[i]['Id'] + '_row\'' + '>';
@@ -88,6 +102,12 @@ function removeFromCart(movieId) {
     // wait what happens if it fails?
     document.getElementById("total_price").innerHTML = (current_total-movie_subTotal).toString() || "0";
     document.getElementById(movieId+"_row").remove();
+
+    let numRows = $('#cart_table_body tr').length;
+    if (numRows === 0) {
+        let paymentButton = jQuery('#payment_button');
+        paymentButton.attr('disabled', true);
+    }
 }
 
 
