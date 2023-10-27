@@ -58,7 +58,7 @@ public class ShoppingCartServlet extends HttpServlet {
         // MAKE A SQL QUERY TO EXTRACT THE PRICES FROM MOVIES IN THE CART
         try (Connection conn = dataSource.getConnection()) {
             // getting the number sales to calculate the id
-            String count_query = "SELECT COUNT(*) AS count FROM sales";
+            String count_query = "SELECT MAX(id) AS count FROM sales";
             PreparedStatement count_statement = conn.prepareStatement(count_query);
             ResultSet count_data = count_statement.executeQuery();
             int count = 0;
@@ -67,7 +67,8 @@ public class ShoppingCartServlet extends HttpServlet {
             }
             count_statement.close();
             count_data.close();
-            saleData.addProperty("starting_id", count+1);
+            int items_in_cart = user.getShoppingCart().size();
+            saleData.addProperty("starting_id", count+1-items_in_cart);
 
             for (Map.Entry<String, Movie> item : user.getShoppingCart().entrySet()) {
                 JsonObject cart_item = new JsonObject();

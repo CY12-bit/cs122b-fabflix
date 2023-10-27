@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.Map;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @WebServlet(name="ShoppingCart.PaymentServlet",urlPatterns = "/api/payment")
 public class PaymentServlet extends HttpServlet {
@@ -79,11 +81,15 @@ public class PaymentServlet extends HttpServlet {
                 JsonObject confirmation_cart = new JsonObject();
 
                 for (Map.Entry<String, Movie> item: user.getShoppingCart().entrySet()) {
-                    String insert_query = "INSERT INTO sales(customerId,movieId,quantity,saleDate) VALUES (?, ?, ?, CURRENT_DATE())";
+                    LocalDate current_date = LocalDate.now();
+                    DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    String formattedDate = current_date.format(myFormatObj);
+                    String insert_query = "INSERT INTO sales(customerId,movieId,quantity,saleDate) VALUES (?, ?, ?, ?)";
                     PreparedStatement insert_statement = conn.prepareStatement(insert_query);
                     insert_statement.setString(1, user.getUserId());
                     insert_statement.setString(2, item.getKey());
                     insert_statement.setInt(3,  item.getValue().getMovieQuantity());
+                    insert_statement.setString(4,formattedDate);
                     insert_statement.executeUpdate();
                     confirmation_cart.addProperty(item.getKey(), item.getValue().getMovieQuantity());
                     insert_statement.close();
