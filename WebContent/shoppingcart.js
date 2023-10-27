@@ -45,6 +45,9 @@ function populateCartTable(resultData) {
  * Function either increases or decreases the quantity of a certain movie
  * by 1 or -1. If the movie quantity is 1 and the user tries to decrease,
  * it will not work.
+ *
+ * Originally, Colin's function has a disconnect between front end and back end so if backend failed
+ * front end would incorrectly change
  */
 function changeQuantity(movieId, change) {
     console.log("changing movie quantity in cart");
