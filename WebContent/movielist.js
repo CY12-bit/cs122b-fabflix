@@ -168,6 +168,23 @@ function handleDisplayForm(formSubmitEvent) {
     location.href = "movielist.html?" + buildDataQuery() + '&' + display_form.serialize();
 }
 
+function setDefaultDropdown() {
+    let sortOrder = getParameterByName('sortOrder');
+    let records = getParameterByName('records');
+
+    if (sortOrder == null) {
+        sortOrder = 'rdta';
+    }
+    if (records == null) {
+        records = 25;
+    }
+
+    jQuery('#records-select option[value="'+records+'"]').attr('selected', true);
+    jQuery('#sortOrder-select option[value="'+sortOrder+'"]').attr('selected', true);
+
+}
+setDefaultDropdown();
+
 function indicateMovieAdd(resultData) {
     console.log(resultData);
     alert("Successfully Added to Cart!")
