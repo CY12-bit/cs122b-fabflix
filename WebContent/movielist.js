@@ -74,6 +74,7 @@ function createPaginationButtons() {
     let paginationEl = $('#pagination');
     let pageNum = getParameterByName('page');
     let records = getParameterByName('records');
+    let sortOrder = getParameterByName('sortOrder');
 
     let prevPageLink = 'movielist.html?' + buildDataQuery();
     let nextPageLink = prevPageLink;
@@ -85,6 +86,11 @@ function createPaginationButtons() {
     if (records && !isNaN(records)) {
         prevPageLink += '&records=' + (parseInt(records));
         nextPageLink += '&records=' + (parseInt(records));
+    }
+
+    if (sortOrder) {
+        prevPageLink += '&sortOrder=' + sortOrder;
+        nextPageLink += '&sortOrder=' + sortOrder;
     }
 
     if (currPage > 0)
@@ -159,8 +165,7 @@ function handleDisplayForm(formSubmitEvent) {
      * event handler when the event is triggered.
      */
     formSubmitEvent.preventDefault();
-    let page = getParameterByName('page') ? getParameterByName('page') : 0;
-    location.href = "movielist.html?" + buildDataQuery() + '&page=' + page + '&' + display_form.serialize();
+    location.href = "movielist.html?" + buildDataQuery() + '&' + display_form.serialize();
 }
 
 function indicateMovieAdd(resultData) {
