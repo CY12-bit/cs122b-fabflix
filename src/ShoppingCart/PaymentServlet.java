@@ -84,7 +84,7 @@ public class PaymentServlet extends HttpServlet {
                     insert_statement.setString(1, user.getUserId());
                     insert_statement.setString(2, item.getKey());
                     insert_statement.setInt(3,  item.getValue().getMovieQuantity());
-                    insert_statement.executeUpdate(insert_query);
+                    insert_statement.executeUpdate();
                     confirmation_cart.addProperty(item.getKey(), item.getValue().getMovieQuantity());
                     insert_statement.close();
                 }
@@ -109,6 +109,7 @@ public class PaymentServlet extends HttpServlet {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", e.getMessage());
             out.write(jsonObject.toString());
+            System.out.println("payment fail: " + e.getMessage());
 
             // Log error to localhost log
             request.getServletContext().log("Error:", e);

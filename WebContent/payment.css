@@ -24,13 +24,13 @@
 #expireDateContainer label{
     margin-right:15px;
     font-size: 15px;
-    color: gray;
+    color: #f9e1c7;
     margin-top:auto;
     margin-bottom:auto;
 }
 
 #payment_header {
-    color: gray;
+    color: #f9e1c7;
     text-align: center;
 }
 
@@ -46,15 +46,10 @@ input[type=text] {
 
 input[type=submit] {
     width: 100%;
-    background-color: #04AA6D;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    padding: 10px;
+    margin-top: 15px;
 }
 
-input[type=submit]:hover {
-    background-color: #45a049;
+#payment_error_message {
+    color: red;
 }

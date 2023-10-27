@@ -194,7 +194,7 @@ jQuery.ajax({
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "POST", // Setting request method
-    data: JSON.stringify({'curr-movielist': location.href}),
+    data: {'curr-movielist': location.href},
     url: 'api/movielist-jump', // Setting request url, which is mapped by StarsServlet in Stars.java
 });
 

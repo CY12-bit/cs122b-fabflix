@@ -71,9 +71,11 @@ public class ShoppingCartServlet extends HttpServlet {
 
             for (Map.Entry<String, Movie> item : user.getShoppingCart().entrySet()) {
                 JsonObject cart_item = new JsonObject();
-                cart_item.addProperty("Id", item.getKey());
-                cart_item.addProperty("Title", item.getValue().getTitle());
-                cart_item.addProperty("Quantity", item.getValue().getMovieQuantity());
+                String movieId = item.getKey();
+                Movie movie = item.getValue();
+                cart_item.addProperty("Id", movieId);
+                cart_item.addProperty("Title", movie.getTitle());
+                cart_item.addProperty("Quantity", movie.getMovieQuantity());
 
                 String price_statement = "SELECT price FROM movies WHERE id = ?";
 
@@ -83,9 +85,11 @@ public class ShoppingCartServlet extends HttpServlet {
                 Float price_value = null;
                 while (price_set.next()) {
                     price_value = price_set.getFloat("price");
+                    movie.setPrice(price_value);
                 }
                 if (price_value == null) {
                     price_value = 10.0F;
+                    movie.setPrice(price_value);
                 }
                 cart_item.addProperty("Price",price_value);
                 price_query.close();
@@ -144,15 +148,25 @@ public class ShoppingCartServlet extends HttpServlet {
         else if (value.equals("clearCart")) {
             user.clearCart();
         }
-
         session.setAttribute("paid", false);
 
-        JsonObject cart = new JsonObject();
+        JsonObject cartData = new JsonObject();
+        JsonArray cartArray = new JsonArray();
         for (Map.Entry<String, Movie> item: user.getShoppingCart().entrySet()) {
-            cart.addProperty(item.getKey(),item.getValue().getMovieQuantity());
+            JsonObject cartItem = new JsonObject();
+            String movieId = item.getKey();
+            Movie movie = item.getValue();
+
+            cartItem.addProperty("Id", movieId);
+            cartItem.addProperty("Title", movie.getTitle());
+            cartItem.addProperty("Quantity", movie.getMovieQuantity());
+            cartItem.addProperty("Price", movie.getPrice());
+            cartArray.add(cartItem);
         }
 
-        response.getWriter().write(cart.toString());
+        cartData.add("cart", cartArray);
+
+        response.getWriter().write(cartData.toString());
 
     }
 

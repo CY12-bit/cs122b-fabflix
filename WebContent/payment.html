@@ -25,6 +25,7 @@
         <h1><a id="website_title" href="index.html">Fablix</a></h1>
         <ul>
             <li><a href="index.html">Home</a></li>
+            <li><a id="movielist_url">Movie List</a></li>
             <li><a href="movielist.html">Top 20</a></li>
             <li><a href="shoppingcart.html">Checkout</a></li>
         </ul>
@@ -35,24 +36,23 @@
     <h1 id="payment_header">Payment Information</h1>
 
     <form id="payment_form" method="POST" action="#">
-        <input name="card_num" placeholder="Card Number" type="text">
+        <input name="card_num" placeholder="Card Number" type="text" required>
         <div id="expireDateContainer">
             <label for="expirationDate">Expiration Date</label>
-            <input id="expirationDate" name="expirationDate" type="date">
+            <input id="expirationDate" name="expirationDate" type="date" required>
         </div>
-        <input name="firstName" placeholder="First Name" type="text">
-        <input name="lastName" placeholder="Last Name" type="text">
+        <input name="firstName" placeholder="First Name" type="text" required>
+        <input name="lastName" placeholder="Last Name" type="text" required>
+        <p id="payment_error_message"></p>
         <label id="final_payment"></label>
-        <input type="submit" value="Place Order">
+        <input type="submit" value="Place Order" class="btn btn-info">
     </form>
 
 </div>
-
-<div id="payment_error_message"></div>
-
 <!-- include jQuery-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!-- include our own JS file -->
 <script src="payment.js"></script>
+<script src="jump-movielist.js"></script>
 </body>
 </html>
