@@ -3,45 +3,44 @@ CREATE DATABASE moviedb;
 USE moviedb;
 
 CREATE TABLE movies (
-	id VARCHAR(10),
+    id VARCHAR(10),
     title VARCHAR(100) NOT NULL,
     year INTEGER NOT NULL,
     director VARCHAR(100) NOT NULL,
-    price FLOAT DEFAULT NULL,
     PRIMARY KEY(id)
 );
 CREATE TABLE stars (
-	id VARCHAR(10),
-	name VARCHAR(100) NOT NULL,
-	birthYear INTEGER,
-	PRIMARY KEY(id)
+    id VARCHAR(10),
+    name VARCHAR(100) NOT NULL,
+    birthYear INTEGER,
+    PRIMARY KEY(id)
 );
 CREATE TABLE stars_in_movies (
-	starId VARCHAR(10) NOT NULL,
+    starId VARCHAR(10) NOT NULL,
     movieId VARCHAR(10) NOT NULL,
     FOREIGN KEY(starId) REFERENCES stars(id),
     FOREIGN KEY(movieId) REFERENCES movies(id)
 );
 CREATE TABLE genres (
-	id INTEGER AUTO_INCREMENT,
+    id INTEGER AUTO_INCREMENT,
     name VARCHAR(32) NOT NULL,
     PRIMARY KEY(id)
 );
 CREATE TABLE genres_in_movies (
-	genreId INTEGER NOT NULL,
+    genreId INTEGER NOT NULL,
     movieId VARCHAR(10) NOT NULL,
     FOREIGN KEY(genreId) REFERENCES genres(id),
     FOREIGN KEY(movieId) REFERENCES movies(id)
 );
 CREATE TABLE creditcards (
-	id VARCHAR(20),
+    id VARCHAR(20),
     firstName VARCHAR(50) NOT NULL,
     lastName VARCHAR(50) NOT NULL,
     expiration date NOT NULL,
     PRIMARY KEY(id)
 );
 CREATE TABLE customers (
-	id INTEGER AUTO_INCREMENT,
+    id INTEGER AUTO_INCREMENT,
     firstName VARCHAR(50) NOT NULL,
     lastName VARCHAR(50) NOT NULL,
     ccld VARCHAR(20) NOT NULL,
@@ -52,30 +51,17 @@ CREATE TABLE customers (
     FOREIGN KEY(ccld) REFERENCES creditcards(id)
 );
 CREATE TABLE sales (
-	id INTEGER AUTO_INCREMENT,
+    id INTEGER AUTO_INCREMENT,
     customerId INTEGER NOT NULL,
     movieId VARCHAR(10) NOT NULL,
     saleDate date NOT NULL,
-    quantity INTEGER DEFAULT 1,
     PRIMARY KEY(id),
     FOREIGN KEY(customerId) REFERENCES customers(id),
     FOREIGN KEY(movieId) REFERENCES movies(id)
 );
 CREATE TABLE ratings (
-	movieId VARCHAR(10) NOT NULL,
+    movieId VARCHAR(10) NOT NULL,
     rating FLOAT NOT NULL,
     numVotes INTEGER NOT NULL,
     FOREIGN KEY(movieId) REFERENCES movies(id)
-);
-
-DROP TRIGGER IF EXISTS Create_Movie_Price;
-DELIMITER $$
-CREATE TRIGGER Create_Movie_Price BEFORE
-INSERT ON movies
-FOR EACH ROW
-    BEGIN
-    IF NEW.price = NULL
-    THEN SET NEW.price = FLOOR(RAND()*(10-5+1)+5);
-    END IF;
-END $$
-DELIMITER ;
+)
