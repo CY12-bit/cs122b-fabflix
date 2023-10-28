@@ -124,7 +124,7 @@ public class MoviesListServlet extends HttpServlet {
                     limit = Integer.parseInt(records);
             } catch (Exception e) {System.out.println(e.getMessage());}
 
-            movie_query += orderByStr + " LIMIT " + limit + " OFFSET " + (limit*pageNum);
+            movie_query += orderByStr + " LIMIT " + (limit + 1) + " OFFSET " + (limit*pageNum);
             System.out.println(movie_query);
             ResultSet movie_rs = statement.executeQuery(movie_query);
 

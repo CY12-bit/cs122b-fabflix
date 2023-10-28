@@ -95,7 +95,7 @@ public class BrowseGenreServlet extends HttpServlet{
 
 //          // TODO: change to int
             movie_statement.setString(1, genreId);
-            movie_statement.setInt(2, limit);
+            movie_statement.setInt(2, limit + 1);
             movie_statement.setInt(3, limit*pageNum);
             System.out.println(movie_statement.toString());
 

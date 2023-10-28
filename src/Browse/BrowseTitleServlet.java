@@ -105,7 +105,7 @@ public class BrowseTitleServlet extends HttpServlet{
             PreparedStatement movie_statement = conn.prepareStatement(movie_query);
 
             movie_statement.setString(1, beginsWith);
-            movie_statement.setInt(2, limit);
+            movie_statement.setInt(2, limit + 1);
             movie_statement.setInt(3, limit*pageNum);
             System.out.println("browse title: " + movie_statement.toString());
 

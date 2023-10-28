@@ -70,7 +70,7 @@ function buildDisplayQuery() {
     return url_query.join('&');
 }
 
-function createPaginationButtons() {
+function createPaginationButtons(isLastPage) {
     let paginationEl = $('#pagination');
     let pageNum = getParameterByName('page');
     let records = getParameterByName('records');
@@ -95,7 +95,8 @@ function createPaginationButtons() {
 
     if (currPage > 0)
         paginationEl.append(`<a href="${prevPageLink}"> <button class="btn btn-info">previous</button></a>`)
-    paginationEl.append(`<a href="${nextPageLink}"> <button class="btn btn-info">next</button></a>`)
+    if (!isLastPage)
+        paginationEl.append(`<a href="${nextPageLink}"> <button class="btn btn-info">next</button></a>`)
 
 }
 
@@ -111,9 +112,13 @@ function handleStarResult(resultData) {
     // Populate the movielist table
     // Find the empty table body by id "movie_table_body"
     let starTableBodyElement = jQuery("#movie_table_body");
+    let records = getParameterByName('records');
+    if (records == null) {
+        records = 25;
+    }
 
     // Iterate through resultData, no more than 10 entries
-    for (let i = 0; i < resultData.length; i++) {
+    for (let i = 0; i < records; i++) {
         const genres = resultData[i]["movie_genres"];
         const stars = resultData[i]["movie_stars"];
 
@@ -153,7 +158,7 @@ function handleStarResult(resultData) {
         // Append the row created to the table body, which will refresh the page
         starTableBodyElement.append(rowHTML);
     }
-    createPaginationButtons();
+    createPaginationButtons(resultData.length <= records);
 }
 
 let display_form = $("#display_form");
