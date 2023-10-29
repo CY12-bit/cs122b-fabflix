@@ -75,8 +75,8 @@ public class SingleMovieServlet extends HttpServlet {
                 String title = movie_data.getString("title");
                 int year = movie_data.getInt("year");
                 String director = movie_data.getString("director");
-                String rating = movie_data.getString("rating");
-                String numVotes = movie_data.getString("numVotes");
+                float rating = movie_data.getFloat("rating");
+                int numVotes = movie_data.getInt("numVotes");
 
                 // id retrieved from param
                 jsonObj.addProperty("id", id);

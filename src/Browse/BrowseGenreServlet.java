@@ -86,7 +86,7 @@ public class BrowseGenreServlet extends HttpServlet{
             JsonArray resArray = new JsonArray();
             String movie_query = "SELECT m.id, m.title, m.year, m.director, r.rating FROM movies m " +
                     "JOIN genres_in_movies gim ON m.id = gim.movieId " +
-                    "JOIN ratings r ON r.movieId = m.id " +
+                    "LEFT JOIN ratings r ON r.movieId = m.id " +
                     "WHERE gim.genreId = ? " +
                     orderByStr +
                     "LIMIT ? OFFSET ?";
@@ -106,7 +106,7 @@ public class BrowseGenreServlet extends HttpServlet{
                 String title = movie_data.getString("title");
                 String year = movie_data.getString("year");
                 String director = movie_data.getString("director");
-                String rating = movie_data.getString("rating");
+                float rating = movie_data.getFloat("rating");
 
                 String star_query = "SELECT s.id, s.name FROM stars_in_movies AS sim " +
                         "JOIN stars AS s ON sim.starId = s.id " +
