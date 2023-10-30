@@ -59,6 +59,7 @@ public class MoviesListServlet extends HttpServlet {
             ArrayList<String> where_cause = new ArrayList<String>();
 
             String[] categories = {"title", "year", "director", "star"};
+            // IN THE FUTURE, I WOULD NEED A HASTABLE WITH PARAMETERS AND SEPARATE SLOTS TO USE PREPAREDSTATEMENTS
             for (String c: categories) {
                 String val = request.getParameter(c);
                 if (val == null) {

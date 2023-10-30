@@ -1,5 +1,6 @@
 package Login;
 
+import Recapta.RecaptchaVerifyUtils;
 import com.google.gson.JsonObject;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -41,6 +42,21 @@ public class LoginServlet extends HttpServlet {
         /  in the real project, you should talk to the database to verify username/password
         */
         PrintWriter out = response.getWriter();
+
+        String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
+        System.out.println("gRecaptchaResponse=" + gRecaptchaResponse);
+        try {
+            RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+
+        } catch (Exception E){
+            JsonObject responseJsonObject = new JsonObject();
+            responseJsonObject.addProperty("status", "fail");
+            responseJsonObject.addProperty("message", "reCapta Failed");
+            System.out.println("ReCapta Failed" + E.getMessage());
+            out.write(responseJsonObject.toString());
+            out.close();
+            return ;
+        }
 
         // Get a connection from dataSource and let resource manager close the connection after usage.
         try (Connection conn = dataSource.getConnection()) {
