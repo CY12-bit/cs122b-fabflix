@@ -29,6 +29,7 @@ IF (mTitle,mYear,mDirector) NOT IN (SELECT title,year,director FROM movies) THEN
     SELECT id INTO @genre_id FROM genres WHERE name = genre_name;
     INSERT INTO stars_in_movies(starId,movieId) VALUES (@star_id,@movie_id);
     INSERT INTO genres_in_movies(genreId, movieId) VALUES (@genre_id,@movie_id);
+	SELECT @movie_id, @star_id, @genre_id;
 END IF;
 END $$
 DELIMITER ;
