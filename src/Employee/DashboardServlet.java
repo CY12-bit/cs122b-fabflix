@@ -44,8 +44,21 @@ public class DashboardServlet extends HttpServlet {
             if (type != null && type.equals("star")) {
                 responseObj = addStar(request.getParameter("starName"), request.getParameter("birthYear"), conn);
             } else if (type != null && type.equals("movie")) {
-                // TODO: call addMovie
+                responseObj = addMovie(
+                        request.getParameter("movieTitle"),
+                        request.getParameter("movieYear"),
+                        request.getParameter("movieDirector"),
+                        request.getParameter("starName"),
+                        request.getParameter("genreName"),
+                        conn
+                );
+            } else {
+                responseObj.addProperty("status", "failed");
+                responseObj.addProperty("message", "post type is invalid");
             }
+
+            out.write(responseObj.toString());
+            response.setStatus(200);
         } catch (Exception e) {
             // Write error message JSON object to output
             JsonObject jsonObject = new JsonObject();
@@ -62,13 +75,21 @@ public class DashboardServlet extends HttpServlet {
     }
 
     private JsonObject addStar(String starName, String birthYearStr, Connection conn) throws SQLException {
-        if (starName == null || birthYearStr == null)
-            return null;
+        JsonObject responseObj = new JsonObject();
+        if (starName == null) {
+            responseObj.addProperty("status", "failed");
+            responseObj.addProperty("message", "star name cannot be empty");
+            return  responseObj;
+        }
         int birthYear = 0;
         try {
-            birthYear = Integer.parseInt(birthYearStr);
+            if (birthYearStr != null) {
+                birthYear = Integer.parseInt(birthYearStr);
+            }
         } catch (Exception e) {
-            return null;
+            responseObj.addProperty("status", "failed");
+            responseObj.addProperty("message", "birth year is invalid");
+            return  responseObj;
         }
 
         String maxIdQuery = "SELECT id FROM stars ORDER BY SUBSTRING(id, 3) DESC LIMIT 1";
@@ -78,6 +99,8 @@ public class DashboardServlet extends HttpServlet {
         while (maxIdSet.next()) {
             maxId = maxIdSet.getString("id");
         }
+        maxIdStatement.close();
+        maxIdSet.close();
 
         String newStarId = "nm" + (Integer.parseInt(maxId.substring(2)) + 1);
 
@@ -86,26 +109,63 @@ public class DashboardServlet extends HttpServlet {
         insertStarStatement.setString(1, newStarId);
         insertStarStatement.setString(2, starName);
         insertStarStatement.setInt(3, birthYear);
+        insertStarStatement.executeUpdate();
+        insertStarStatement.close();
 
-        JsonObject responseObj = new JsonObject();
         responseObj.addProperty("status", "success");
         responseObj.addProperty("star_id", newStarId);
 
         return responseObj;
     }
 
-    // TODO: finish implementing
     private JsonObject addMovie(
-            String movieTitle, String movieYear,
+            String movieTitle, String movieYearStr,
             String movieDirector, String starName,
             String genreName, Connection conn
-    ) {
-        return null;
+    ) throws SQLException{
+        JsonObject responseObj = new JsonObject();
+
+        if (movieTitle == null || movieYearStr == null || movieDirector == null || starName == null || genreName == null) {
+            responseObj.addProperty("status", "failed");
+            responseObj.addProperty("message", "make sure all fields are filled");
+            return responseObj;
+        }
+
+        int movieYear = 0;
+        try {
+            movieYear = Integer.parseInt(movieYearStr);
+        } catch (Exception e) {
+            responseObj.addProperty("status", "failed");
+            responseObj.addProperty("message", "year field is invalid");
+            return responseObj;
+        }
+
+        String addMovieQuery = "{call add_movie(?, ?, ?, ?, ?)}";
+        CallableStatement addMovieStatement = conn.prepareCall(addMovieQuery);
+        addMovieStatement.setString(1, movieTitle);
+        addMovieStatement.setInt(2, movieYear);
+        addMovieStatement.setString(3, movieDirector);
+        addMovieStatement.setString(4, starName);
+        addMovieStatement.setString(5, genreName);
+        System.out.println(addMovieStatement.toString());
+
+        ResultSet idSet = addMovieStatement.executeQuery();
+        while(idSet.next()) {
+            responseObj.addProperty("movie_id", idSet.getString("movie_id"));
+            responseObj.addProperty("star_id", idSet.getString("star_id"));
+            responseObj.addProperty("genre_id", idSet.getString("genre_id"));
+        }
+
+        addMovieStatement.close();
+        idSet.close();
+        if (responseObj.isEmpty()) {
+            responseObj.addProperty("status", "failed");
+            responseObj.addProperty("message", "movie already in catalog");
+        }
+        return responseObj;
     }
 
     // Function provides metadata of database
-
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();

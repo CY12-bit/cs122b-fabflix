@@ -6,7 +6,6 @@ CREATE PROCEDURE add_movie(
     IN mTitle VARCHAR(100),
     IN mYear INTEGER,
     IN mDirector VARCHAR(100),
-    IN price FLOAT,
     IN star_name VARCHAR(100),
     IN genre_name VARCHAR(32)
 )
@@ -14,7 +13,7 @@ BEGIN
 IF (mTitle,mYear,mDirector) NOT IN (SELECT title,year,director FROM movies) THEN 	# If the movie does not exist
     INSERT into movies 
     SELECT CONCAT('tt',LPAD(CAST((MAX(CAST(SUBSTRING(id, 3) AS unsigned)) + 1) AS CHAR(10)),7,'0')),
-    mTitle,mYear,mDirector,price FROM movies; 
+    mTitle,mYear,mDirector,FLOOR(RAND()*(10-5+1)+5) FROM movies; 
     IF star_name NOT IN (SELECT DISTINCT name FROM stars) THEN
         INSERT INTO stars(id,name,birthYear) 
         SELECT CONCAT('nm',LPAD(CAST((MAX(CAST(SUBSTRING(id, 3) AS unsigned)) + 1) AS CHAR(10)),7,'0')),
@@ -29,7 +28,7 @@ IF (mTitle,mYear,mDirector) NOT IN (SELECT title,year,director FROM movies) THEN
     SELECT id INTO @genre_id FROM genres WHERE name = genre_name;
     INSERT INTO stars_in_movies(starId,movieId) VALUES (@star_id,@movie_id);
     INSERT INTO genres_in_movies(genreId, movieId) VALUES (@genre_id,@movie_id);
-	SELECT @movie_id, @star_id, @genre_id;
+	SELECT @movie_id AS movie_id, @star_id AS star_id, @genre_id AS genre_id;
 END IF;
 END $$
 DELIMITER ;
