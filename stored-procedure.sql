@@ -41,7 +41,7 @@ CREATE PROCEDURE add_star(
     IN birth_year INTEGER
 )
 BEGIN
-    IF (star_name, birth_year) NOT IN (SELECT name, birthYear FROM stars) THEN 	# If the movie does not exist
+    IF (star_name, birth_year) NOT IN (SELECT name, birthYear FROM stars) THEN
         INSERT INTO stars(id,name,birthYear)
         SELECT CONCAT('nm',LPAD(CAST((MAX(CAST(SUBSTRING(id, 3) AS unsigned)) + 1) AS CHAR(10)),7,'0')),
                star_name, birth_year
