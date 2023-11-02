@@ -10,6 +10,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @WebServlet(name = "Employee.DashboardServlet", urlPatterns = "/api/dashboard")
 public class DashboardServlet extends HttpServlet {
