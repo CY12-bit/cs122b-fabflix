@@ -33,3 +33,21 @@ IF (mTitle,mYear,mDirector) NOT IN (SELECT title,year,director FROM movies) THEN
 END IF;
 END $$
 DELIMITER ;
+
+DROP PROCEDURE IF EXISTS add_star;
+DELIMITER $$
+CREATE PROCEDURE add_star(
+    IN star_name VARCHAR(100),
+    IN birth_year INTEGER
+)
+BEGIN
+    IF (star_name, birth_year) NOT IN (SELECT name, birthYear FROM stars) THEN 	# If the movie does not exist
+        INSERT INTO stars(id,name,birthYear)
+        SELECT CONCAT('nm',LPAD(CAST((MAX(CAST(SUBSTRING(id, 3) AS unsigned)) + 1) AS CHAR(10)),7,'0')),
+               star_name, birth_year
+        FROM stars;
+
+        SELECT id AS star_id FROM stars WHERE name = star_name AND birthYear = birth_year;
+    END IF;
+END $$
+DELIMITER ;
