@@ -18,6 +18,7 @@ function handleLoginResult(resultData) {
         console.log("show error message");
         console.log(resultData["message"]);
         $("#login_error_message").text(resultData["message"]);
+        if (window.grecaptcha) grecaptcha.reset();
     }
 }
 
