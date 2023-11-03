@@ -25,6 +25,10 @@ public class MovieParser extends DefaultHandler {
     private String tempVal;
     private String tempDirector;
     private MovieObject tempMovie;
+
+    private boolean parsingGenres = false;
+    private ArrayList<String> tempGenres = new ArrayList<String>();
+
     public MovieParser() {
         myMovies = new HashMap<String,MovieObject>();
     }
@@ -60,10 +64,24 @@ public class MovieParser extends DefaultHandler {
         if (qName.equalsIgnoreCase("film")) {
             tempMovie = new MovieObject();
         }
+        else if (qName.equalsIgnoreCase("cattext")) {
+            tempVal = "[NO PARSE]";
+        }
+        else if (qName.equalsIgnoreCase("cats")) {
+            parsingGenres = true;
+        }
     }
 
     public void characters(char[] ch, int start, int length) throws SAXException {
-        tempVal = new String(ch, start, length);
+        if (parsingGenres && tempVal != "[NO PARSE]") {
+            final String[] genres = new String(ch, start, length).split(" ");
+            for (String g: genres){
+                tempGenres.add(g);
+            }
+        }
+        else {
+            tempVal = new String(ch, start, length);
+        }
     }
 
     // When the function reaches 500 movies, it will insert those movies into the database
@@ -72,7 +90,7 @@ public class MovieParser extends DefaultHandler {
         if (qName.equalsIgnoreCase("fid")) {
             tempMovie.setId(tempVal);
         }
-        if (qName.equalsIgnoreCase("dirname")) {
+        else if (qName.equalsIgnoreCase("dirname")) {
             tempDirector = tempVal;
         }
         else if (qName.equalsIgnoreCase("t")) {
@@ -87,7 +105,7 @@ public class MovieParser extends DefaultHandler {
             // Make sure we don't add duplicates
             if (!myMovies.containsKey(tempMovie.getId())) {
                 myMovies.put(tempMovie.getId(),tempMovie);
-                System.out.println(tempMovie.toString());
+                //System.out.println(tempMovie.toString());
 
                 // If we reached 500 movies!
                 if (myMovies.size() == 500) {
@@ -96,6 +114,11 @@ public class MovieParser extends DefaultHandler {
                 }
             }
 
+        }
+        else if (qName.equalsIgnoreCase("cats")) {
+            parsingGenres = false;
+            tempMovie.addGenres(tempGenres);
+            tempGenres.clear();
         }
     }
 
