@@ -129,7 +129,8 @@ public class MoviesListServlet extends HttpServlet {
                     limit = Integer.parseInt(records);
             } catch (Exception e) {System.out.println(e.getMessage());}
 
-            movie_query += orderByStr + " LIMIT " + (limit + 1) + " OFFSET " + (limit*pageNum);
+            movie_query += orderByStr + "LIMIT ? OFFSET ?";
+            // movie_query += orderByStr + " LIMIT " + (limit + 1) + " OFFSET " + (limit*pageNum);
             
             PreparedStatement prepared_movie_query = conn.prepareStatement(movie_query);
 
@@ -143,6 +144,9 @@ public class MoviesListServlet extends HttpServlet {
                     }
                 }
             }
+            prepared_movie_query.setInt(parameter_counter,limit+1);
+            prepared_movie_query.setInt(parameter_counter+1,limit*pageNum);
+
             ResultSet movie_rs = prepared_movie_query.executeQuery();
 
             JsonArray movieList = new JsonArray();
