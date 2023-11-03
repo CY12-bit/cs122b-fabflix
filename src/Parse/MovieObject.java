@@ -29,7 +29,10 @@ public class MovieObject {
     public String getTitle() { return title; }
 
     // Setters
-    public void setId(String id) { this.mid = id; }
+    public void setId(String id) {
+        id = id.strip();
+        this.mid = id;
+    }
     public void setDirector(String direct) {
         direct = direct.strip();
         if (direct.contains("Unknown")||direct.contains("unknown")||direct.contains("UnYear")) {
