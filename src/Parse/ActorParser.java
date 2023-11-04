@@ -2,6 +2,7 @@ package Parse;
 
 
 import java.io.IOException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -46,6 +47,9 @@ public class ActorParser extends DefaultHandler {
             //parse the file and also register this class for call backs
             sp.parse("actors63.xml", this);
 
+            // insert remaining
+            insertBatch();
+
         } catch (SAXException se) {
             se.printStackTrace();
         } catch (ParserConfigurationException pce) {
@@ -68,7 +72,51 @@ public class ActorParser extends DefaultHandler {
         tempVal = new String(ch, start, length);
     }
 
+    private int getHighestId(Connection connection) throws SQLException {
+        String highestIdQuery = "SELECT id FROM stars " +
+                "ORDER BY SUBSTRING(id, 3) DESC " +
+                "LIMIT 1";
+        PreparedStatement highestIdStatement = connection.prepareStatement(highestIdQuery);
+        ResultSet highestId = highestIdStatement.executeQuery();
+        String idStr = "";
+        while (highestId.next()) {
+            idStr = highestId.getString("id");
+        }
+        return Integer.parseInt(idStr.substring(2));
+    }
+
+    private String buildQuery() {
+        String query = "INSERT INTO stars (id, name, birthYear) VALUES " + "(?, ?, ?), ".repeat(actorList.size());
+        return query.substring(0, query.length()-2);
+    }
+
     private void insertBatch() {
+        Connection connection = null;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(
+                    "jdbc:" + DBInfo.dbtype + "://localhost:3306/" + DBInfo.dbname,
+                    DBInfo.username, DBInfo.password);
+
+            if (connection != null) {
+                int nextId = getHighestId(connection) + 1;
+                String insertQuery = buildQuery();
+                PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
+                int index = 1;
+                for (Actor actor: actorList) {
+                    insertStatement.setString(index, "nm"+nextId);
+                    insertStatement.setString(index+1, actor.getName());
+                    insertStatement.setInt(index+2, actor.getBirthYear());
+
+                    nextId++;
+                    index += 3;
+                }
+                insertStatement.executeUpdate();
+
+            }
+        } catch (Exception e) {
+            System.out.println("batch failed: " + e.getMessage());
+        }
         //get the current max id
 
         // query = insert into stars(id, name, birthyear) values
@@ -85,7 +133,9 @@ public class ActorParser extends DefaultHandler {
                 actorList.add(tempActor);
             } else {
                 // insert into db
+                insertBatch();
                 // clear arraylist
+                actorList.clear();
             }
             System.out.println(tempActor.toString());
         } else if (qName.equalsIgnoreCase("stagename")) {
