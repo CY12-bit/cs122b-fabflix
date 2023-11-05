@@ -86,8 +86,6 @@ public class MovieParser extends DefaultHandler {
         }
     }
 
-    // When the function reaches 500 movies, it will insert those movies into the database
-    // and then clear the movie list for the next chunk
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (qName.equalsIgnoreCase("fid")) {
             tempMovie.setId(tempVal);
@@ -220,7 +218,6 @@ public class MovieParser extends DefaultHandler {
                             nextGenreId++;
                         }
                     }
-
                 }
 
                 // Execute import into movies
