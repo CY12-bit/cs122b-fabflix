@@ -1,9 +1,10 @@
 package Parse;
 
 import java.io.IOException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -14,11 +15,9 @@ import org.xml.sax.SAXException;
 
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
-
 public class MovieParser extends DefaultHandler {
+
+    private Connection parser_conn = null;
 
     HashMap<String,MovieObject> myMovies;
 
@@ -46,7 +45,7 @@ public class MovieParser extends DefaultHandler {
             sp.parse("mains243.xml",this);
 
             // If we have any remaining movies in the set, we add them to the database
-            insertMovies();
+            insertBatch();
         }
         catch (SAXException se) {
             se.printStackTrace();
@@ -99,9 +98,17 @@ public class MovieParser extends DefaultHandler {
         else if (qName.equalsIgnoreCase("year")) {
             tempMovie.setYear(tempVal);
         }
+        else if (qName.equalsIgnoreCase("cats")) {
+            parsingGenres = false;
+            tempMovie.addGenres(tempGenres);
+            tempGenres.clear();
+        }
         else if (qName.equalsIgnoreCase("film")) {
             tempMovie.setDirector(tempDirector);
-
+            // Check if there are genres. Otherwise, mark it as Uncategorized
+            if (tempMovie.getGenres().isEmpty()) {
+                tempMovie.addGenre("ctcxx");
+            }
             // Make sure we don't add duplicates
             if (!myMovies.containsKey(tempMovie.getId())) {
                 myMovies.put(tempMovie.getId(),tempMovie);
@@ -109,29 +116,127 @@ public class MovieParser extends DefaultHandler {
 
                 // If we reached 500 movies!
                 if (myMovies.size() == 500) {
-                    insertMovies();
+                    insertBatch();
                     myMovies.clear();
                 }
             }
-
-        }
-        else if (qName.equalsIgnoreCase("cats")) {
-            parsingGenres = false;
-            tempMovie.addGenres(tempGenres);
-            tempGenres.clear();
         }
     }
 
-    private void insertMovies() {
+    private void establishConnection() throws Exception {
+        if (parser_conn == null) {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            parser_conn = DriverManager.getConnection(
+                    "jdbc:" + DBInfo.dbtype + "://localhost:3306/" + DBInfo.dbname,
+                    DBInfo.username, DBInfo.password);
+            parser_conn.setAutoCommit(false);
+        }
+    }
+    private void closeConnection() throws SQLException {
+        if (parser_conn != null) {
+            parser_conn.close();
+        }
+    }
+
+    private int getHighestGenreID() throws SQLException {
+        String highestIDQuery = "SELECT MAX(id) as id FROM genres";
+
+        Statement highestIdStatement = parser_conn.createStatement();
+        ResultSet highestId = highestIdStatement.executeQuery(highestIDQuery);
+        int idInt = -1;
+        while (highestId.next()) {
+            idInt = highestId.getInt("id");
+        }
+        highestId.close();
+        highestIdStatement.close();
+
+        return idInt;
+
+    }
+
+    private HashMap<String,Integer> getAllGenres() throws SQLException {
+        HashMap<String,Integer> all_genres = new HashMap<String,Integer>();
+        String allGenresQuery = "SELECT DISTINCT name,id FROM genres";
+        ResultSet genre_results = parser_conn.createStatement().executeQuery(allGenresQuery);
+        while (genre_results.next()) {
+            all_genres.put(genre_results.getString("name"),genre_results.getInt("id"));
+        }
+        return all_genres;
+    }
+
+    private void insertBatch() {
         // Check if the movie already exists in the database
             // If it's a movie that was from the XML, then ignore
             // If it's a movie that was from the original db, then don't insert it
         // Insert the movies into the database
+        // Insert into genres and
         // Print out that it was successful
+        // Since it's in batches, don't want to repeat connecting to the db over and over again
+        // Or running the same queries again and again
+        try {
+            establishConnection();
+            if (parser_conn != null) {
+                int nextGenreId = getHighestGenreID() + 1;
+                // I should consider the case where the movie is already in the database but the actors need to be assigned to it
+                // I should keep the XML's movieIds
+
+                String movieQuery = "INSERT INTO movies (id,title,year,director) VALUES " + "(?,?,?,?), ".repeat(myMovies.size());
+                movieQuery = movieQuery.substring(0, movieQuery.length()-2);
+                PreparedStatement insertStatement = parser_conn.prepareStatement(movieQuery);
+
+                int index = 1;
+
+                // Retrieve all current genres in the moviedb
+                HashMap<String,Integer> all_genres = getAllGenres();
+
+                String genre_query = "INSERT INTO genres (id,name) VALUES ";
+                String genre_in_movies_query = "INSERT INTO genres_in_movies (genreId,movieId) VALUES ";
+
+                for (Map.Entry<String, MovieObject> movie : myMovies.entrySet()) {
+                    insertStatement.setString(index,movie.getKey());
+                    insertStatement.setString(index+1,movie.getValue().getTitle());
+                    insertStatement.setInt(index+2,movie.getValue().getYear());
+                    insertStatement.setString(index+3,movie.getValue().getDirector());
+
+                    // Generate queries to insert values into genre and genre_in_movies
+                    for (String g : movie.getValue().getGenres()) {
+                        if (!all_genres.containsKey(g)) {
+                            genre_query += String.format("(%1$d,%2$s), ",nextGenreId, g);
+                            all_genres.put(g,nextGenreId);
+                        }
+                        genre_in_movies_query += String.format("(%1$d,%2$s), ", all_genres.get(g), movie.getKey());
+                        nextGenreId++;
+                    }
+                    index+=4;
+                }
+                // Execute import into movies
+                insertStatement.executeLargeBatch();
+                Statement genre_stmnt = parser_conn.createStatement();
+                if (!genre_query.equals("INSERT INTO genres (id,name) VALUES ")) {
+                    genre_query = genre_query.substring(0, genre_query.length()-2);
+                    genre_stmnt.addBatch(genre_query);
+                }
+
+                genre_in_movies_query = genre_in_movies_query.substring(0, genre_in_movies_query.length()-2);
+                genre_stmnt.addBatch(genre_in_movies_query);
+
+                genre_stmnt.executeBatch();
+
+                parser_conn.commit();
+
+                insertStatement.close();
+                genre_stmnt.close();
+
+                System.out.println("Successfully Inserted Batch");
+            }
+        } catch (Exception e) {
+            System.out.println("batch failed: " + e.getMessage());
+        }
     }
 
     public static void main(String[] args) {
         MovieParser spe = new MovieParser();
         spe.runParser();
+
     }
 }

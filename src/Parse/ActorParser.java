@@ -74,7 +74,7 @@ public class ActorParser extends DefaultHandler {
 
     private int getHighestId(Connection connection) throws SQLException {
         String highestIdQuery = "SELECT id FROM stars " +
-                "ORDER BY SUBSTRING(id, 3) DESC " +
+                "ORDER BY SUBSTRING(id, 3) DESC " + // Colin: Doesn't this sort the strings by highest to lowest?
                 "LIMIT 1";
         PreparedStatement highestIdStatement = connection.prepareStatement(highestIdQuery);
         ResultSet highestId = highestIdStatement.executeQuery();
@@ -82,6 +82,7 @@ public class ActorParser extends DefaultHandler {
         while (highestId.next()) {
             idStr = highestId.getString("id");
         }
+        // Colin: Does the prepared statement need to be closed?
         return Integer.parseInt(idStr.substring(2));
     }
 

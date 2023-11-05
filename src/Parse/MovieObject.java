@@ -5,14 +5,12 @@ import java.util.HashMap;
 
 public class MovieObject {
 
-
-
     private final static HashMap<String, String> genre_map = new HashMap<String, String>() {
         {
             put("susp", "Thriller"); put("ctcxx","Uncategorized"); put("dramn","Drama");
-            put("cnr", "Cops and Robbers"); put("cnrb", "Cops and Robbers"); put("camp", "camp");
-            put("actn","Action"); put("cart","Animation"); put("comdx","comedy");
-            put("sports","sports"); put("sram>","Drama");put("drama","drama"); put("draam","Drama"); put("dram>","Drama");
+            put("cnr", "Cops and Robbers"); put("cnrb", "Cops and Robbers"); put("camp", "Camp");
+            put("actn","Action"); put("cart","Animation"); put("comdx","Comedy");
+            put("sports","Sports"); put("sram>","Drama");put("drama","Drama"); put("draam","Drama"); put("dram>","Drama");
             put("faml", "Family"); put("hist", "History"); put("fant","Fantasy");
             put("dram","Drama"); put("west","Western"); put("myst","Mystery"); put("sxfi","Sci-Fi");
             put("s.f.", "Sci-Fi"); put("advt","Adventure"); put("horr","Horror"); put("hor","Horror"); put("mystp","Mystery");
@@ -23,7 +21,7 @@ public class MovieObject {
             put("epic","Epic"); put("scfi","Sci-Fi"); put("surl","Sureal"); put("avga", "Avant Garde");
             put("crim","Crime"); put("surr","surreal"); put("scif","Sci-Fi");
             put("dramd","Drama"); put("muscl","Musical"); put("surreal","surreal"); put("muusc","Musical");
-            put("tvmini","TV miniseries"); put("musical","Musical");put("ctxxx","Uncategorized"); put("cnrbb","Cops and Robbers");
+            put("tvmini","TV Miniseries"); put("musical","Musical");put("ctxxx","Uncategorized"); put("cnrbb","Cops and Robbers");
         }
     };
 
@@ -46,7 +44,7 @@ public class MovieObject {
     public String getId() { return mid; }
     public String getDirector() { return director; }
     public String getTitle() { return title; }
-    public ArrayList<String> getGenres() {return genres; }
+    public ArrayList<String> getGenres() { return genres; }
 
     // Setters
     public void setId(String id) {
@@ -88,15 +86,18 @@ public class MovieObject {
         this.year = Integer.parseInt(yr);
     }
 
+    public void addGenre(String g) {
+        g = g.strip();
+        if (genre_map.containsKey(g.toLowerCase())) {
+            genres.add(genre_map.get(g.toLowerCase()));
+        }
+        else {
+            System.out.println("Unknown genre: "+ g);
+        }
+    }
     public void addGenres(final ArrayList<String> tempGenres) {
         for (String g : tempGenres) {
-            g = g.strip();
-            if (genre_map.containsKey(g.toLowerCase())) {
-                genres.add(genre_map.get(g.toLowerCase()));
-            }
-            else {
-                System.out.println("Unknown genre: "+ g);
-            }
+            addGenre(g);
         }
     }
 
