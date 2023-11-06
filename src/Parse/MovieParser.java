@@ -46,7 +46,7 @@ public class MovieParser extends DefaultHandler {
             establishConnection();
 
             // Parse and import XML data into moviedb
-            sp.parse("mains243 (Light).xml",this);
+            sp.parse("mains243.xml",this);
 
             // If we have any remaining movies in the set, we add them to the database
             insertBatch();
