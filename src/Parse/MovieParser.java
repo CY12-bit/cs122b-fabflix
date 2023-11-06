@@ -42,10 +42,16 @@ public class MovieParser extends DefaultHandler {
         try {
             SAXParser sp = spf.newSAXParser();
 
+            // Establishes Database Connection
+            establishConnection();
+
+            // Parse and import XML data into moviedb
             sp.parse("mains243 (Light).xml",this);
 
             // If we have any remaining movies in the set, we add them to the database
             insertBatch();
+
+            // Closes database connection
             closeConnection();
         }
         catch (SAXException se) {
@@ -120,6 +126,7 @@ public class MovieParser extends DefaultHandler {
                     insertBatch();
                     myMovies.clear();
                 }
+
             }
         }
     }
@@ -130,7 +137,9 @@ public class MovieParser extends DefaultHandler {
             parser_conn = DriverManager.getConnection(
                     "jdbc:" + DBInfo.dbtype + "://localhost:3306/" + DBInfo.dbname,
                     DBInfo.username, DBInfo.password);
+            parser_conn.setAutoCommit(false);
         }
+
     }
     private void closeConnection() throws SQLException {
         if (parser_conn != null) {
@@ -186,59 +195,58 @@ public class MovieParser extends DefaultHandler {
         // Since it's in batches, don't want to repeat connecting to the db over and over again
         // Or running the same queries again and again
         try {
-            establishConnection();
-            if (parser_conn != null) {
-                int nextGenreId = getHighestGenreID() + 1;
-                // I should consider the case where the movie is already in the database but the actors need to be assigned to it
-                // I should keep the XML's movieIds
+            int nextGenreId = getHighestGenreID() + 1;
+            // I should consider the case where the movie is already in the database but the actors need to be assigned to it
+            // I should keep the XML's movieIds
 
-                String movieQuery = "INSERT INTO movies (id,title,year,director) VALUES ";
+            String movieQuery = "INSERT INTO movies (id,title,year,director) VALUES ";
 
-                Statement insertStatement = parser_conn.createStatement();
+            Statement insertStatement = parser_conn.createStatement();
 
-                // Retrieve all current genres in the moviedb
-                HashMap<String,Integer> all_genres = getAllGenres();
+            // Retrieve all current genres in the moviedb
+            HashMap<String,Integer> all_genres = getAllGenres();
 
-                String genre_query = "INSERT INTO genres (id,name) VALUES ";
-                String genre_in_movies_query = "INSERT INTO genres_in_movies (genreId,movieId) VALUES ";
+            String genre_query = "INSERT INTO genres (id,name) VALUES ";
+            String genre_in_movies_query = "INSERT INTO genres_in_movies (genreId,movieId) VALUES ";
 
-                for (Map.Entry<String, MovieObject> movie : myMovies.entrySet()) {
-                    // Need to check if the movie is already in the original database
-                    if (!checkMovie(movie.getValue())) {
-                        movieQuery += String.format("(%1$s,%2$s,%3$d,%4$s), ",movie.getKey(),movie.getValue().getTitle(),
-                                movie.getValue().getYear(),movie.getValue().getDirector());
+            for (Map.Entry<String, MovieObject> movie : myMovies.entrySet()) {
+                // Need to check if the movie is already in the original database
+                if (!checkMovie(movie.getValue())) {
+                    movieQuery += String.format("('%1$s','%2$s',%3$d,'%4$s'), ",movie.getKey(),movie.getValue().getTitle(),
+                            movie.getValue().getYear(),movie.getValue().getDirector());
 
-                        // Generate queries to insert values into genre and genre_in_movies
-                        for (String g : movie.getValue().getGenres()) {
-                            if (!all_genres.containsKey(g)) {
-                                genre_query += String.format("(%1$d,%2$s), ",nextGenreId, g);
-                                all_genres.put(g,nextGenreId);
-                            }
-                            genre_in_movies_query += String.format("(%1$d,%2$s), ", all_genres.get(g), movie.getKey());
-                            nextGenreId++;
+                    // Generate queries to insert values into genre and genre_in_movies
+                    for (String g : movie.getValue().getGenres()) {
+                        if (!all_genres.containsKey(g)) {
+                            genre_query += String.format("(%1$d,'%2$s'), ",nextGenreId, g);
+                            all_genres.put(g,nextGenreId);
                         }
+                        genre_in_movies_query += String.format("(%1$d,'%2$s'), ", all_genres.get(g), movie.getKey());
+                        nextGenreId++;
                     }
                 }
-
-                // Execute import into movies
-                if (!movieQuery.equals("INSERT INTO movies (id,title,year,director) VALUES ")) {
-                    movieQuery = movieQuery.substring(0, movieQuery.length()-2);
-                    insertStatement.addBatch(movieQuery);
-                    if (!genre_query.equals("INSERT INTO genres (id,name) VALUES ")) {
-                        genre_query = genre_query.substring(0, genre_query.length()-2);
-                        insertStatement.addBatch(genre_query);
-                    }
-                    genre_in_movies_query = genre_in_movies_query.substring(0, genre_in_movies_query.length()-2);
-                    insertStatement.addBatch(genre_in_movies_query);
-                }
-                insertStatement.executeLargeBatch();
-
-                parser_conn.commit();
-
-                insertStatement.close();
-
-                System.out.println("Successfully Inserted Batch");
             }
+
+            // Execute import into movies
+            if (!movieQuery.equals("INSERT INTO movies (id,title,year,director) VALUES ")) {
+                movieQuery = movieQuery.substring(0, movieQuery.length()-2) + ";";
+
+                insertStatement.addBatch(movieQuery);
+                if (!genre_query.equals("INSERT INTO genres (id,name) VALUES ")) {
+                    genre_query = genre_query.substring(0, genre_query.length()-2) + ";";
+                    insertStatement.addBatch(genre_query);
+                }
+                genre_in_movies_query = genre_in_movies_query.substring(0, genre_in_movies_query.length()-2) + ";";
+                insertStatement.addBatch(genre_in_movies_query);
+            }
+            insertStatement.executeBatch();
+
+            parser_conn.commit();
+
+            insertStatement.close();
+
+            System.out.println("Successfully Inserted Batch");
+
         } catch (Exception e) {
             System.out.println("batch failed: " + e.getMessage());
         }
