@@ -1,17 +1,18 @@
-package Login;
+package Employee;
 
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
 /**
  * Servlet Filter implementation class d.LoginFilter
  */
-@WebFilter(filterName = "Login.LoginFilter", urlPatterns = "/*")
-public class LoginFilter implements Filter {
+@WebFilter(filterName = "Employee.EmployeeLoginFilter", urlPatterns = "/_dashboard/*")
+public class EmployeeLoginFilter implements Filter {
     private final ArrayList<String> allowedURIs = new ArrayList<>();
 
     /**
@@ -32,9 +33,9 @@ public class LoginFilter implements Filter {
         }
 
         // Redirect to login page if the "user" attribute doesn't exist in session
-        if (httpRequest.getSession().getAttribute("user") == null && httpRequest.getSession().getAttribute("employee") == null) {
+        if (httpRequest.getSession().getAttribute("employee") == null) {
             // cs122b-projects is the path on aws
-            httpResponse.sendRedirect("/cs122b_projects_war/login.html");
+            httpResponse.sendRedirect("/cs122b_projects_war/_dashboard/login.html");
         } else {
             chain.doFilter(request, response);
         }
@@ -52,7 +53,6 @@ public class LoginFilter implements Filter {
     public void init(FilterConfig fConfig) {
         allowedURIs.add("login.html");
         allowedURIs.add("login.js");
-        allowedURIs.add("api/login");
         allowedURIs.add("login.css");
         allowedURIs.add("api/employee/login");
     }
