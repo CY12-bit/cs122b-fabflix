@@ -129,6 +129,9 @@ public class MovieParser extends DefaultHandler {
 
             }
         }
+        else if (qName.equalsIgnoreCase("directorfilms")) {
+            tempDirector = "Unknown"; // Hopefully, no one is named Unknown in real life
+        }
     }
 
     private void establishConnection() throws Exception {
