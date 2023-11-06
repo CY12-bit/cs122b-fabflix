@@ -25,17 +25,48 @@ public class ActorParser extends DefaultHandler {
     int maxRows;
     List<Actor> actorList;
 
+    Connection connection;
+    int nextId;
+
     public ActorParser() {
         tempActor = null;
         maxRows = 500;
         actorList = new ArrayList<>(maxRows);
+        connection = null;
+        startConnection();
+        nextId = 0;
+    }
+
+    private void startConnection() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(
+                    "jdbc:" + DBInfo.dbtype + "://localhost:3306/" + DBInfo.dbname,
+                    DBInfo.username, DBInfo.password);
+        } catch (Exception e) {
+            connection = null;
+        }
+
+    }
+
+    private void closeConnection() {
+        try {
+            if (connection != null)
+                connection.close();
+        } catch (Exception ignore) {}
+
     }
 
     public void runExample() {
-        parseDocument();
+        try {
+            nextId = getHighestId() + 1;
+            parseDocument();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    private void parseDocument() {
+    private void parseDocument() throws SQLException {
 
         //get a factory
         SAXParserFactory spf = SAXParserFactory.newInstance();
@@ -45,10 +76,11 @@ public class ActorParser extends DefaultHandler {
             SAXParser sp = spf.newSAXParser();
 
             //parse the file and also register this class for call backs
-            sp.parse("actors63.xml", this);
+            sp.parse("actors.xml", this);
 
             // insert remaining
             insertBatch();
+            closeConnection();
 
         } catch (SAXException se) {
             se.printStackTrace();
@@ -72,7 +104,7 @@ public class ActorParser extends DefaultHandler {
         tempVal = new String(ch, start, length);
     }
 
-    private int getHighestId(Connection connection) throws SQLException {
+    private int getHighestId() throws SQLException {
         String highestIdQuery = "SELECT id FROM stars " +
                 "ORDER BY SUBSTRING(id, 3) DESC " + // Colin: Doesn't this sort the strings by highest to lowest?
                 "LIMIT 1";
@@ -91,51 +123,35 @@ public class ActorParser extends DefaultHandler {
         return query.substring(0, query.length()-2);
     }
 
-    private void insertBatch() {
-        Connection connection = null;
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection(
-                    "jdbc:" + DBInfo.dbtype + "://localhost:3306/" + DBInfo.dbname,
-                    DBInfo.username, DBInfo.password);
-
-            if (connection != null) {
-                int nextId = getHighestId(connection) + 1;
-                String insertQuery = buildQuery();
-                PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
-                int index = 1;
-                for (Actor actor: actorList) {
-                    insertStatement.setString(index, "nm"+nextId);
-                    insertStatement.setString(index+1, actor.getName());
+    private void insertBatch() throws SQLException{
+        if (connection != null) {
+            String insertQuery = buildQuery();
+            PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
+            int index = 1;
+            for (Actor actor: actorList) {
+                insertStatement.setString(index, actor.getId());
+                insertStatement.setString(index+1, actor.getName());
+                if (actor.getBirthYear() != null)
                     insertStatement.setInt(index+2, actor.getBirthYear());
+                else
+                    insertStatement.setString(index+2, null);
 
-                    nextId++;
-                    index += 3;
-                }
-                insertStatement.executeUpdate();
-
+                index += 3;
             }
-        } catch (Exception e) {
-            System.out.println("batch failed: " + e.getMessage());
-        }
-        //get the current max id
+            insertStatement.executeUpdate();
 
-        // query = insert into stars(id, name, birthyear) values
-        // for each actor in actorList
-        //    maxid++;
-        //    query += (maxid, actor.name, actor.birthYear),
-        // remove extra comma
-        // execute update
+        }
     }
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (qName.equalsIgnoreCase("actor")) {
             if (actorList.size() < maxRows) {
+                tempActor.setId("nm" + nextId++);
                 actorList.add(tempActor);
             } else {
-                // insert into db
-                insertBatch();
-                // clear arraylist
+                try {
+                    insertBatch();
+                } catch (Exception e) { System.out.println(e.getMessage()); }
                 actorList.clear();
             }
             System.out.println(tempActor.toString());

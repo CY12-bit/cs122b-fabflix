@@ -3,9 +3,11 @@ package Parse;
 public class Actor {
     String name;
     Integer birthYear;
+    String id;
     public Actor() {
         this.name = "";
         this.birthYear = null;
+        this.id = null;
     }
 
     public String getName() {
@@ -29,11 +31,20 @@ public class Actor {
         this.birthYear = birthYear;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "Actor{" +
                 "name='" + name + '\'' +
                 ", birthYear=" + birthYear +
+                ", id='" + id + '\'' +
                 '}';
     }
 }
