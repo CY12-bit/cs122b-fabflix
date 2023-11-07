@@ -17,10 +17,10 @@ public class MovieObject {
             put("romt","Romance"); put("romt.","Romance"); put("comd","Comedy"); put("musc","Musical");
             put("docu","Documentary"); put("porn", "Adult"); put("noir","Black");
             put("biop","Biological Picture"); put("biopp","Biological Picture"); put("tv","TV Show"); put("tvs","TV series");
-            put("tvm","TV miniseries"); put("ctxx","Uncategorized"); put("disa","Diaster");
-            put("epic","Epic"); put("scfi","Sci-Fi"); put("surl","Sureal"); put("avga", "Avant Garde");
-            put("crim","Crime"); put("surr","surreal"); put("scif","Sci-Fi");
-            put("dramd","Drama"); put("muscl","Musical"); put("surreal","surreal"); put("muusc","Musical");
+            put("tvm","TV Miniseries"); put("ctxx","Uncategorized"); put("disa","Disaster");
+            put("epic","Epic"); put("scfi","Sci-Fi"); put("surl","Surreal"); put("avga", "Avant Garde");
+            put("crim","Crime"); put("surr","Surreal"); put("scif","Sci-Fi");
+            put("dramd","Drama"); put("muscl","Musical"); put("surreal","Surreal"); put("muusc","Musical");
             put("tvmini","TV Miniseries"); put("musical","Musical");put("ctxxx","Uncategorized"); put("cnrbb","Cops and Robbers");
         }
     };
