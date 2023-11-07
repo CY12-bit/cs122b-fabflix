@@ -35,9 +35,7 @@ public class MovieObject {
 
     private ArrayList<String> genres;
 
-    public MovieObject() {
-        genres = new ArrayList<String>();
-    }
+    public MovieObject() { genres = new ArrayList<String>(); }
 
     // Getters
     public int getYear() { return year; }
@@ -49,6 +47,7 @@ public class MovieObject {
     // Setters
     public void setId(String id) {
         id = id.strip();
+        id = id.replaceAll("[\\W]","");
         this.mid = id;
     }
     public void setDirector(String direct) {
@@ -100,6 +99,7 @@ public class MovieObject {
             addGenre(g);
         }
     }
+
 
     @Override
     public String toString() {
