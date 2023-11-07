@@ -149,16 +149,6 @@ public class MovieParser extends DefaultHandler {
                 System.out.println("Duplicate Movie in XML: " + tempMovie.getTitle());
             }
 
-            /*
-            if (!myMovies.containsKey(tempMovie.getId())) {
-                myMovies.put(tempMovie.getId(),new HashMap<String,MovieObject>(){{put(tempMovie.getTitle(),tempMovie);}});
-                movie_counter++;
-            } // If there was a movie with the same ID but not the same title, still add it to the movie list
-            else if (!myMovies.get(tempMovie.getId()).containsKey(tempMovie.getTitle())) {
-                myMovies.get(tempMovie.getId()).put(tempMovie.getTitle(),tempMovie);
-                movie_counter++;
-            }
-            */
         }
         else if (qName.equalsIgnoreCase("directorfilms")) {
             // If we reached 600 movies
@@ -284,10 +274,10 @@ public class MovieParser extends DefaultHandler {
         }
     }
 
-    public HashMap<String,String> getMovieCollection() {
-        HashMap<String, String> movie_id_pairs = new HashMap<String, String>();
+    public HashMap<String,String[]> getMovieCollection() {
+        HashMap<String, String[]> movie_id_pairs = new HashMap<String, String[]>();
         for (final MovieObject m : myMovies) {
-            movie_id_pairs.put(m.getId(),m.getTitle());
+            movie_id_pairs.put(m.getId(), new String[]{m.getTitle(), m.getDirector()});
         }
         return movie_id_pairs;
     }
