@@ -239,16 +239,18 @@ public class MovieParser extends DefaultHandler {
 
                     // Generate queries to insert values into genre and genre_in_movies
                     for (String g : movie.getGenres()) {
+                        // If the genre doesn't exist, we add an insert query with the appropriate id
                         if (!all_genres.containsKey(g)) {
                             genre_prep.setInt(1,nextGenreId);
                             genre_prep.setString(2,g);
                             genre_prep.addBatch();
                             all_genres.put(g,nextGenreId);
+                            nextGenreId++;
                         }
                         genre_in_movie_prep.setInt(1,all_genres.get(g));
                         genre_in_movie_prep.setString(2,movie.getId());
                         genre_in_movie_prep.addBatch();
-                        nextGenreId++;
+
                     }
                 }
                 else {
