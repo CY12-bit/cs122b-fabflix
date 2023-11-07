@@ -131,7 +131,7 @@ public class MovieParser extends DefaultHandler {
             }
 
             // Check if there was a movie with the same id. If not, add the new movie to the list
-            final String movieIdentifier = tempMovie.getTitle()+tempMovie.getDirector()+tempMovie.getYear();
+            final String movieIdentifier = tempMovie.getTitle()+"|"+tempMovie.getDirector()+"|"+tempMovie.getYear();
 
             if(!movieIdGroups.containsKey(tempMovie.getId())) {
                 myMovies.add(tempMovie);
