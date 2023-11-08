@@ -106,7 +106,7 @@ public class ActorParser extends DefaultHandler {
 
     private int getHighestId() throws SQLException {
         String highestIdQuery = "SELECT id FROM stars " +
-                "ORDER BY SUBSTRING(id, 3) DESC " + // Colin: Doesn't this sort the strings by highest to lowest?
+                "ORDER BY SUBSTRING(id, 3) DESC " +
                 "LIMIT 1";
         PreparedStatement highestIdStatement = connection.prepareStatement(highestIdQuery);
         ResultSet highestId = highestIdStatement.executeQuery();
