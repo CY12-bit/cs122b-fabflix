@@ -140,6 +140,7 @@ public class MovieParser extends DefaultHandler {
                 movie_counter++;
             }
             else if (!movieIdGroups.get(tempMovie.getId()).contains(movieIdentifier)) {
+                System.out.print("Duplicate movie ID but different movie information. Creating new id...");
                 movieIdGroups.get(tempMovie.getId()).add(movieIdentifier);
                 tempMovie.setId(tempMovie.getId()+"_"+(movieIdGroups.get(tempMovie.getId()).size()-1));
                 myMovies.add(tempMovie);
@@ -191,7 +192,6 @@ public class MovieParser extends DefaultHandler {
         highestIdStatement.close();
 
         return idInt;
-
     }
 
     private HashMap<String,Integer> getAllGenres() throws SQLException {
@@ -215,8 +215,6 @@ public class MovieParser extends DefaultHandler {
         movie_stmt.setString(4,baseId+"%");
         return movie_stmt.executeQuery().next();
     }
-
-
 
     private void insertBatch() {
         try {
