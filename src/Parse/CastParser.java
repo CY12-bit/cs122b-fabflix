@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 
@@ -19,7 +18,6 @@ import Parse.Actor;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.Result;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -48,8 +46,8 @@ public class CastParser extends DefaultHandler {
                     "jdbc:" + DBInfo.dbtype + "://localhost:3306/" + DBInfo.dbname,
                     DBInfo.username, DBInfo.password);
             parser_conn.setAutoCommit(false);
-            movie_stmt = parser_conn.prepareStatement("INSERT INTO stars_in_movies(starId,movieId) VALUES (?,?);");
-            star_stmt = parser_conn.prepareStatement("INSERT INTO stars(id,name) VALUES (?,?)");
+            movie_stmt = parser_conn.prepareStatement("INSERT INTO stars_in_movies(movieId,starId) VALUES (?,?);");
+            star_stmt = parser_conn.prepareStatement("INSERT INTO stars(id,name) VALUES (?,?);");
         }
     }
 
@@ -68,20 +66,23 @@ public class CastParser extends DefaultHandler {
     // E.g. Lost in Translation was already in the movie db
     // If there are multiple movies with the same triple, check their ids for most matching;
     private String[] getMovieIfExists(final String id, final String t, final String d) throws SQLException {
-        String movieQuery = "SELECT id,year FROM movies WHERE title = ? AND director = ?" +
-                " AND (LENGTH(id) == 9 OR id LIKE ?) LIMIT 1";
+        String movieQuery = "SELECT id, year FROM movies WHERE title = ? AND director = ?" +
+                " AND (LENGTH(id) = 9 OR id LIKE ?) LIMIT 1";
         PreparedStatement movie_stmt = parser_conn.prepareStatement(movieQuery);
         movie_stmt.setString(1,t);
         movie_stmt.setString(2,d);
         movie_stmt.setString(3,id+"%");
         ResultSet movie_results = movie_stmt.executeQuery();
         String[] movie_info = null;
-        if (movie_results.isBeforeFirst()) {
-            movie_results.last();
-            if (movie_results.getRow() > 1) {
+        int counter = 1;
+        while (movie_results.next()) {
+            if (counter > 1) {
                 System.out.println("More than One Result for: " + id + ", " + t);
             }
-            movie_info = new String[]{movie_results.getString("id"), Integer.toString(movie_results.getInt("year"))};
+            else if (counter == 1) {
+                movie_info = new String[]{movie_results.getString("id"), Integer.toString(movie_results.getInt("year"))};
+            }
+            counter++;
         }
 
         return movie_info;
@@ -90,22 +91,39 @@ public class CastParser extends DefaultHandler {
     // Function checks if the star is already in the database
     // Checks their name and date of birth
     // If it returns multiple people (e.g. John Howard), then returns the first star mentioned?
-    private String getStarIfExists(final String starName, final Integer movie_year) throws SQLException {
+    private String getStarIfExists() throws SQLException {
         String starQuery;
         PreparedStatement select_star_stmt;
-        if (movie_year != null) {
-            starQuery = "SELECT id FROM star WHERE name = ? AND birthYear <= ?";
+        System.out.println(tempMovie.getYear());
+        if (tempMovie.getYear() != 0) {
+            starQuery = "SELECT * FROM stars WHERE name = ? AND (birthYear <= ? OR birthYear IS NULL) ORDER BY -birthYear DESC";
             select_star_stmt = parser_conn.prepareStatement(starQuery);
-            select_star_stmt.setString(1,starName);
-            select_star_stmt.setInt(2,movie_year);
+            select_star_stmt.setString(1,tempActor.getName());
+            select_star_stmt.setInt(2,tempMovie.getYear());
         }
         else {
             starQuery = "SELECT id FROM star WHERE name = ?";
             select_star_stmt = parser_conn.prepareStatement(starQuery);
-            select_star_stmt.setString(1,starName);
+            select_star_stmt.setString(1,tempActor.getName());
         }
 
-        return select_star_stmt.executeQuery().getString("id");
+        ResultSet select_star_result = select_star_stmt.executeQuery();
+        String starId = null;
+        int counter = 1;
+        while (select_star_result.next()) {
+            if (counter > 1) {
+                System.out.println("More than One Star: ("+
+                        select_star_result.getString("id")+","+
+                        select_star_result.getString("name")+","+
+                        select_star_result.getString("birthYear")+")"
+                );
+            }
+            else {
+                starId = select_star_result.getString("id");
+            }
+            counter++;
+        }
+        return starId;
     }
 
     private int getHighestId() throws SQLException {
@@ -128,28 +146,23 @@ public class CastParser extends DefaultHandler {
         star_stmt.setString(1,new_id);
         star_stmt.setString(2,tempActor.getName());
         star_stmt.addBatch();
+        nextId++;
         return new_id;
     }
 
     private void insertBatch() {
         try {
-            movie_stmt.executeLargeBatch();
             star_stmt.executeLargeBatch();
             parser_conn.commit();
-        } catch (Exception E) {
-
+            movie_stmt.executeLargeBatch();
+            parser_conn.commit();
+        } catch (SQLException e) {
+            System.out.println("-- batch failed: " + e.getMessage());
         }
-
-
     }
 
     public void runParser() {
-        try {
-            nextId = getHighestId() + 1;
-            parseDocument();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
+        parseDocument();
     }
 
     private void parseDocument() {
@@ -158,10 +171,9 @@ public class CastParser extends DefaultHandler {
             SAXParser sp = spf.newSAXParser();
 
             establishConnection();
-
+            nextId = getHighestId() + 1;
             // Parse and import XML data into moviedb
-            sp.parse("cast243.xml",this);
-
+            sp.parse("casts124 - Light.xml",this);
             insertBatch();
 
             closeConnection();
@@ -202,8 +214,10 @@ public class CastParser extends DefaultHandler {
                 final String[] existingMovieInfo = getMovieIfExists(tempMovie.getId(),tempMovie.getTitle(),tempMovie.getDirector());
                 if (existingMovieInfo != null) {
                     tempMovie.setId(existingMovieInfo[0]);
-                    String starId = getStarIfExists(tempActor.getName(),Integer.parseInt(existingMovieInfo[1]));
+                    tempMovie.setYear(existingMovieInfo[1]);
+                    String starId = getStarIfExists();
                     if (starId == null) {
+                        System.out.println("Inserting New Star: "  + tempActor.getName());
                         starId = insertStar();
                     }
                     tempActor.setId(starId);
