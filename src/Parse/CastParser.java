@@ -31,6 +31,8 @@ public class CastParser extends DefaultHandler {
     private PreparedStatement star_stmt;
     int nextId;
 
+    private int cast_counter = 0;
+
     private String tempVal;
 
     private MovieObject tempMovie;
@@ -208,6 +210,13 @@ public class CastParser extends DefaultHandler {
     }
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
+        if (qName.equalsIgnoreCase(" dirfilms")) {
+            if (cast_counter >= 500) {
+                System.out.println("- Batch Size: " + cast_counter);
+                insertBatch();
+                System.out.println("-- Successfully inserted batch.");
+            }
+        }
         if (qName.equalsIgnoreCase("m")) {
             // Check if the movie is already in the database
             try {
@@ -225,6 +234,7 @@ public class CastParser extends DefaultHandler {
                     movie_stmt.setString(1,tempMovie.getId());
                     movie_stmt.setString(2,tempActor.getId());
                     movie_stmt.addBatch();
+                    cast_counter++;
                 }
                 else {
                     System.out.println("Can't Find Movie: " + tempMovie.getTitle());
