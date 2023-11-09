@@ -150,10 +150,16 @@ public class DashboardServlet extends HttpServlet {
         System.out.println(addMovieStatement.toString());
 
         ResultSet idSet = addMovieStatement.executeQuery();
-        while(idSet.next()) {
-            responseObj.addProperty("movie_id", idSet.getString("movie_id"));
-            responseObj.addProperty("star_id", idSet.getString("star_id"));
-            responseObj.addProperty("genre_id", idSet.getString("genre_id"));
+        if (idSet.next()) {
+            String movieId = idSet.getString("movie_id");
+            String starId = idSet.getString("star_id");
+            String genreId = idSet.getString("genre_id");
+
+            if (movieId != null && starId != null && genreId != null) {
+                responseObj.addProperty("movie_id", movieId);
+                responseObj.addProperty("star_id", starId);
+                responseObj.addProperty("genre_id", genreId);
+            }
         }
 
         addMovieStatement.close();
