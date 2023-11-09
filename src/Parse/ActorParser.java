@@ -76,7 +76,7 @@ public class ActorParser extends DefaultHandler {
             SAXParser sp = spf.newSAXParser();
 
             //parse the file and also register this class for call backs
-            sp.parse("actors.xml", this);
+            sp.parse("actors63.xml", this);
 
             // insert remaining
             insertBatch();

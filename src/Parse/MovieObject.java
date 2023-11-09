@@ -28,6 +28,7 @@ public class MovieObject {
     private String title;
 
     private int year;
+    private String year_str;
 
     private String mid;
 
@@ -38,6 +39,7 @@ public class MovieObject {
     public MovieObject() { genres = new ArrayList<String>(); }
 
     // Getters
+    public String getYear_str() { return year_str; }
     public int getYear() { return year; }
     public String getId() { return mid; }
     public String getDirector() { return director; }
@@ -78,9 +80,10 @@ public class MovieObject {
     }
     public void setYear(String yr) {
         yr = yr.strip();
+        year_str = yr.replaceAll("\\D","");
         yr = yr.replaceAll("\\D","0");
         while (yr.length() < 4) {
-            yr += "0";
+           yr += "0";
         }
         this.year = Integer.parseInt(yr);
     }
@@ -99,7 +102,6 @@ public class MovieObject {
             addGenre(g);
         }
     }
-
 
     @Override
     public String toString() {

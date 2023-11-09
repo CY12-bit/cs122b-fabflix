@@ -32,6 +32,7 @@ public class CastParser extends DefaultHandler {
     int nextId;
 
     private int cast_counter = 0;
+    private HashMap<String,String> tempCast = new HashMap<String,String>();
 
     private String tempVal;
 
@@ -96,7 +97,6 @@ public class CastParser extends DefaultHandler {
     private String getStarIfExists() throws SQLException {
         String starQuery;
         PreparedStatement select_star_stmt;
-        System.out.println(tempMovie.getYear());
         if (tempMovie.getYear() != 0) {
             starQuery = "SELECT * FROM stars WHERE name = ? AND (birthYear <= ? OR birthYear IS NULL) ORDER BY -birthYear DESC";
             select_star_stmt = parser_conn.prepareStatement(starQuery);
@@ -125,6 +125,11 @@ public class CastParser extends DefaultHandler {
             }
             counter++;
         }
+
+        if (starId == null && tempCast.containsKey(tempActor.getName())) {
+            starId = tempCast.get(tempActor.getName());
+        }
+
         return starId;
     }
 
@@ -187,7 +192,7 @@ public class CastParser extends DefaultHandler {
             ie.printStackTrace();
         }
         catch (Exception E) {
-            System.out.println("Error: " + E.getMessage());
+            E.printStackTrace();
         }
     }
 
@@ -201,7 +206,7 @@ public class CastParser extends DefaultHandler {
             tempMovie.setDirector(tempDirector);
         }
         else if (qName.equalsIgnoreCase(("a"))) {
-            tempActor = new Actor();
+            tempActor = null;
         }
     }
 
@@ -214,6 +219,7 @@ public class CastParser extends DefaultHandler {
             if (cast_counter >= 500) {
                 System.out.println("- Batch Size: " + cast_counter);
                 insertBatch();
+                tempCast.clear();
                 System.out.println("-- Successfully inserted batch.");
             }
         }
@@ -224,20 +230,25 @@ public class CastParser extends DefaultHandler {
                 if (existingMovieInfo != null) {
                     tempMovie.setId(existingMovieInfo[0]);
                     tempMovie.setYear(existingMovieInfo[1]);
-                    String starId = getStarIfExists();
-                    if (starId == null) {
-                        System.out.println("Inserting New Star: "  + tempActor.getName());
-                        starId = insertStar();
+                    if (tempActor != null) {
+                        if (!tempActor.getName().matches("^[a|s][ ]*[a|s]([ ]*[a|s]?)*$")  && !tempActor.getName().equals(" ")
+                                && !tempActor.getName().matches("[\\d]+")) {
+                            String starId = getStarIfExists();
+                            if (starId == null) {
+                                System.out.println("- Inserting New Star: "  + tempActor.getName());
+                                starId = insertStar();
+                                tempCast.put(tempActor.getName(),starId);
+                            }
+                            tempActor.setId(starId);
+                        }
+                        movie_stmt.setString(1,tempMovie.getId());
+                        movie_stmt.setString(2,tempActor.getId());
+                        movie_stmt.addBatch();
+                        cast_counter++;
                     }
-                    tempActor.setId(starId);
-
-                    movie_stmt.setString(1,tempMovie.getId());
-                    movie_stmt.setString(2,tempActor.getId());
-                    movie_stmt.addBatch();
-                    cast_counter++;
                 }
                 else {
-                    System.out.println("Can't Find Movie: " + tempMovie.getTitle());
+                    System.out.println("-- Can't Find Movie: " + tempMovie.getTitle());
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
@@ -253,7 +264,11 @@ public class CastParser extends DefaultHandler {
            tempMovie.setTitle(tempVal);
         }
         else if (qName.equalsIgnoreCase("a")) {
-            tempActor.setName(tempVal);
+            if (tempVal != "") {
+                tempActor = new Actor();
+                tempActor.setName(tempVal);
+            }
+
         }
     }
 

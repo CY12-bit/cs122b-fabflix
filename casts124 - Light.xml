@@ -1,0 +1,189 @@
+<?xml version="1.0"?>
+<!--DOCTYPE casts PUBLIC "-//DAML Project//DTD Play//EN"-->
+<!DOCTYPE CAST.DTD>
+<!-- MASTER BASE File of casts in [varese]mydocs/mov/xml/castsnnn.xml. -->
+<!-- XML copy, validated with IE, 29 Dec 2003-->
+<!-- This file is copyright 1987,1989,1990,1993,1996,1998,2000,2003 by Gio Wiederhold. -->
+<!-- Corresponding DTD is in [varese]mydocs/mov/xml/castmm.dtd --> 
+<!-- Total 48K+ entries (April 2001). ~9000 films by ~2700 directors -->
+<!-- CASTS: Fairly complete for Hitchcock actors. -->
+<!-- Entries are arranged alphabetically by directors' and film codes, -->
+<!-- The major fields are {filmcode, title, actor, followed by dep. info, -->
+<!-- 		role-type, role-description, and optional role-name, role-specs} -->
+<!-- Each letter section starts with a comment with 5 repeats of the letter -->
+<!-- For each director a header entry is provided with {code, name, note} -->
+<!-- AAAAA: Directors starting with A. -->
+<casts>
+<dirfilms><dirid>CLa</dirid><is>Lamont</is><castnote>Actors and notes.</castnote>
+<filmc>
+<m><f>CLa18</f><t>One-Run Elmer</t><a>Buster Keaton</a><p>Und</p><r/></m></filmc>
+<filmc>
+<m><f>CLa20</f><t>Tars and Stripes</t><a>Buster Keaton</a><p>Und</p><r/></m></filmc>
+<filmc>
+<m><f>CLa24</f><t>Grand Slam Opera</t><a>Buster Keaton</a><p>Und</p><r/></m></filmc>
+<filmc>
+<m><f>CLa95</f><t>Abbott and Costello in the Foreign Legion</t><a>Bud Abbott</a><p>Com</p><r/></m>
+<m><f>CLa95</f><t>Abbott and Costello in the Foreign Legion</t><a>Lou Costello</a><p>Com</p><r/></m>
+<m><f>CLa95</f><t>Abbott and Costello in the Foreign Legion</t><a>Patricia Medina</a><p>Und</p><r>exotic undercover agent</r></m>
+<m><f>CLa95</f><t>Abbott and Costello in the Foreign Legion</t><a>Walter Slezak</a><p>Und</p><r>legionaire</r></m>
+<m><f>CLa95</f><t>Abbott and Costello in the Foreign Legion</t><a>Douglass Dumbrille</a><p>Und</p><r>sheik</r></m></filmc>
+<filmc>
+<m><f>CLa100</f><t>Abbott and Costello Meet the Invisible Man</t><a>Bud Abbott</a><p>Com</p><r>detective</r></m>
+<m><f>CLa100</f><t>Abbott and Costello Meet the Invisible Man</t><a>Lou Costello</a><p>Com</p><r>detective</r></m>
+<m><f>CLa100</f><t>Abbott and Costello Meet the Invisible Man</t><a>Arthur Franz</a><p>Und</p><r>invisible boxer</r></m>
+<m><f>CLa100</f><t>Abbott and Costello Meet the Invisible Man</t><a>William Frawley</a><p>Und</p><r/></m>
+<m><f>CLa100</f><t>Abbott and Costello Meet the Invisible Man</t><a>Sheldon Leonard</a><p>Und</p><r/></m></filmc>
+<filmc>
+<m><f>CLa110</f><t>Abbott and Costello Meet Captain Kidd</t><a>Bud Abbott</a><p>Com</p><r>servant with treasure map</r></m>
+<m><f>CLa110</f><t>Abbott and Costello Meet Captain Kidd</t><a>Lou Costello</a><p>Com</p><r>servant</r></m>
+<m><f>CLa110</f><t>Abbott and Costello Meet Captain Kidd</t><a>Charles Laughton</a><p>Und</p><r>pirate</r></m>
+<m><f>CLa110</f><t>Abbott and Costello Meet Captain Kidd</t><a>Hillary Brooke</a><p>Und</p><r/></m>
+<m><f>CLa110</f><t>Abbott and Costello Meet Captain Kidd</t><a>Fran Warren</a><p>Und</p><r/></m>
+<m><f>CLa110</f><t>Abbott and Costello Meet Captain Kidd</t><a>Leif Erickson</a><p>Und</p><r/></m></filmc>
+<filmc>
+<m><f>CLa114</f><t>Abbott and Costello Go To Mars</t><a>Bud Abbott</a><p>Com</p><r/></m>
+<m><f>CLa114</f><t>Abbott and Costello Go To Mars</t><a>Lou Costello</a><p>Com</p><r/></m>
+<m><f>CLa114</f><t>Abbott and Costello Go To Mars</t><a>Mari Blanchard</a><p>Und</p><r>sexy queen on Venus</r> <n>Alura</n></m>
+<m><f>CLa114</f><t>Abbott and Costello Go To Mars</t><a>Anita Ekberg</a><p>Und</p><r/></m>
+<m><f>CLa114</f><t>Abbott and Costello Go To Mars</t><a>Martha Hyer</a><p>Und</p><r/></m>
+<m><f>CLa114</f><t>Abbott and Costello Go To Mars</t><a>Robert Paige</a><p>Und</p><r/></m>
+<m><f>CLa114</f><t>Abbott and Costello Go To Mars</t><a>Horace McMahon</a><p>Und</p><r/></m>
+<m><f>CLa114</f><t>Abbott and Costello Go To Mars</t><a>Jack Kruschen</a><p>Und</p><r/></m></filmc>
+<filmc>
+<m><f>CLa115</f><t>Abbott and Costello Meet Dr.~Jekyll and Mr.~Hyde</t><a>Bud Abbott</a><p>Com</p><r/></m>
+<m><f>CLa115</f><t>Abbott and Costello Meet Dr.~Jekyll and Mr.~Hyde</t><a>Lou Costello</a><p>Com</p><r/></m>
+<m><f>CLa115</f><t>Abbott and Costello Meet Dr.~Jekyll and Mr.~Hyde</t><a>Boris Karloff</a><p>Und</p><r>Dr.~Jekyll</r></m>
+<m><f>CLa115</f><t>Abbott and Costello Meet Dr.~Jekyll and Mr.~Hyde</t><a>Eddie Parker</a><p>Und</p><r>Mr.~Hyde</r></m>
+<m><f>CLa115</f><t>Abbott and Costello Meet Dr.~Jekyll and Mr.~Hyde</t><a>Craig Stevens</a><p>Und</p><r/></m>
+<m><f>CLa115</f><t>Abbott and Costello Meet Dr.~Jekyll and Mr.~Hyde</t><a>Helen Westcott</a><p>Und</p><r/></m></filmc>
+<filmc>
+<m><f>CLa121</f><t>Abbott and Costello Meet the Keystone Kops</t><a>Bud Abbott</a><p>Com</p><r>becomes stuntmansr</r></m>
+<m><f>CLa121</f><t>Abbott and Costello Meet the Keystone Kops</t><a>Lou Costello</a><p>Com</p><r>becomes stuntmansr</r></m>
+<m><f>CLa121</f><t>Abbott and Costello Meet the Keystone Kops</t><a>Lynn Bari</a><p>Und</p><r/></m>
+<m><f>CLa121</f><t>Abbott and Costello Meet the Keystone Kops</t><a>Fred Clark</a><p>Und</p><r>con man</r><error>R(An)</error></m>
+<m><f>CLa121</f><t>Abbott and Costello Meet the Keystone Kops</t><a>Frank Wilcox</a><p>Und</p><r/></m>
+<m><f>CLa121</f><t>Abbott and Costello Meet the Keystone Kops</t><a>Maxie Rosenbloom</a><p>Und</p><r/></m>
+<m><f>CLa121</f><t>Abbott and Costello Meet the Keystone Kops</t><a>Mack Sennett</a><p>Bit</p><r/></m></filmc>
+<filmc>
+<m><f>CLa125</f><t>Abbott and Costello Meet the Mummy</t><a>Bud Abbott</a><p>Com</p><r/></m>
+<m><f>CLa125</f><t>Abbott and Costello Meet the Mummy</t><a>Lou Costello</a><p>Com</p><r/></m>
+<m><f>CLa125</f><t>Abbott and Costello Meet the Mummy</t><a>Eddie Parker</a><p>Und</p><r>mummy</r></m>
+<m><f>CLa125</f><t>Abbott and Costello Meet the Mummy</t><a>Marie Windsor</a><p>Und</p><r/></m>
+<m><f>CLa125</f><t>Abbott and Costello Meet the Mummy</t><a>Kurt Katch</a><p>Und</p><r/></m>
+<m><f>CLa125</f><t>Abbott and Costello Meet the Mummy</t><a>Richard Karlan</a><p>Und</p><r/></m>
+<m><f>CLa125</f><t>Abbott and Costello Meet the Mummy</t><a>Mel Welles</a><p>Und</p><r/></m>
+<m><f>CLa125</f><t>Abbott and Costello Meet the Mummy</t><a>Peggy King</a><p>Und</p><r>singer</r></m></filmc>
+<filmc>
+<m><f>CLa127</f><t>Dance With me, Henry</t><a>Bud Abbott</a><p>Com</p><r/></m>
+<m><f>CLa127</f><t>Dance With me, Henry</t><a>Lou Costello</a><p>Com</p><r/></m>
+<m><f>CLa127</f><t>Dance With me, Henry</t><a>Gigi Perreau</a><p>Und</p><r>kind amusement park owner</r></m></filmc>
+</dirfilms>
+<dirfilms><dirid>CLB</dirid><is>C.Bragaglia</is><castnote>Actors and notes.</castnote>
+<filmc>
+<m><f>CLB10</f><t>Figaro Qua, Figaro la</t><a>Toto</a><p>Und</p><r>barber</r> <n>Figaro</n></m>
+<m><f>CLB10</f><t>Figaro Qua, Figaro la</t><a>Isa Barzizza</a><p>Und</p><r/></m>
+<m><f>CLB10</f><t>Figaro Qua, Figaro la</t><a>Gianni Agnus</a><p>Und</p><r/></m></filmc>
+<filmc>
+<m><f>CLB20</f><t>Toto and Peppino Divided in Berlin</t><a>Toto</a><p>Und</p><r>comic</r></m>
+<m><f>CLB20</f><t>Toto and Peppino Divided in Berlin</t><a>Peppino DeFillippo</a><p>Und</p><r>comic</r></m></filmc>
+</dirfilms>
+<dirfilms><dirid>ClC</dirid><is>Chabrol</is><castnote>Actors and notes.</castnote>
+<filmc>
+<m><f>ClC2</f><t>The Cousins</t><a>Gerard Blain</a><p>Vil</p><r>country cousin, deceiptful</r></m>
+<m><f>ClC2</f><t>The Cousins</t><a>JeanClaude Brialy</a><p>Vic</p><r>gifted, suave city cousin, destroyed</r></m>
+<m><f>ClC2</f><t>The Cousins</t><a>Juliette Mayniel</a><p>Lov | Her</p><r>girlfriend, nearly fooled</r></m></filmc>
+<filmc>
+<m><f>ClC5</f><t>Un homme et une femme</t><a>Anouk Aim\'ee</a><p>Und</p><r>script girl</r></m>
+<m><f>ClC5</f><t>Un homme et une femme</t><a>Louis Jean-Trintignant</a><p>Und</p><r>the stunt man</r></m>
+<m><f>ClC5</f><t>Un homme et une femme</t><a>Pierre Barouh</a><p>Und</p><r>racing-car driver</r></m></filmc>
+<filmc>
+<m><f>ClC8</f><t>Marie-Chantal contre le Docteur Kha</t><a>JoseMaria Caffare</a><p>Und</p><r>weird scientist</r><error>R(An)</error></m>
+<m><f>ClC8</f><t>Marie-Chantal contre le Docteur Kha</t><a>Charles Denner</a><p>Und</p><r>spy, gives jewel to Marie-Chantal, assassinated</r><error>R(An)</error></m>
+<m><f>ClC8</f><t>Marie-Chantal contre le Docteur Kha</t><a>Marie La Forette</a><p>Inn</p><r>charms spy</r> <n>Marie-Chantal</n><error>R(An)</error></m>
+<m><f>ClC8</f><t>Marie-Chantal contre le Docteur Kha</t><a>Stephan Audran</a><p>Und</p><r/></m></filmc>
+
+<filmc>
+<m><f>ClC18</f><t>La femme infidele</t><a>michel bouquet</a><p>Und</p><r>deceived husband, locates lover</r></m>
+<m><f>ClC18</f><t>La femme infidele</t><a>Stephane Audran</a><p>Und</p><r>wife, takes on lover</r></m>
+<m><f>ClC18</f><t>La femme infidele</t><a></a><p>Und</p><r>lover</r></m>
+</filmc>
+<filmc>
+<m><f>ClC20</f><t>Les Biches</t><a>Jaqueline Sassard</a><p>Und</p><r>mopy lesbian</r></m>
+<m><f>ClC20</f><t>Les Biches</t><a>JeanLouis Trintignant</a><p>Und</p><r>doper architect</r></m>
+<m><f>ClC20</f><t>Les Biches</t><a>Stephane Audran</a><p>Und</p><r>chic lesbian</r></m></filmc>
+<filmc>
+<m><f>ClC21</f><t>La Femme Infidele</t><a>Stephane Audran</a><p>Und</p><r>chic, unfaithful</r></m>
+<m><f>ClC21</f><t>La Femme Infidele</t><a>Michel Bouquet</a><p>Und</p><r>cuckold</r></m>
+<m><f>ClC21</f><t>La Femme Infidele</t><a>Maurice Ronet</a><p>Und</p><r>professional seducer</r></m>
+<m><f>ClC21</f><t>La Femme Infidele</t><a>Michel Duchaussoy</a><p>Und</p><r/></m></filmc>
+<filmc>
+<m><f>ClC22</f><t>The Beast Must Die</t><a>Charles Gray</a><p>Und</p><r/></m></filmc>
+<filmc>
+<m><f>ClC24</f><t>Le Boucher</t><a>Jean Yanne</a><p>Und</p><r>butcher</r></m>
+<m><f>ClC24</f><t>Le Boucher</t><a>Stephane Audran</a><p>Und</p><r/></m></filmc>
+<filmc>
+<m><f>ClC35</f><t>Une Partie de Plaisir</t><a>Paul Gegauff</a><p>Und</p><r>husband, divorces</r></m>
+<m><f>ClC35</f><t>Une Partie de Plaisir</t><a>Danielle Gegauff</a><p>Und</p><r>mistress of 8 years</r></m>
+<m><f>ClC35</f><t>Une Partie de Plaisir</t><a>Paula Moore</a><p>Und</p><r>wife, divorces</r><error>R(An)</error></m>
+<m><f>ClC35</f><t>Une Partie de Plaisir</t><a>Michel Valette</a><p>Und</p><r/></m></filmc>
+<filmc>
+<m><f>ClC45</f><t>The Cry of the Owl</t><a>Christophe Malavoy</a><p>Und</p><r>draftsman, divorced</r> <n>Robert</n></m>
+<m><f>ClC45</f><t>The Cry of the Owl</t><a>Mathilda May</a><p>Und</p><r>together, supportive, suprised</r> <n>Juliette</n></m>
+<m><f>ClC45</f><t>The Cry of the Owl</t><a>Jacques Penot</a><p>Und</p><r>Julliette's fiancee, left</r> <n>Patrick</n></m>
+<m><f>ClC45</f><t>The Cry of the Owl</t><a>Virgenie Thevenet</a><p>Und</p><r>Robert's malocious ex-wife</r> <n>Veronique</n></m></filmc>
+<filmc>
+<m><f>ClC49</f><t>Stille Tage in Clichy</t><a>Andrew McCarthy</a><p>Und</p><r>Author</r> <n>Henry Miller, Joey</n><error>R(An)</error></m>
+<m><f>ClC49</f><t>Stille Tage in Clichy</t><a>Nigel Havers</a><p>Und</p><r>friend</r><error>R(An)</error></m>
+<m><f>ClC49</f><t>Stille Tage in Clichy</t><a>Stephane Audran</a><p>Und</p><r/></m>
+<m><f>ClC49</f><t>Stille Tage in Clichy</t><a>Mario Adorf</a><p>Und</p><r>artist with live models</r> <n>Sebastian</n><error>R(An)</error></m>
+<m><f>ClC49</f><t>Stille Tage in Clichy</t><a>s a</a><p>Und</p><r>publisher</r> <n>Regenstag</n></m>
+<m><f>ClC49</f><t>Stille Tage in Clichy</t><a>Barbara deRossi</a><p>Und</p><r>madam</r> <n>Adrianne</n><error>R(An)</error></m></filmc>
+<filmc>
+<m><f>ClC50</f><t>Story of Women</t><a>Isabel Huppert</a><p>Und</p><r>wife, madam, executed</r> <n>Marie Latour</n>  <rolespecs><rbase>Marie_Luise Giraud</rbase></rolespecs></m>
+<m><f>ClC50</f><t>Story of Women</t><a>Francois Cluzet</a><p>Und</p><r>dull husband</r></m>
+<m><f>ClC50</f><t>Story of Women</t><a>Nils Travenier</a><p>Und</p><r>collaborator, lover</r></m>
+<m><f>ClC50</f><t>Story of Women</t><a>Marie Trintignant</a><p>Und</p><r>prostitute</r><error>R(An)</error></m></filmc>
+<filmc>
+<m><f>ClC57</f><t>La Ceremonie</t><a>JeanPierre Cassel</a><p>Und</p><r>husband</r></m>
+<m><f>ClC57</f><t>La Ceremonie</t><a>Jacqueline Bisset</a><p>Und</p><r>wife</r></m>
+<m><f>ClC57</f><t>La Ceremonie</t><a>Sandrine Bonnaire</a><p>Und</p><r>taciturn maid</r></m>
+<m><f>ClC57</f><t>La Ceremonie</t><a>Isabelle Huppert</a><p>Und</p><r>postmistress, threatens</r></m></filmc>
+<filmc>
+<m><f>ClC58</f><t>The Swindle</t><a>Isabelle Huppert</a><p>Und</p><r>sexy wench</r></m></filmc>
+<filmc>
+<m><f>ClC60</f><t>Merci pour le Chocolat</t><a>Isabelle Huppert</a><p>Und</p><r/></m></filmc>
+</dirfilms>
+<dirfilms><dirid>ClS</dirid><is>Sautet</is><castnote>Actors and notes.</castnote>
+<filmc>
+<m><f>ClS22</f><t>Les choses de la vie</t><a>s a</a><p>Und</p><r>middle class man, has car accident, re-examines his life</r></m></filmc>
+<filmc>
+<m><f>ClS25</f><t>C\'esar et Rosalie</t><a>Yves Montand</a><p>Und</p><r>rich, charming, loves Rosalie, jealous</r> <n>Cesar</n></m>
+<m><f>ClS25</f><t>C\'esar et Rosalie</t><a>Sami Frey</a><p>Und</p><r>gentle, young love of Rosalie</r> <n>David</n></m>
+<m><f>ClS25</f><t>C\'esar et Rosalie</t><a>Romy Schneider</a><p>Und</p><r>torn</r> <n>Rosalie</n></m></filmc>
+<filmc>
+<m><f>ClS40</f><t>Un coeur en hiver</t><a>Daniel Auteuil</a><p>Und</p><r>old friend, luthier, weak</r></m>
+<m><f>ClS40</f><t>Un coeur en hiver</t><a>Emanuelle Beart</a><p>Und</p><r>puritan violinst, intrudes</r> <n>Camille</n></m>
+<m><f>ClS40</f><t>Un coeur en hiver</t><a>Andre Dussollier</a><p>Und</p><r>suave old friend</r></m>
+<m><f>ClS40</f><t>Un coeur en hiver</t><a>Elisabeth Bourgine</a><p>Und</p><r/></m>
+<m><f>ClS40</f><t>Un coeur en hiver</t><a>Maurice Garrel</a><p>Und</p><r/></m>
+<m><f>ClS40</f><t>Un coeur en hiver</t><a>JeanLuc Bibeau</a><p>Und</p><r/></m></filmc>
+<filmc>
+<m><f>ClS45</f><t>Nelly and Monsieur Arnaud</t><a>Emanuelle Beart</a><p>Und</p><r>young wife</r> <n>Nelly</n></m>
+<m><f>ClS45</f><t>Nelly and Monsieur Arnaud</t><a>Michel Serrault</a><p>Und</p><r>rich, older admirer</r> <n>Arnaud</n></m>
+<m><f>ClS45</f><t>Nelly and Monsieur Arnaud</t><a>JeanHugues Anglade</a><p>Und</p><r>publisher, falls for Nelly</r></m>
+<m><f>ClS45</f><t>Nelly and Monsieur Arnaud</t><a>s a</a><p>Und</p><r>boring, lazy husband</r></m></filmc>
+</dirfilms>
+<dirfilms><dirid>ClW</dirid><is>Weill</is><castnote>Actors and notes.</castnote>
+<filmc>
+<m><f>ClW10</f><t>It's My Turn</t><a>Jill Clayburgh</a><p>Und</p><r/></m>
+<m><f>ClW10</f><t>It's My Turn</t><a>Michael Douglas</a><p>Und</p><r/></m>
+<m><f>ClW10</f><t>It's My Turn</t><a>Charles Grodin</a><p>Und</p><r/></m>
+<m><f>ClW10</f><t>It's My Turn</t><a>Dianne Wiest</a><p>Und</p><r/></m></filmc>
+<filmc>
+<m><f>ClW20</f><t>Girlfriends</t><a>Melanie Myron</a><p>Und</p><r>photographer</r> <n>Susan Weinblatt</n></m>
+<m><f>ClW20</f><t>Girlfriends</t><a>Anita Skinner</a><p>Und</p><r>poet, close friend, gets married</r> <n>Anne Munroe</n></m>
+<m><f>ClW20</f><t>Girlfriends</t><a>Christopher Guest</a><p>Und</p><r>Susan's boyfriend</r></m></filmc>
+</dirfilms>
+</casts>
+<!--  end -->
+

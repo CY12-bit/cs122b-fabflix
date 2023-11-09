@@ -206,13 +206,17 @@ public class MovieParser extends DefaultHandler {
 
     private boolean checkMovie(final MovieObject mo, final String baseId) throws SQLException {
         // I indicate whether a movie was from the original database by checking their id length
-        String movieQuery = "SELECT id FROM movies WHERE title = ? AND year = ? AND director = ?" +
-                " AND (LENGTH(id) = 9 OR id LIKE ?)";
-        PreparedStatement movie_stmt = parser_conn.prepareStatement(movieQuery);
+
+        String movieQuery= "SELECT id FROM movies WHERE title = ? " +
+                "AND (year = ? OR CAST(year as CHAR) LIKE ?) AND director = ?" +
+                " AND (LENGTH(id) = 9 OR id LIKE ?)";;
+        PreparedStatement movie_stmt;
+        movie_stmt = parser_conn.prepareStatement(movieQuery);
         movie_stmt.setString(1,mo.getTitle());
         movie_stmt.setInt(2,mo.getYear());
-        movie_stmt.setString(3,mo.getDirector());
-        movie_stmt.setString(4,baseId+"%");
+        movie_stmt.setString(3,mo.getYear_str()+"%");
+        movie_stmt.setString(4,mo.getDirector());
+        movie_stmt.setString(5,baseId+"%");
         return movie_stmt.executeQuery().next();
     }
 
@@ -231,7 +235,7 @@ public class MovieParser extends DefaultHandler {
                 if (!checkMovie(movie,base_id)) {
                     movie_prep.setString(1,movie.getId());
                     movie_prep.setString(2,movie.getTitle());
-                    movie_prep.setInt(3,movie.getYear());
+                    movie_prep.setInt(3, movie.getYear());
                     movie_prep.setString(4,movie.getDirector());
                     movie_prep.addBatch();
 
