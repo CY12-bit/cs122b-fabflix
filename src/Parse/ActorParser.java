@@ -119,8 +119,16 @@ public class ActorParser extends DefaultHandler {
     }
 
     private String buildQuery() {
-        String query = "INSERT INTO stars (id, name, birthYear) VALUES " + "(?, ?, ?), ".repeat(actorList.size());
-        return query.substring(0, query.length()-2);
+        String beginning = "INSERT INTO stars (id, name, birthYear) " +
+                "SELECT * FROM ( VALUES ";
+        String rows = "ROW(?, ?, ?),".repeat(actorList.size());
+        rows = rows.substring(0, rows.length()-1);
+        String end = ") as newStars (id, name, birthYear) " +
+                "WHERE NOT EXISTS (" +
+                "SELECT 1 FROM stars AS s " +
+                "WHERE s.name = newStars.name AND " +
+                "((s.birthYear is null and newStars.birthYear is null) or s.birthYear = newStars.birthYear))";
+        return beginning + rows + end;
     }
 
     private void insertBatch() throws SQLException{
@@ -139,6 +147,7 @@ public class ActorParser extends DefaultHandler {
                 index += 3;
             }
             insertStatement.executeUpdate();
+            insertStatement.close();
 
         }
     }
