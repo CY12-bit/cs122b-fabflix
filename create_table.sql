@@ -71,3 +71,4 @@ CREATE TABLE IF NOT EXISTS employees (
     fullname varchar(100),
     PRIMARY KEY(email)
 );
+INSERT INTO employees(email,password,fullname) VALUES ('classta@email.edu','classta','TA CS122B');
