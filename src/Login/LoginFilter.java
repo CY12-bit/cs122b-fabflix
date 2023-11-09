@@ -34,7 +34,7 @@ public class LoginFilter implements Filter {
         // Redirect to login page if the "user" attribute doesn't exist in session
         if (httpRequest.getSession().getAttribute("user") == null && httpRequest.getSession().getAttribute("employee") == null) {
             // cs122b-projects is the path on aws
-            httpResponse.sendRedirect("/cs122b_projects_war/login.html");
+            httpResponse.sendRedirect("/cs122b_projects_war/login.html"); // Change it to /cs122b-projects/login.html for AWS
         } else {
             chain.doFilter(request, response);
         }

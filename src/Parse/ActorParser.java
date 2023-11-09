@@ -57,7 +57,7 @@ public class ActorParser extends DefaultHandler {
 
     }
 
-    public void runExample() {
+    public void runParser() {
         try {
             nextId = getHighestId() + 1;
             parseDocument();
@@ -131,7 +131,7 @@ public class ActorParser extends DefaultHandler {
         return beginning + rows + end;
     }
 
-    private void insertBatch() throws SQLException{
+    private void insertBatch() throws SQLException {
         if (connection != null) {
             String insertQuery = buildQuery();
             PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
@@ -174,7 +174,7 @@ public class ActorParser extends DefaultHandler {
 
     public static void main(String[] args) {
         ActorParser ap = new ActorParser();
-        ap.runExample();
+        ap.runParser();
     }
 
 }
