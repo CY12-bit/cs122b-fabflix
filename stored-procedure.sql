@@ -23,8 +23,8 @@ IF (SELECT NOT EXISTS(SELECT 1 FROM movies WHERE mTitle = title AND mYear = year
     IF (SELECT NOT EXISTS(SELECT 1 FROM genres WHERE genre_name = name)) THEN
         INSERT INTO genres(name) VALUES (genre_name);
     END IF;
-    SELECT id INTO @movie_id FROM movies WHERE title = mTitle AND year = mYear AND director = mDirector;
-    SELECT id INTO @star_id FROM stars WHERE name = star_name;
+    SELECT id INTO @movie_id FROM movies WHERE title = mTitle AND year = mYear AND director = mDirector LIMIT 1;
+    SELECT id INTO @star_id FROM stars WHERE name = star_name LIMIT 1;
     SELECT id INTO @genre_id FROM genres WHERE name = genre_name;
     INSERT INTO stars_in_movies(starId,movieId) VALUES (@star_id,@movie_id);
     INSERT INTO genres_in_movies(genreId, movieId) VALUES (@genre_id,@movie_id);
