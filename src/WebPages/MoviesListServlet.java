@@ -18,7 +18,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Map;
 
 @WebServlet(name="WebPages.MoviesListServlet",urlPatterns="/api/movielist")
 public class MoviesListServlet extends HttpServlet {
@@ -35,7 +34,6 @@ public class MoviesListServlet extends HttpServlet {
             e.printStackTrace();
         }
     }
-
 
     /*
     Project 1: Function will return results for movie list.
@@ -57,22 +55,29 @@ public class MoviesListServlet extends HttpServlet {
 
             // Find the correct WHERE CLAUSE filters
             ArrayList<String> where_cause = new ArrayList<String>();
+            ArrayList<Integer> parameter_presence = new ArrayList<Integer>();
 
-            String[] categories = {"title", "year", "director", "star"};
+            final String[] categories = {"title", "year", "director", "star"};
+            int parameter_counter = 1;
+
+            // IN THE FUTURE, I WOULD NEED A HASTABLE WITH PARAMETERS AND SEPARATE SLOTS TO USE PREPAREDSTATEMENTS
             for (String c: categories) {
                 String val = request.getParameter(c);
                 if (val == null) {
+                    parameter_presence.add(0);
                     continue;
                 }
                 if (c.equals("director") || c.equals("title")) {
-                    where_cause.add(String.format("%1$s LIKE '%%%2$s%%'", c, val));
-                } else if (c.equals("year")) {
-                    where_cause.add(String.format("%1$s = %2$s", c, val));
+                    where_cause.add(String.format("%1$s LIKE ?", c));
+                }
+                else if (c.equals("year")) {
+                    where_cause.add(String.format("%1$s = ?", c));
                 }
                 else {
-                    where_cause.add(String.format("EXISTS (SELECT * FROM %1$ss_in_movies JOIN %1$ss ON %1$ss.id = %1$ss_in_movies.%1$sId WHERE movieId = movies.id AND %1$ss.name LIKE '%%%2$s%%')",
-                            c, val));
+                    where_cause.add(String.format("EXISTS (SELECT * FROM %1$ss_in_movies JOIN %1$ss ON %1$ss.id = %1$ss_in_movies.%1$sId WHERE movieId = movies.id AND %1$ss.name LIKE ?)", c));
                 }
+                parameter_presence.add(parameter_counter);
+                parameter_counter++;
             }
 
             if (!where_cause.isEmpty()) {
@@ -124,9 +129,25 @@ public class MoviesListServlet extends HttpServlet {
                     limit = Integer.parseInt(records);
             } catch (Exception e) {System.out.println(e.getMessage());}
 
-            movie_query += orderByStr + " LIMIT " + (limit + 1) + " OFFSET " + (limit*pageNum);
-            System.out.println(movie_query);
-            ResultSet movie_rs = statement.executeQuery(movie_query);
+            movie_query += orderByStr + "LIMIT ? OFFSET ?";
+            // movie_query += orderByStr + " LIMIT " + (limit + 1) + " OFFSET " + (limit*pageNum);
+            
+            PreparedStatement prepared_movie_query = conn.prepareStatement(movie_query);
+
+            for (int counter = 0; counter < categories.length; counter++) {
+                if (parameter_presence.get(counter) != 0) {
+                    if (categories[counter].equals("year")) {
+                        prepared_movie_query.setInt(parameter_presence.get(counter), Integer.parseInt(request.getParameter("year")));
+                    }
+                    else {
+                        prepared_movie_query.setString(parameter_presence.get(counter),"%" + request.getParameter(categories[counter])+"%");
+                    }
+                }
+            }
+            prepared_movie_query.setInt(parameter_counter,limit+1);
+            prepared_movie_query.setInt(parameter_counter+1,limit*pageNum);
+
+            ResultSet movie_rs = prepared_movie_query.executeQuery();
 
             JsonArray movieList = new JsonArray();
 

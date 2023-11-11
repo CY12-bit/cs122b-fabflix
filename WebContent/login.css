@@ -1,0 +1,22 @@
+#login_form {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+
+}
+#website_content {
+    margin: auto;
+}
+#website_content h3 {
+    text-align:center;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-size:30px;
+}
+body {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+}
+.g-recaptcha {
+    padding:15px;
+}

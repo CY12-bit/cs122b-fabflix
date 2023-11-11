@@ -1,5 +1,6 @@
 package Login;
 
+import Recapta.RecaptchaVerifyUtils;
 import com.google.gson.JsonObject;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,6 +16,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
+import org.jasypt.util.password.StrongPasswordEncryptor;
 
 @WebServlet(name = "Login.LoginServlet", urlPatterns = "/api/login")
 public class LoginServlet extends HttpServlet {
@@ -42,6 +45,21 @@ public class LoginServlet extends HttpServlet {
         */
         PrintWriter out = response.getWriter();
 
+        String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
+        System.out.println("gRecaptchaResponse=" + gRecaptchaResponse);
+        try {
+            RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+
+        } catch (Exception E){
+            JsonObject responseJsonObject = new JsonObject();
+            responseJsonObject.addProperty("status", "fail");
+            responseJsonObject.addProperty("message", "reCapta Failed");
+            System.out.println("ReCapta Failed" + E.getMessage());
+            out.write(responseJsonObject.toString());
+            out.close();
+            return ;
+        }
+
         // Get a connection from dataSource and let resource manager close the connection after usage.
         try (Connection conn = dataSource.getConnection()) {
             String user_query = "SELECT c.id, c.password FROM customers c " +
@@ -53,18 +71,18 @@ public class LoginServlet extends HttpServlet {
 
             ResultSet user_data = user_statement.executeQuery();
             User currUser = null;
-            String actualPw = "";
+            boolean passwordCorrect = false;
             while (user_data.next()) {
                 String userId = user_data.getString("id");
                 // String firstName = user_data.getString("firstName");
                 // String lastName = user_data.getString("lastName");
-                actualPw = user_data.getString("password");
-
+                String encryptedPassword = user_data.getString("password");
+                passwordCorrect = new StrongPasswordEncryptor().checkPassword(password, encryptedPassword);
                 currUser = new User(userId);
             }
 
             // username doesn't exist
-            if (currUser != null && actualPw.equals(password)) {
+            if (currUser != null && passwordCorrect) {
                 responseJsonObject.addProperty("status", "success");
                 responseJsonObject.addProperty("message", "success");
                 // adding user to session
