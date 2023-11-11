@@ -2,8 +2,12 @@
 function handleAddMovie(resultData) {
     if (resultData["status"] === "success") {
         $('#add-movie-form')[0].reset();
+        let ids = `star id: ${resultData['star_id']}, movie id: ${resultData['movie_id']}, genre id: ${resultData['genre_id']}`;
+        $("#result-message").text(ids);
+    } else {
+        $("#result-message").text(resultData['message']);
     }
-    $("#result-message").text(resultData['message']);
+
 }
 
 let addMovieForm = $('#add-movie-form')

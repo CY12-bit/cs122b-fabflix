@@ -159,6 +159,7 @@ public class DashboardServlet extends HttpServlet {
                 responseObj.addProperty("movie_id", movieId);
                 responseObj.addProperty("star_id", starId);
                 responseObj.addProperty("genre_id", genreId);
+                responseObj.addProperty("status", "success");
             }
         }
 
