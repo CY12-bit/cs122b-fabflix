@@ -41,6 +41,8 @@ public class MovieParser extends DefaultHandler {
      */
     // Variable indicates whether the genre should be parsed or not
     int nextGenreId;
+    // Variable indicates how many total genres are we assigning to each movie
+    private int genre_movie_counter;
     private boolean parseGenre;
     // Structure contains all current genres in the database
     private HashMap<String,Integer> current_genres;
@@ -68,6 +70,7 @@ public class MovieParser extends DefaultHandler {
         current_genres = new HashMap<String, Integer>();
         new_genres = new HashSet<String>();
         parseGenre = false;
+        genre_movie_counter = 0;
         batchStatements = new ArrayList<ArrayList<PreparedStatement>>();
     }
 
@@ -167,7 +170,10 @@ public class MovieParser extends DefaultHandler {
                 }
             }
             try {
-                checkMovie();
+                boolean checkIfMovieNotExists = checkMovie();
+                if (checkIfMovieNotExists) { // If the movie doesn't already exist in the database
+                    genre_movie_counter += tempMovie.getGenres().size();
+                }
             } catch (Exception E) {
                 System.out.println(E.getMessage());
             }
@@ -202,7 +208,7 @@ public class MovieParser extends DefaultHandler {
     }
 
     // Movie Check Methods
-    private void checkMovie() {
+    private boolean checkMovie() {
         // Check if there was a movie with the same id. If not, add the new movie to the list
         final String movieIdentifier = tempMovie.getTitle()+"|"+tempMovie.getDirector()+"|"+tempMovie.getYear();
 
@@ -212,6 +218,7 @@ public class MovieParser extends DefaultHandler {
             movieIdGroups.put(tempMovie.getId(),new HashSet<String>());
             movieIdGroups.get(tempMovie.getId()).add(movieIdentifier);
             movie_counter++;
+            return true;
         }
         else if (!movieIdGroups.get(tempMovie.getId()).contains(movieIdentifier)) {
             System.out.println("Same movie ID but diff. movie info. Generating new id for "+tempMovie.getId());
@@ -219,9 +226,11 @@ public class MovieParser extends DefaultHandler {
             tempMovie.setId(tempMovie.getId()+"_"+(movieIdGroups.get(tempMovie.getId()).size()-1));
             myMovies.add(tempMovie);
             movie_counter++;
+            return true;
         }
         else {
             System.out.println("Duplicate Movie in XML: " + tempMovie.getTitle());
+            return false;
         }
     }
 
@@ -253,6 +262,7 @@ public class MovieParser extends DefaultHandler {
     // Batch Insertion Methods
     private void loadBatch() {
         try {
+            System.out.println("-- Load Batch");
             // Create 3 new prepared statements
             System.out.println("Batch Size: " + myMovies.size());
             String movie_query = "INSERT INTO movies (id, title, year, director) " +
@@ -269,10 +279,16 @@ public class MovieParser extends DefaultHandler {
             String genre_query = "INSERT INTO genres (id,name) VALUES " +
                     "(?,?),".repeat(new_genres.size());
             genre_query = genre_query.substring(0, genre_query.length() - 1) + ";";
+            String genre_in_movies_query = "INSERT INTO genres_in_movies (genreId,movieId) " +
+                    "SELECT * FROM ( VALUES " + "ROW(?,?),".repeat(genre_movie_counter);
+            genre_in_movies_query = genre_in_movies_query.substring(0, genre_in_movies_query.length() - 1);
+            genre_in_movies_query += ") AS newPairs(genreId,movieId) WHERE NOT EXISTS (" +
+                    "SELECT 1 FROM genres_in_movies as gm WHERE gm.genreId = newPairs.genreId AND " +
+                    "gm.movieId = newPairs.movieId) AND EXISTS (SELECT id FROM movies WHERE id = newPairs.movieId);";
 
             PreparedStatement movie_prep = parser_conn.prepareStatement(movie_query);
             PreparedStatement genre_prep = parser_conn.prepareStatement(genre_query);
-            PreparedStatement genre_in_movie_prep = parser_conn.prepareStatement("INSERT INTO genres_in_movies (genreId,movieId) VALUES (?,?);");
+            PreparedStatement genre_in_movie_prep = parser_conn.prepareStatement(genre_in_movies_query);
 
             int index = 1;
             for (String g : new_genres) {
@@ -286,6 +302,7 @@ public class MovieParser extends DefaultHandler {
             new_genres.clear();
 
             index = 1;
+            int genre_in_movies_index = 1;
             for (final MovieObject movie : myMovies) {
                 String base_id = movie.getId().split("_")[0];
                 movie_prep.setString(index, movie.getId());
@@ -295,9 +312,9 @@ public class MovieParser extends DefaultHandler {
                 movie_prep.setString(index + 4, movie.getYear_str());
                 movie_prep.setString(index + 5, base_id);
                 for (String g : movie.getGenres()) {
-                    genre_in_movie_prep.setInt(1, current_genres.get(g));
-                    genre_in_movie_prep.setString(2, movie.getId());
-                    genre_in_movie_prep.addBatch();
+                    genre_in_movie_prep.setInt(genre_in_movies_index, current_genres.get(g));
+                    genre_in_movie_prep.setString(genre_in_movies_index+1, movie.getId());
+                    genre_in_movies_index+=2;
                 }
                 index += 6;
             }
@@ -307,9 +324,9 @@ public class MovieParser extends DefaultHandler {
             tempBatch.add(genre_prep);
             tempBatch.add(genre_in_movie_prep);
             batchStatements.add(tempBatch);
-
             myMovies.clear();
             movie_counter = 0;
+            genre_movie_counter = 0;
         } catch (Exception E) {
             E.printStackTrace();
         }
