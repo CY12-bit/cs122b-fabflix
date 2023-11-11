@@ -8,12 +8,10 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.HashMap;
-
-import Parse.MovieObject;
-import Parse.Actor;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Objects;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -25,22 +23,23 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class CastParser extends DefaultHandler {
-
     private Connection parser_conn = null;
-    private PreparedStatement movie_stmt;
-    private PreparedStatement star_stmt;
-    int nextId;
 
+    private HashMap<String,HashMap<String,Integer>> currentActors = new HashMap<String,HashMap<String,Integer>>();
+
+    private ArrayList<String[]> movieStarPairs = new ArrayList<String[]>();
+    private boolean validateMovie = false;
+    private String[] existingMovieInfo = null;
+
+    int nextId;
     private int cast_counter = 0;
     private HashMap<String,String> tempCast = new HashMap<String,String>();
-
     private String tempVal;
-
     private MovieObject tempMovie;
     private String tempDirector;
-
     private Actor tempActor;
 
+    // Database Connection Methods
     // Function establishes a database connection
     private void establishConnection() throws Exception {
         if (parser_conn == null) {
@@ -49,88 +48,30 @@ public class CastParser extends DefaultHandler {
                     "jdbc:" + DBInfo.dbtype + "://localhost:3306/" + DBInfo.dbname,
                     DBInfo.username, DBInfo.password);
             parser_conn.setAutoCommit(false);
-            movie_stmt = parser_conn.prepareStatement("INSERT INTO stars_in_movies(movieId,starId) VALUES (?,?);");
-            star_stmt = parser_conn.prepareStatement("INSERT INTO stars(id,name) VALUES (?,?);");
         }
     }
-
     // Function closes the database connection
     private void closeConnection() throws SQLException {
         if (parser_conn != null) {
-            movie_stmt.close();
-            star_stmt.close();
             parser_conn.close();
             parser_conn = null;
         }
     }
 
-    // Function checks if the movie already exists in the database
-    // Checks the title, year, and director
-    // E.g. Lost in Translation was already in the movie db
-    // If there are multiple movies with the same triple, check their ids for most matching;
-    private String[] getMovieIfExists(final String id, final String t, final String d) throws SQLException {
-        String movieQuery = "SELECT id, year FROM movies WHERE title = ? AND director = ?" +
-                " AND (LENGTH(id) = 9 OR id LIKE ?) LIMIT 1";
-        PreparedStatement movie_stmt = parser_conn.prepareStatement(movieQuery);
-        movie_stmt.setString(1,t);
-        movie_stmt.setString(2,d);
-        movie_stmt.setString(3,id+"%");
-        ResultSet movie_results = movie_stmt.executeQuery();
-        String[] movie_info = null;
-        int counter = 1;
-        while (movie_results.next()) {
-            if (counter > 1) {
-                System.out.println("More than One Result for: " + id + ", " + t);
+    private void getCurrentActors() throws SQLException {
+        ResultSet actor_results = parser_conn.createStatement().executeQuery(
+                "SELECT DISTINCT name,id,birthYear FROM stars;"
+        );
+        while (actor_results.next()) {
+            if (!currentActors.containsKey(actor_results.getString("name"))) {
+                currentActors.put(actor_results.getString("name"),new HashMap<String,Integer>());
             }
-            else if (counter == 1) {
-                movie_info = new String[]{movie_results.getString("id"), Integer.toString(movie_results.getInt("year"))};
-            }
-            counter++;
+            Integer tempYear = actor_results.getInt("birthYear");
+            if (tempYear == 0) {tempYear = null; }
+            currentActors.get(actor_results.getString("name")).put(
+                    actor_results.getString("id"), tempYear
+            );
         }
-
-        return movie_info;
-    }
-
-    // Function checks if the star is already in the database
-    // Checks their name and date of birth
-    // If it returns multiple people (e.g. John Howard), then returns the first star mentioned?
-    private String getStarIfExists() throws SQLException {
-        String starQuery;
-        PreparedStatement select_star_stmt;
-        if (tempMovie.getYear() != 0) {
-            starQuery = "SELECT * FROM stars WHERE name = ? AND (birthYear <= ? OR birthYear IS NULL) ORDER BY -birthYear DESC";
-            select_star_stmt = parser_conn.prepareStatement(starQuery);
-            select_star_stmt.setString(1,tempActor.getName());
-            select_star_stmt.setInt(2,tempMovie.getYear());
-        }
-        else {
-            starQuery = "SELECT id FROM star WHERE name = ?";
-            select_star_stmt = parser_conn.prepareStatement(starQuery);
-            select_star_stmt.setString(1,tempActor.getName());
-        }
-
-        ResultSet select_star_result = select_star_stmt.executeQuery();
-        String starId = null;
-        int counter = 1;
-        while (select_star_result.next()) {
-            if (counter > 1) {
-                System.out.println("More than One Star: ("+
-                        select_star_result.getString("id")+","+
-                        select_star_result.getString("name")+","+
-                        select_star_result.getString("birthYear")+")"
-                );
-            }
-            else {
-                starId = select_star_result.getString("id");
-            }
-            counter++;
-        }
-
-        if (starId == null && tempCast.containsKey(tempActor.getName())) {
-            starId = tempCast.get(tempActor.getName());
-        }
-
-        return starId;
     }
 
     private int getHighestId() throws SQLException {
@@ -145,33 +86,110 @@ public class CastParser extends DefaultHandler {
         }
         return Integer.parseInt(idStr.substring(2));
     }
+    private String[] getMovieIfExists(final String id, final String t, final String d) throws SQLException {
+        PreparedStatement movie_stmt;
+        String[] queries = {
+                "SELECT id, year FROM movies WHERE title = ? AND director = ? AND (LENGTH(id) = 9 OR id LIKE ?) LIMIT 1",
+                "SELECT id, year, director FROM movies WHERE title = ? AND (LENGTH(id) = 9 OR id LIKE ?)",
+                "SELECT id, year FROM movies WHERE title = ? AND director = ? LIMIT 1",
+                "SELECT id, year FROM movies WHERE title = ? AND (LENGTH(id) = 9 OR id LIKE ?) LIMIT 1"
+        };
+        if (Objects.equals(t, "The Thief of Bagdad")) {
+            System.out.println("");
+        }
+        int queryCounter = 1;
+        ResultSet movie_results;
+        String[] movie_info = null;
+        for (String q : queries) {
+            movie_stmt = parser_conn.prepareStatement(q);
+            if (queryCounter == 1) {
+                movie_stmt.setString(1,t);
+                movie_stmt.setString(2,d);
+                movie_stmt.setString(3,id+"%");
+                movie_results = movie_stmt.executeQuery();
+                while (movie_results.next()) {
+                    movie_info = new String[]{movie_results.getString("id"), Integer.toString(movie_results.getInt("year"))};
+                }
+                if (movie_info != null) {break; }
+            }
+            else if (queryCounter == 2) {
+                movie_stmt.setString(1,t);
+                movie_stmt.setString(2,id+"%");
+                movie_results = movie_stmt.executeQuery();
+                String[] tempDirector = d.split("[ ]|[\\.]");
+                while (movie_results.next()) {
+                    String[] mDirector = movie_results.getString("director").split("[ ]|[\\.]|(?=\\p{Lu})");
+                    if (tempDirector.length == 1 || mDirector.length == 1) {
+                        if (tempDirector[0].equalsIgnoreCase(mDirector[mDirector.length-1])) {
+                            movie_info = new String[]{movie_results.getString("id"), Integer.toString(movie_results.getInt("year"))};
+                        }
+                    }
+                    else {
+                        if (tempDirector[0].substring(0,1).equalsIgnoreCase(mDirector[0].substring(0,1))) {
+                            if (tempDirector[tempDirector.length-1].equalsIgnoreCase(mDirector[mDirector.length-1])) {
+                                movie_info = new String[]{movie_results.getString("id"), Integer.toString(movie_results.getInt("year"))};
+                            }
+                        }
+                    }
+                }
+                if (movie_info != null) {break; }
+            }
+            else if (queryCounter == 3) {
+                movie_stmt.setString(1,t);
+                movie_stmt.setString(2,d);
+                movie_results = movie_stmt.executeQuery();
+                while (movie_results.next()) {
+                    movie_info = new String[]{movie_results.getString("id"), Integer.toString(movie_results.getInt("year"))};
+                }
+                if (movie_info != null) {break; }
+            }
+            else {
+                movie_stmt.setString(1,t);
+                movie_stmt.setString(2,id+"%");
+                movie_results = movie_stmt.executeQuery();
+                while (movie_results.next()) {
+                    movie_info = new String[]{movie_results.getString("id"), Integer.toString(movie_results.getInt("year"))};
+                }
+                break;
+            }
 
-    // Function creates a new star in the movie database
-    // birthYear is always null though
-    private String insertStar() throws SQLException {
+            queryCounter++;
+        }
+
+        return movie_info;
+    }
+    private String getStarIfExists(final Integer movieYear) {
+        String starId = null;
+        if (currentActors.containsKey(tempActor.getName())) {
+            Integer year = null;
+            for (Map.Entry<String, Integer> entry : currentActors.get(tempActor.getName()).entrySet()) {
+                if (entry.getValue() != null) {
+                    if (movieYear == null || entry.getValue() <= movieYear) {
+                        if (year == null || (entry.getValue() <= year)) {
+                            starId = entry.getKey();
+                            year = entry.getValue();
+                        }
+                    }
+                }
+                else {
+                    starId = entry.getKey();
+                }
+            }
+        }
+        else if (tempCast.containsKey(tempActor.getName())) {
+            starId = tempCast.get(tempActor.getName());
+        }
+        return starId;
+    }
+    private String newStarId() {
         String new_id = "nm" + nextId;
-        star_stmt.setString(1,new_id);
-        star_stmt.setString(2,tempActor.getName());
-        star_stmt.addBatch();
         nextId++;
         return new_id;
     }
-
-    private void insertBatch() {
-        try {
-            star_stmt.executeLargeBatch();
-            parser_conn.commit();
-            movie_stmt.executeLargeBatch();
-            parser_conn.commit();
-        } catch (SQLException e) {
-            System.out.println("-- batch failed: " + e.getMessage());
-        }
-    }
-
+    // Parsing Methods
     public void runParser() {
         parseDocument();
     }
-
     private void parseDocument() {
         SAXParserFactory spf = SAXParserFactory.newInstance();
         try {
@@ -179,9 +197,15 @@ public class CastParser extends DefaultHandler {
 
             establishConnection();
             nextId = getHighestId() + 1;
+            getCurrentActors();
+
             // Parse and import XML data into moviedb
-            sp.parse("casts124 - Light.xml",this);
+            sp.parse("casts124.xml",this);
+
             insertBatch();
+            tempCast.clear();
+            movieStarPairs.clear();
+            cast_counter = 0;
 
             closeConnection();
         } catch (SAXException se) {
@@ -195,10 +219,21 @@ public class CastParser extends DefaultHandler {
             E.printStackTrace();
         }
     }
-
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         tempVal = "";
         if (qName.equalsIgnoreCase("dirfilms")) {
+            if (cast_counter >= 600) {
+                System.out.println("- Batch Size: " + cast_counter);
+                insertBatch();
+                tempCast.clear();
+                movieStarPairs.clear();
+                cast_counter = 0;
+                try {
+                    getCurrentActors();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             tempDirector = "[Unknown]";
         }
         else if (qName.equalsIgnoreCase("filmc")) {
@@ -209,71 +244,108 @@ public class CastParser extends DefaultHandler {
             tempActor = null;
         }
     }
-
     public void characters(char[] ch, int start, int length) throws SAXException {
         tempVal = new String(ch, start, length);
     }
-
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (qName.equalsIgnoreCase(" dirfilms")) {
-            if (cast_counter >= 500) {
-                System.out.println("- Batch Size: " + cast_counter);
-                insertBatch();
-                tempCast.clear();
-                System.out.println("-- Successfully inserted batch.");
+        if (qName.equalsIgnoreCase("filmc")) {
+            if (existingMovieInfo == null) {
+                System.out.println("Movie Not Found: " + tempMovie.getTitle());
             }
+            validateMovie = false;
+            existingMovieInfo = null;
         }
-        if (qName.equalsIgnoreCase("m")) {
+        else if (qName.equalsIgnoreCase("m")) {
             // Check if the movie is already in the database
             try {
-                final String[] existingMovieInfo = getMovieIfExists(tempMovie.getId(),tempMovie.getTitle(),tempMovie.getDirector());
-                if (existingMovieInfo != null) {
+                if (!validateMovie) {
+                    existingMovieInfo = getMovieIfExists(tempMovie.getId(),tempMovie.getTitle(),tempMovie.getDirector());
+                    validateMovie = true;
+                }
+                else if (existingMovieInfo != null) {
                     tempMovie.setId(existingMovieInfo[0]);
                     tempMovie.setYear(existingMovieInfo[1]);
                     if (tempActor != null) {
-                        if (!tempActor.getName().matches("^[a|s][ ]*[a|s]([ ]*[a|s]?)*$")  && !tempActor.getName().equals(" ")
+                        if (!tempActor.getName().matches("^[a|s|S|A][ ]*[a|s|S|A]([ ]*[a|s]?)*$")
+                                && !tempActor.getName().equals(" ")
                                 && !tempActor.getName().matches("[\\d]+")) {
-                            String starId = getStarIfExists();
+                            String starId = getStarIfExists(tempMovie.getYear());
                             if (starId == null) {
-                                System.out.println("- Inserting New Star: "  + tempActor.getName());
-                                starId = insertStar();
+                                starId = newStarId();
                                 tempCast.put(tempActor.getName(),starId);
                             }
                             tempActor.setId(starId);
+                            final String[] tempPair = {tempActor.getId(),tempMovie.getId()};
+                            movieStarPairs.add(tempPair);
+                            cast_counter++;
                         }
-                        movie_stmt.setString(1,tempMovie.getId());
-                        movie_stmt.setString(2,tempActor.getId());
-                        movie_stmt.addBatch();
-                        cast_counter++;
                     }
-                }
-                else {
-                    System.out.println("-- Can't Find Movie: " + tempMovie.getTitle());
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
-        if (qName.equalsIgnoreCase("is")) {
+        else if (qName.equalsIgnoreCase("is")) {
             tempDirector = tempVal;
         }
         else if (qName.equalsIgnoreCase("f")) {
             tempMovie.setId(tempVal);
         }
         else if (qName.equalsIgnoreCase("t")) {
-           tempMovie.setTitle(tempVal);
+            tempMovie.setTitle(tempVal);
         }
         else if (qName.equalsIgnoreCase("a")) {
             if (tempVal != "") {
                 tempActor = new Actor();
                 tempActor.setName(tempVal);
             }
-
         }
     }
-
     public static void main(String[] args) {
         CastParser cp = new CastParser();
         cp.runParser();
+    }
+
+    // Batch Insertion Methods
+    private void insertBatch() {
+        try {
+            String stars_in_movies_query = "INSERT INTO stars_in_movies (starId,movieId) SELECT * FROM ( VALUES " +
+                    "ROW(?,?),\n".repeat(movieStarPairs.size());
+            stars_in_movies_query = stars_in_movies_query.substring(0,stars_in_movies_query.length()-2);
+            stars_in_movies_query += ") as newPairs(starId,movieId) " +
+                    "WHERE NOT EXISTS (" + "SELECT 1 FROM stars_in_movies AS sm " + "WHERE sm.starId = newPairs.starId AND "
+                    + "sm.movieId=newPairs.movieId);";
+            String stars_query = "INSERT INTO stars (id,name) VALUES " + "(?,?),\n".repeat(tempCast.size());
+            stars_query = stars_query.substring(0,stars_query.length()-2)+";";
+
+            PreparedStatement stars_in_movies_prep = parser_conn.prepareStatement(stars_in_movies_query);
+            PreparedStatement stars_prep = parser_conn.prepareStatement(stars_query);
+
+            int index = 1;
+
+            for (Map.Entry<String, String> entry : tempCast.entrySet()) {
+                stars_prep.setString(index,entry.getValue());
+                stars_prep.setString(index+1,entry.getKey());
+                index+=2;
+            }
+            if (!stars_prep.toString().contains("INSERT INTO stars (id,name) VALUE;")) {
+                stars_prep.executeUpdate();
+                parser_conn.commit();
+            }
+            index=1;
+            for (String[] p : movieStarPairs) {
+                stars_in_movies_prep.setString(index,p[0]);
+                stars_in_movies_prep.setString(index+1,p[1]);
+                index+=2;
+            }
+
+            stars_in_movies_prep.executeUpdate();
+            parser_conn.commit();
+            System.out.println("-- Successfully Exported Batch");
+        } catch (Exception E) {
+            System.out.println("-- batch failed: " + E.getMessage());
+            E.printStackTrace();
+        }
+
     }
 }

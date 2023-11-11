@@ -37,3 +37,8 @@ Both:
 - create_table.sql
 - setting up aws + maven project
 - git
+
+### Parser Optimizations
+1. Multi-Threading
+2. Clunking
+3. Mass Insert SQL. SQL handling duplicates

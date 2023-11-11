@@ -2,16 +2,13 @@ package Parse;
 
 public class xmlParser {
     public static void main(String[] args) {
-        ActorParser ap = new ActorParser();
+        System.out.println("-- Start XML Parsing");
         MovieParser mp = new MovieParser();
-        CastParser cp = new CastParser();
-
         mp.runParser();
-        System.out.println("-- Finished Movie Parser");
+        ActorParser ap = new ActorParser();
         ap.runParser();
-        System.out.println("-- Finished Actor Parser");
+        CastParser cp = new CastParser();
         cp.runParser();
-        System.out.println("-- Finished Cast Parser");
-
+        System.out.println("-- Finished XML Parsing");
     }
 }
