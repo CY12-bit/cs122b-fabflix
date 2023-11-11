@@ -214,7 +214,7 @@ public class MovieParser extends DefaultHandler {
             movie_counter++;
         }
         else if (!movieIdGroups.get(tempMovie.getId()).contains(movieIdentifier)) {
-            System.out.println("Same movie ID but diff. movie information. Generating new id...");
+            System.out.println("Same movie ID but diff. movie info. Generating new id for "+tempMovie.getId());
             movieIdGroups.get(tempMovie.getId()).add(movieIdentifier);
             tempMovie.setId(tempMovie.getId()+"_"+(movieIdGroups.get(tempMovie.getId()).size()-1));
             myMovies.add(tempMovie);

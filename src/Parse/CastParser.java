@@ -94,9 +94,6 @@ public class CastParser extends DefaultHandler {
                 "SELECT id, year FROM movies WHERE title = ? AND director = ? LIMIT 1",
                 "SELECT id, year FROM movies WHERE title = ? AND (LENGTH(id) = 9 OR id LIKE ?) LIMIT 1"
         };
-        if (Objects.equals(t, "The Thief of Bagdad")) {
-            System.out.println("");
-        }
         int queryCounter = 1;
         ResultSet movie_results;
         String[] movie_info = null;
@@ -162,6 +159,7 @@ public class CastParser extends DefaultHandler {
         String starId = null;
         if (currentActors.containsKey(tempActor.getName())) {
             Integer year = null;
+            // We want to grab the star with an actual birthYear and who is farthest away from the movie year
             for (Map.Entry<String, Integer> entry : currentActors.get(tempActor.getName()).entrySet()) {
                 if (entry.getValue() != null) {
                     if (movieYear == null || entry.getValue() <= movieYear) {
@@ -171,7 +169,7 @@ public class CastParser extends DefaultHandler {
                         }
                     }
                 }
-                else {
+                else if (year == null) { // Hopefully this is good...
                     starId = entry.getKey();
                 }
             }
