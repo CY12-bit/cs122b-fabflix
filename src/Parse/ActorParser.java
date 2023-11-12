@@ -146,6 +146,7 @@ public class ActorParser extends DefaultHandler {
 
                 index += 3;
             }
+            System.out.println("ACTOR: batch size " + actorList.size() + " added");
             insertStatement.executeUpdate();
             insertStatement.close();
 
@@ -163,7 +164,6 @@ public class ActorParser extends DefaultHandler {
                 } catch (Exception e) { System.out.println(e.getMessage()); }
                 actorList.clear();
             }
-            System.out.println(tempActor.toString());
         } else if (qName.equalsIgnoreCase("stagename")) {
             tempActor.setName(tempVal);
         } else if (qName.equalsIgnoreCase("dob")) {
