@@ -1,5 +1,7 @@
 package Parse;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import java.sql.*;
@@ -23,6 +25,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class MovieParser extends DefaultHandler {
+    private BufferedWriter errorWriter;
+
     // Database Connection
     private Connection parser_conn;
 
@@ -74,6 +78,11 @@ public class MovieParser extends DefaultHandler {
         genre_movie_counter = 0;
         batchStatements = new ArrayList<ArrayList<PreparedStatement>>();
         movieMap = new HashMap<>();
+        try {
+            errorWriter = new BufferedWriter(new FileWriter("movieLogs.txt"));
+        } catch (Exception E) {
+            E.printStackTrace();
+        }
     }
 
     // SAX Parsing Methods
@@ -97,6 +106,8 @@ public class MovieParser extends DefaultHandler {
             loadBatch();
             exportBatches();
             clearBatches();
+
+            errorWriter.close();
 
             // Closes database connection
             closeConnection();
@@ -226,6 +237,12 @@ public class MovieParser extends DefaultHandler {
         // If we have came across the movie before but they have different movie information, then we still insert it
         // with a new movie ID we generate
         else if (!movieIdGroups.get(tempMovie.getId()).contains(movieIdentifier)) {
+            try {
+                errorWriter.write("Same movie ID but diff. movie info. Generating new id for "+tempMovie.getId());
+                errorWriter.newLine();
+            } catch (Exception E) {
+                E.printStackTrace();
+            }
             System.out.println("Same movie ID but diff. movie info. Generating new id for "+tempMovie.getId());
             movieIdGroups.get(tempMovie.getId()).add(movieIdentifier);
             tempMovie.setId(tempMovie.getId()+"_"+(movieIdGroups.get(tempMovie.getId()).size()-1));
@@ -267,6 +284,10 @@ public class MovieParser extends DefaultHandler {
 
     public HashMap<String, MovieObject> getMovieMap() {
         return movieMap;
+    }
+
+    public HashMap<String, HashSet<String>> getMovieIdGroups() {
+        return movieIdGroups;
     }
 
     private boolean checkIfGenreParsed(final String g) { return new_genres.contains(g) || current_genres.containsKey(g); }

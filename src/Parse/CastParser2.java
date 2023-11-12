@@ -1,6 +1,8 @@
 package Parse;
 
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ AWS can only handle this parser.
  */
 
 public class CastParser2 extends DefaultHandler {
+    private BufferedWriter errorWriter;
     private String tempVal;
     private StarInMovie tempPair;
     private ArrayList<StarInMovie> simArray;
@@ -29,6 +32,7 @@ public class CastParser2 extends DefaultHandler {
 
     HashMap<String, String> actorNameIdMap;
     HashMap<String, MovieObject> movieIdMap;
+    // HashMap<String, HashSet<String>> movieIdGroups;
 
     public CastParser2(HashMap<String, MovieObject> movieIdMap) {
         tempPair = null;
@@ -36,7 +40,13 @@ public class CastParser2 extends DefaultHandler {
         connection = null;
         this.actorNameIdMap = new HashMap<>();
         this.movieIdMap = movieIdMap;
+        // this.movieIdGroups = movieIdGroups;
         startConnection();
+        try {
+            errorWriter = new BufferedWriter(new FileWriter("castLogs.txt"));
+        } catch (Exception E) {
+            E.printStackTrace();
+        }
     }
 
     private void startConnection() {
@@ -45,10 +55,10 @@ public class CastParser2 extends DefaultHandler {
             connection = DriverManager.getConnection(
                     "jdbc:" + DBInfo.dbtype + "://localhost:3306/" + DBInfo.dbname,
                     DBInfo.username, DBInfo.password);
+            connection.setAutoCommit(false);
         } catch (Exception e) {
             connection = null;
         }
-
     }
 
     private void closeConnection() {
@@ -56,7 +66,6 @@ public class CastParser2 extends DefaultHandler {
             if (connection != null)
                 connection.close();
         } catch (Exception ignore) {}
-
     }
 
     private void populateStarNameIdMap() throws SQLException {
@@ -89,7 +98,8 @@ public class CastParser2 extends DefaultHandler {
                 statement.setString(2, sim.getMovieId());
                 statement.addBatch();
             }
-            statement.executeBatch();
+            statement.executeLargeBatch();
+            connection.commit();
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
@@ -110,6 +120,7 @@ public class CastParser2 extends DefaultHandler {
 
             insertBatch();
             closeConnection();
+            errorWriter.close();
 
         } catch (SAXException se) {
             se.printStackTrace();
@@ -136,6 +147,12 @@ public class CastParser2 extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (qName.equalsIgnoreCase("m")) {
             if (tempPair.hasNull()) {
+                try {
+                    errorWriter.write("Cast is missing value: " + tempPair.toString());
+                    errorWriter.newLine();
+                } catch (Exception E) {
+                    E.printStackTrace();
+                }
                 System.out.println("Cast is missing value: " + tempPair.toString());
                 return;
             }
@@ -145,11 +162,17 @@ public class CastParser2 extends DefaultHandler {
                     simArray.add(tempPair);
                 }
             } else {
+                try {
+                    errorWriter.write("Unrecognized Movie Id: " + tempPair.getMovieId());
+                    errorWriter.newLine();
+                } catch (Exception E) {
+                    E.printStackTrace();
+                }
                 System.out.println("Unrecognized Movie Id: " + tempPair.getMovieId());
             }
 
             if (simArray.size() >= 1500) {
-                System.out.println("-- inserting stars in movie batch (size: " + simArray.size() + "--");
+                System.out.println("-- inserting stars in movie batch (size: " + simArray.size() + ") --");
                 insertBatch();
                 simArray.clear();
             }
@@ -159,18 +182,20 @@ public class CastParser2 extends DefaultHandler {
             tempPair.setMovieId(tempVal);
         } else if (qName.equalsIgnoreCase("a")) {
             String starName = tempVal;
-            starName = starName.strip();
-            starName = starName.replaceAll("~", " ");
-            starName = starName.replaceAll("[\\\\][\\W]","");
             tempPair.setStarName(starName);
 
-            if (actorNameIdMap.containsKey(starName)) {
+            if (actorNameIdMap.containsKey(tempPair.getStarName())) {
                 tempPair.setStarId(actorNameIdMap.get(starName));
             } else {
-                System.out.println("unrecognized star: " + starName);
+                try {
+                    errorWriter.write("Unrecognized star: " + starName);
+                    errorWriter.newLine();
+                } catch (Exception E) {
+                    E.printStackTrace();
+                }
+                System.out.println("Unrecognized star: " + starName);
             }
         }
-
     }
 
 }

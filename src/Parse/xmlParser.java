@@ -10,6 +10,7 @@ public class xmlParser {
         mp.runParser();
 
         HashMap<String, MovieObject> movieMap = mp.getMovieMap();
+        // HashMap<String, HashSet<String>> moveIdGroups = mp.getMovieIdGroups();
         ActorParser ap = new ActorParser();
         ap.runParser();
 

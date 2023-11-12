@@ -1,5 +1,7 @@
 package Parse;
 
+import java.util.ArrayList;
+
 public class StarInMovie {
     String starId;
     String movieId;
@@ -25,6 +27,8 @@ public class StarInMovie {
     }
 
     public void setMovieId(String movieId) {
+        movieId = movieId.strip();
+        movieId = movieId.replaceAll("[\\W]","");
         this.movieId = movieId;
     }
 
@@ -33,6 +37,10 @@ public class StarInMovie {
     }
 
     public void setMovieName(String movieName) {
+        movieName = movieName.strip();
+        movieName = movieName.replaceAll("~"," ");
+        movieName = movieName.replaceAll("[\\\\][\\W]","");
+        movieName = movieName.replaceAll("[\\\\]","");
         this.movieName = movieName;
     }
 
@@ -40,8 +48,23 @@ public class StarInMovie {
         return starName;
     }
 
-    public void setStarName(String starName) {
-        this.starName = starName;
+    public void setStarName(String name) {
+        if (name != "") {
+            name = name.strip();
+            name = name.replaceAll("~", " ");
+            name = name.replaceAll("[\\\\][\\W]","");
+
+            // Capitalization Process
+            String[] split_words = name.split("[ ]+");
+            ArrayList<String> capitalized_words = new ArrayList<String>();
+            for (String c : split_words) {
+                c = c.substring(0, 1).toUpperCase() + c.substring(1);
+                capitalized_words.add(c);
+            }
+            name = String.join(" ",capitalized_words);
+        }
+
+        this.starName = name;
     }
 
     public boolean hasNull() {

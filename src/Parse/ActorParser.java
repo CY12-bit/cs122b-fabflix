@@ -1,6 +1,8 @@
 package Parse;
 
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class ActorParser extends DefaultHandler {
+    private BufferedWriter errorWriter;
     private String tempVal;
 
     //to maintain context
@@ -38,6 +41,11 @@ public class ActorParser extends DefaultHandler {
         startConnection();
         nextId = 0;
         actorNames = new HashSet<>();
+        try {
+            errorWriter = new BufferedWriter(new FileWriter("actorLogs.txt"));
+        } catch (Exception E) {
+            E.printStackTrace();
+        }
     }
 
     private void startConnection() {
@@ -64,7 +72,7 @@ public class ActorParser extends DefaultHandler {
         try {
             nextId = getHighestId() + 1;
             parseDocument();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
@@ -84,6 +92,8 @@ public class ActorParser extends DefaultHandler {
             // insert remaining
             insertBatch();
             closeConnection();
+
+            errorWriter.close();
 
         } catch (SAXException se) {
             se.printStackTrace();
@@ -165,6 +175,12 @@ public class ActorParser extends DefaultHandler {
                     actorList.add(tempActor);
                 }
                 else {
+                    try {
+                        errorWriter.write("duplicate actor: " + tempActor.getName());
+                        errorWriter.newLine();
+                    } catch (Exception E) {
+                        E.printStackTrace();
+                    }
                     System.out.println("duplicate actor: " + tempActor.getName());
                 }
             } else {

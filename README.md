@@ -61,6 +61,9 @@ Both:
 - setting up aws + maven project
 - git
 
+### Files that use PreparedStatements
+- Almost all files in src (except User,Movie,MovieObject,Actor,RecaptchaConstraints,JumpServlet)
+
 ### Parser Optimizations
 1. Implemented Multi-Threading for MovieParser.
    - Use 3 threads to parse 3 batches of prepared statements at the same time. 
