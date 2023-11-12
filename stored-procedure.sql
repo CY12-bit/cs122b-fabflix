@@ -13,7 +13,7 @@ BEGIN
 IF (SELECT NOT EXISTS(SELECT 1 FROM movies WHERE mTitle = title AND mYear = year AND mDirector = director)) THEN 	# If the movie does not exist
     INSERT into movies 
     SELECT CONCAT('tt',LPAD(CAST((MAX(CAST(SUBSTRING(id, 3) AS unsigned)) + 1) AS CHAR(10)),7,'0')),
-    mTitle,mYear,mDirector,FLOOR(RAND()*(10-5+1)+5) FROM movies; 
+    mTitle,mYear,mDirector,FLOOR(RAND()*(10-5+1)+5) FROM movies WHERE LENGTH(id) >= 9; 
     IF (SELECT NOT EXISTS(SELECT 1 FROM stars WHERE star_name = name)) THEN
         INSERT INTO stars(id,name,birthYear) 
         SELECT CONCAT('nm',LPAD(CAST((MAX(CAST(SUBSTRING(id, 3) AS unsigned)) + 1) AS CHAR(10)),7,'0')),
