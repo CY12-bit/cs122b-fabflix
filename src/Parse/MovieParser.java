@@ -54,8 +54,6 @@ public class MovieParser extends DefaultHandler {
      */
     private ArrayList<ArrayList<PreparedStatement>> batchStatements;
 
-    private HashMap<String, HashSet<MovieObject>> title_movie_map;
-
     /*
     Parsing Related
      */
@@ -63,6 +61,7 @@ public class MovieParser extends DefaultHandler {
     private String tempDirector;
     private MovieObject tempMovie;
     private ArrayList<String> tempGenres = new ArrayList<String>();
+    private HashMap<String, MovieObject> movieMap;
 
     // Initializer
     public MovieParser() {
@@ -74,7 +73,7 @@ public class MovieParser extends DefaultHandler {
         parseGenre = false;
         genre_movie_counter = 0;
         batchStatements = new ArrayList<ArrayList<PreparedStatement>>();
-        title_movie_map = new HashMap<>();
+        movieMap = new HashMap<>();
     }
 
     // SAX Parsing Methods
@@ -210,14 +209,6 @@ public class MovieParser extends DefaultHandler {
         }
     }
 
-    private void addTempMovieToMap() {
-        if (!title_movie_map.containsKey(tempMovie.getTitle())) {
-            title_movie_map.put(tempMovie.getTitle(), new HashSet<>());
-        }
-        HashSet<MovieObject> set = title_movie_map.get(tempMovie.getTitle());
-        set.add(tempMovie);
-    }
-
     // Movie Check Methods
     private boolean checkMovie() {
         // Check if there was a movie with the same id. If not, add the new movie to the list
@@ -228,7 +219,7 @@ public class MovieParser extends DefaultHandler {
             myMovies.add(tempMovie);
             movieIdGroups.put(tempMovie.getId(),new HashSet<String>());
             movieIdGroups.get(tempMovie.getId()).add(movieIdentifier);
-            addTempMovieToMap();
+            movieMap.put(tempMovie.getId(), tempMovie);
             movie_counter++;
             return true;
         }
@@ -239,7 +230,7 @@ public class MovieParser extends DefaultHandler {
             movieIdGroups.get(tempMovie.getId()).add(movieIdentifier);
             tempMovie.setId(tempMovie.getId()+"_"+(movieIdGroups.get(tempMovie.getId()).size()-1));
             myMovies.add(tempMovie);
-            addTempMovieToMap();
+            movieMap.put(tempMovie.getId(), tempMovie);
             movie_counter++;
             return true;
         }
@@ -273,6 +264,11 @@ public class MovieParser extends DefaultHandler {
         }
         genre_results.close();
     }
+
+    public HashMap<String, MovieObject> getMovieMap() {
+        return movieMap;
+    }
+
     private boolean checkIfGenreParsed(final String g) { return new_genres.contains(g) || current_genres.containsKey(g); }
 
     // Batch Insertion Methods
@@ -370,9 +366,6 @@ public class MovieParser extends DefaultHandler {
         }
     }
 
-    public HashMap<String, HashSet<MovieObject>> getTitleMovieMap() {
-        return title_movie_map;
-    }
 
     // Multi-Threading Methods
     static class QueryWorker implements Runnable {
