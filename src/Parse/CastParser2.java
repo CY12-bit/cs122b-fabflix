@@ -15,6 +15,11 @@ import org.xml.sax.SAXException;
 
 import org.xml.sax.helpers.DefaultHandler;
 
+/*
+This is the light version of the Cast Parser used on AWS.
+AWS can only handle this parser.
+ */
+
 public class CastParser2 extends DefaultHandler {
     private String tempVal;
     private StarInMovie tempPair;
