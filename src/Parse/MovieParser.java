@@ -54,6 +54,8 @@ public class MovieParser extends DefaultHandler {
      */
     private ArrayList<ArrayList<PreparedStatement>> batchStatements;
 
+    private HashMap<String, HashSet<MovieObject>> title_movie_map;
+
     /*
     Parsing Related
      */
@@ -72,6 +74,7 @@ public class MovieParser extends DefaultHandler {
         parseGenre = false;
         genre_movie_counter = 0;
         batchStatements = new ArrayList<ArrayList<PreparedStatement>>();
+        title_movie_map = new HashMap<>();
     }
 
     // SAX Parsing Methods
@@ -207,24 +210,36 @@ public class MovieParser extends DefaultHandler {
         }
     }
 
+    private void addTempMovieToMap() {
+        if (!title_movie_map.containsKey(tempMovie.getTitle())) {
+            title_movie_map.put(tempMovie.getTitle(), new HashSet<>());
+        }
+        HashSet<MovieObject> set = title_movie_map.get(tempMovie.getTitle());
+        set.add(tempMovie);
+    }
+
     // Movie Check Methods
     private boolean checkMovie() {
         // Check if there was a movie with the same id. If not, add the new movie to the list
         final String movieIdentifier = tempMovie.getTitle()+"|"+tempMovie.getDirector()+"|"+tempMovie.getYear();
 
-        // Check if the movie's id has already been used
+        // If the movie id hasn't been processed already
         if(!movieIdGroups.containsKey(tempMovie.getId())) {
             myMovies.add(tempMovie);
             movieIdGroups.put(tempMovie.getId(),new HashSet<String>());
             movieIdGroups.get(tempMovie.getId()).add(movieIdentifier);
+            addTempMovieToMap();
             movie_counter++;
             return true;
         }
+        // If we have came across the movie before but they have different movie information, then we still insert it
+        // with a new movie ID we generate
         else if (!movieIdGroups.get(tempMovie.getId()).contains(movieIdentifier)) {
             System.out.println("Same movie ID but diff. movie info. Generating new id for "+tempMovie.getId());
             movieIdGroups.get(tempMovie.getId()).add(movieIdentifier);
             tempMovie.setId(tempMovie.getId()+"_"+(movieIdGroups.get(tempMovie.getId()).size()-1));
             myMovies.add(tempMovie);
+            addTempMovieToMap();
             movie_counter++;
             return true;
         }
@@ -353,6 +368,10 @@ public class MovieParser extends DefaultHandler {
         } catch (Exception E) {
             System.out.println("Unable to Grab Current Genres");
         }
+    }
+
+    public HashMap<String, HashSet<MovieObject>> getTitleMovieMap() {
+        return title_movie_map;
     }
 
     // Multi-Threading Methods
