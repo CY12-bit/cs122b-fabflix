@@ -76,3 +76,6 @@ Both:
 3. Implemented HashMap on CastParserV2.
    - Stores movies created in MovieParser in hashmap to be referenced by CastParser instead of calling db multiple times.
    - Reduces time of CastParserV2 by 1/2 its original time.
+  
+### Inconsistency Report
+- located in movieLogs.txt, castLogs.txt, and actorLogs.txt
