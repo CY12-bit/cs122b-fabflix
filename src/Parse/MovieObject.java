@@ -10,7 +10,7 @@ public class MovieObject {
             put("susp", "Thriller"); put("ctcxx","Uncategorized"); put("dramn","Drama");
             put("cnr", "Cops and Robbers"); put("cnrb", "Cops and Robbers"); put("camp", "Camp");
             put("actn","Action"); put("cart","Animation"); put("comdx","Comedy");
-            put("sports","Sports"); put("sram>","Drama");put("drama","Drama"); put("draam","Drama"); put("dram>","Drama");
+            put("sports","Sport"); put("sram>","Drama");put("drama","Drama"); put("draam","Drama"); put("dram>","Drama");
             put("faml", "Family"); put("hist", "History"); put("fant","Fantasy");
             put("dram","Drama"); put("west","Western"); put("myst","Mystery"); put("sxfi","Sci-Fi");
             put("s.f.", "Sci-Fi"); put("advt","Adventure"); put("horr","Horror"); put("hor","Horror"); put("mystp","Mystery");
