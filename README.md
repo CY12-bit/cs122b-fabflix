@@ -1,4 +1,4 @@
-demo video link: https://youtu.be/BajTOlOgLzg
+demo video link: https://youtu.be/20gYDr3Eh2U
 
 ### Member contribution
 
@@ -63,6 +63,8 @@ Both:
 
 ### Files that use PreparedStatements
 - Almost all files in src (except User,Movie,MovieObject,Actor,RecaptchaConstraints,JumpServlet)
+- most servlets already used prepared statements 
+- changes: MovieListServlets (~line 135) changes to use PreparedStatements
 
 ### Parser Optimizations
 1. Implemented Multi-Threading for MovieParser.
