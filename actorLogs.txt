@@ -1,0 +1,26 @@
+duplicate actor: Kenneth Branagh
+duplicate actor: Wilford Brimley
+duplicate actor: Colin Campbell
+duplicate actor: John Cassavetes
+duplicate actor: William Devane
+duplicate actor: Derek Farr
+duplicate actor: Charles Farrell
+duplicate actor: Frances Fisher
+duplicate actor: Peter Graves
+duplicate actor: Laurence Harvey
+duplicate actor: Nicky Henson
+duplicate actor: William Holden
+duplicate actor: Rex Ingram
+duplicate actor: Charles King
+duplicate actor: Jack Lambert
+duplicate actor: Jane March
+duplicate actor: Spanky McFarland
+duplicate actor: Mary Morris
+duplicate actor: Carrie Ann Morrow
+duplicate actor: Jennifer ONeill
+duplicate actor: Raymond Pellegrin
+duplicate actor: Harvey Stephens
+duplicate actor: Sting
+duplicate actor: Ann Todd
+duplicate actor: Beverly Tyler
+duplicate actor: Vanessa Williams
