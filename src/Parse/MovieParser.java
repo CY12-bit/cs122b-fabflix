@@ -256,6 +256,7 @@ public class MovieParser extends DefaultHandler {
         while (genre_results.next()) {
             current_genres.put(genre_results.getString("name"),genre_results.getInt("id"));
         }
+        genre_results.close();
     }
     private boolean checkIfGenreParsed(final String g) { return new_genres.contains(g) || current_genres.containsKey(g); }
 

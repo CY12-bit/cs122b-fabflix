@@ -114,7 +114,8 @@ public class ActorParser extends DefaultHandler {
         while (highestId.next()) {
             idStr = highestId.getString("id");
         }
-        // Colin: Does the prepared statement need to be closed?
+        highestIdStatement.close();
+        highestId.close();
         return Integer.parseInt(idStr.substring(2));
     }
 

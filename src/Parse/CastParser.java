@@ -72,6 +72,7 @@ public class CastParser extends DefaultHandler {
                     actor_results.getString("id"), tempYear
             );
         }
+        actor_results.close();
     }
 
     private int getHighestId() throws SQLException {
@@ -84,6 +85,8 @@ public class CastParser extends DefaultHandler {
         while (highestId.next()) {
             idStr = highestId.getString("id");
         }
+        highestIdStatement.close();
+        highestId.close();
         return Integer.parseInt(idStr.substring(2));
     }
     private String[] getMovieIfExists(final String id, final String t, final String d) throws SQLException {
@@ -95,7 +98,7 @@ public class CastParser extends DefaultHandler {
                 "SELECT id, year FROM movies WHERE title = ? AND (LENGTH(id) = 9 OR id LIKE ?) LIMIT 1"
         };
         int queryCounter = 1;
-        ResultSet movie_results;
+        ResultSet movie_results = null;
         String[] movie_info = null;
         for (String q : queries) {
             movie_stmt = parser_conn.prepareStatement(q);
@@ -149,10 +152,10 @@ public class CastParser extends DefaultHandler {
                 }
                 break;
             }
-
+            movie_results.close();
             queryCounter++;
         }
-
+        movie_results.close();
         return movie_info;
     }
     private String getStarIfExists(final Integer movieYear) {
