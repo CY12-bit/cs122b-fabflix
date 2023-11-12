@@ -12,9 +12,8 @@ public class xmlParser {
         HashMap<String, MovieObject> movieMap = mp.getMovieMap();
         ActorParser ap = new ActorParser();
         ap.runParser();
-        HashMap<String, String> actorMap = ap.getActorNameId();
 
-        CastParser2 cp = new CastParser2(movieMap, actorMap);
+        CastParser2 cp = new CastParser2(movieMap);
         cp.runParser();
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);

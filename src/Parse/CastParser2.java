@@ -25,11 +25,11 @@ public class CastParser2 extends DefaultHandler {
     HashMap<String, String> actorNameIdMap;
     HashMap<String, MovieObject> movieIdMap;
 
-    public CastParser2(HashMap<String, MovieObject> movieIdMap, HashMap<String, String> actorIdNameMap) {
+    public CastParser2(HashMap<String, MovieObject> movieIdMap) {
         tempPair = null;
         simArray = new ArrayList<>();
         connection = null;
-        this.actorNameIdMap = actorIdNameMap;
+        this.actorNameIdMap = new HashMap<>();
         this.movieIdMap = movieIdMap;
         startConnection();
     }
@@ -54,8 +54,22 @@ public class CastParser2 extends DefaultHandler {
 
     }
 
+    private void populateStarNameIdMap() throws SQLException {
+        if (connection != null) {
+            String query = "SELECT id, name FROM stars";
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                actorNameIdMap.put(resultSet.getString("name"), resultSet.getString("id"));
+            }
+            statement.close();
+            resultSet.close();
+        }
+    }
+
     public void runParser() {
         try {
+            populateStarNameIdMap();
             parseDocument();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -140,7 +154,7 @@ public class CastParser2 extends DefaultHandler {
             tempPair.setMovieId(tempVal);
         } else if (qName.equalsIgnoreCase("a")) {
             String starName = tempVal;
-            starName = starName.strip().toLowerCase();
+            starName = starName.strip();
             starName = starName.replaceAll("~", " ");
             starName = starName.replaceAll("[\\\\][\\W]","");
             tempPair.setStarName(starName);

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -27,8 +28,7 @@ public class ActorParser extends DefaultHandler {
 
     Connection connection;
     int nextId;
-
-    HashMap<String, String> actorNameToId;
+    HashSet<String> actorNames;
 
     public ActorParser() {
         tempActor = null;
@@ -37,11 +37,7 @@ public class ActorParser extends DefaultHandler {
         connection = null;
         startConnection();
         nextId = 0;
-        actorNameToId = new HashMap<>();
-    }
-
-    public HashMap<String,String> getActorNameId() {
-        return actorNameToId;
+        actorNames = new HashSet<>();
     }
 
     private void startConnection() {
@@ -140,33 +136,34 @@ public class ActorParser extends DefaultHandler {
     }
     private void insertBatch() throws SQLException {
         if (connection != null) {
-            String insertQuery = "INSERT INTO stars (id, name, birthYear) VALUE (?, ?, ?)";
-            try (PreparedStatement insertStatement = connection.prepareStatement(insertQuery)) {
-                for (Actor actor: actorList) {
-                    insertStatement.setString(1, actor.getId());
-                    insertStatement.setString(2, actor.getName());
-                    if (actor.getBirthYear() != null)
-                        insertStatement.setInt(3, actor.getBirthYear());
-                    else
-                        insertStatement.setString(3, null);
-                    insertStatement.addBatch();
-                }
-                insertStatement.executeBatch();
-                System.out.println("ACTOR: batch size " + actorList.size() + " added");
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
+            String insertQuery = buildQuery();
+            PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
+            int index = 1;
+            for (Actor actor: actorList) {
+                insertStatement.setString(index, actor.getId());
+                insertStatement.setString(index+1, actor.getName());
+                if (actor.getBirthYear() != null)
+                    insertStatement.setInt(index+2, actor.getBirthYear());
+                else
+                    insertStatement.setString(index+2, null);
 
+                index += 3;
+            }
+            System.out.println("ACTOR: batch size " + actorList.size() + " added");
+            insertStatement.executeUpdate();
+            insertStatement.close();
         }
     }
+
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (qName.equalsIgnoreCase("actor")) {
             if (actorList.size() < maxRows) {
                 tempActor.setId("nm" + nextId++);
-                actorList.add(tempActor);
-                if (!actorNameToId.containsKey(tempActor.getName().toLowerCase()))
-                    actorNameToId.put(tempActor.getName().toLowerCase(), tempActor.getId());
+                if (!actorNames.contains(tempActor.getName().toLowerCase())) {
+                    actorNames.add(tempActor.getName().toLowerCase());
+                    actorList.add(tempActor);
+                }
                 else {
                     System.out.println("duplicate actor: " + tempActor.getName());
                 }
