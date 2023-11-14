@@ -1,0 +1,3 @@
+USE moviedb;
+
+ALTER TABLE movie ALTER COLUMN title FULLTEXT;

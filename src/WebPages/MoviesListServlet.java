@@ -19,6 +19,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+/*
+
+1. implement servlet for full text against title
+- remove the 4 search options in index.html and replace it with just one search bar that uses full text search against title
+2. combine the 3 queries into 1
+   - ie right now the code queries for a movie's genre + stars separate from the movie titles
+   - browserGenreServlet and browseTitleServlet
+ */
+
 @WebServlet(name="WebPages.MoviesListServlet",urlPatterns="/api/movielist")
 public class MoviesListServlet extends HttpServlet {
     // IDK man
