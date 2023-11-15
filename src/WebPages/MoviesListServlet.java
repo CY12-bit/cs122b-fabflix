@@ -62,6 +62,12 @@ public class MoviesListServlet extends HttpServlet {
             String movie_query = "SELECT * FROM movies"
                     + " LEFT JOIN ratings ON ratings.movieId = movies.id";
 
+            String val = request.getParameter("title");
+            if (val != null) {
+                movie_query += " WHERE MATCH(title) AGAINST (? IN BOOLEAN MODE)";
+            }
+
+            /*
             // Find the correct WHERE CLAUSE filters
             ArrayList<String> where_cause = new ArrayList<String>();
             ArrayList<Integer> parameter_presence = new ArrayList<Integer>();
@@ -76,7 +82,10 @@ public class MoviesListServlet extends HttpServlet {
                     parameter_presence.add(0);
                     continue;
                 }
-                if (c.equals("director") || c.equals("title")) {
+                if (c.equals("title")) {
+                    where_cause.add(String.format("MATCH(title) AGAINST (? IN BOOLEAN MODE)", c));
+                }
+                else if (c.equals("director")) {
                     where_cause.add(String.format("%1$s LIKE ?", c));
                 }
                 else if (c.equals("year")) {
@@ -92,6 +101,7 @@ public class MoviesListServlet extends HttpServlet {
             if (!where_cause.isEmpty()) {
                 movie_query += "\nWHERE " + String.join(" AND ",where_cause);
             }
+            */
 
             String sortOrder = request.getParameter("sortOrder");
             String orderByStr = " ORDER BY rating DESC, title ";
@@ -142,19 +152,31 @@ public class MoviesListServlet extends HttpServlet {
             // movie_query += orderByStr + " LIMIT " + (limit + 1) + " OFFSET " + (limit*pageNum);
             
             PreparedStatement prepared_movie_query = conn.prepareStatement(movie_query);
+            if (val != null) {
+                prepared_movie_query.setString(1,val+"*");
+            }
+            prepared_movie_query.setInt(2,limit+1);
+            prepared_movie_query.setInt(3,limit*pageNum);
 
+            /*
             for (int counter = 0; counter < categories.length; counter++) {
                 if (parameter_presence.get(counter) != 0) {
                     if (categories[counter].equals("year")) {
                         prepared_movie_query.setInt(parameter_presence.get(counter), Integer.parseInt(request.getParameter("year")));
                     }
                     else {
-                        prepared_movie_query.setString(parameter_presence.get(counter),"%" + request.getParameter(categories[counter])+"%");
+                        if (categories[counter].equals("title")) {
+                            prepared_movie_query.setString(parameter_presence.get(counter),request.getParameter(categories[counter])+"*");
+                        }
+                        else {
+                            prepared_movie_query.setString(parameter_presence.get(counter),"%" + request.getParameter(categories[counter])+"%");
+                        }
                     }
                 }
             }
             prepared_movie_query.setInt(parameter_counter,limit+1);
             prepared_movie_query.setInt(parameter_counter+1,limit*pageNum);
+            */
 
             ResultSet movie_rs = prepared_movie_query.executeQuery();
 

@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Objects;
 
 @WebServlet(name="Browse.BrowseTitleServlet",urlPatterns="/api/browse-title")
 public class BrowseTitleServlet extends HttpServlet{
@@ -39,14 +40,18 @@ public class BrowseTitleServlet extends HttpServlet{
         String records = request.getParameter("records");
         String sortOrder = request.getParameter("sortOrder");
 
-        String alphaNum = "LIKE ";
+        String where_clause = "";
+        String alphaNum;
         if (beginsWith != null) {
             if (beginsWith.equals("*"))
             {
                 alphaNum = "REGEXP ";
                 beginsWith = "^[^a-zA-Z0-9]";
-            } else {
-                beginsWith += "%";
+                where_clause = "WHERE m.title "+alphaNum+" ? ";
+            }
+            else {
+                where_clause = "WHERE MATCH (m.title) AGAINST (? IN BOOLEAN MODE) ";
+                beginsWith += "*";
             }
         }
 
@@ -98,18 +103,20 @@ public class BrowseTitleServlet extends HttpServlet{
             JsonArray resArray = new JsonArray();
             String movie_query = "SELECT m.id, m.title, m.year, m.director, r.rating FROM movies m " +
                     "LEFT JOIN ratings r ON r.movieId = m.id " +
-                    "WHERE m.title " + alphaNum + " ? " +
+                    where_clause +
                     orderByStr +
                     "LIMIT ? OFFSET ?";
 
             PreparedStatement movie_statement = conn.prepareStatement(movie_query);
 
             movie_statement.setString(1, beginsWith);
+
             movie_statement.setInt(2, limit + 1);
             movie_statement.setInt(3, limit*pageNum);
             System.out.println("browse title: " + movie_statement.toString());
 
             ResultSet movie_data = movie_statement.executeQuery();
+
             while (movie_data.next()) {
                 JsonObject movieObj = new JsonObject();
                 String movieId = movie_data.getString("id");
