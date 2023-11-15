@@ -34,31 +34,9 @@
 <div class="website_content">
     <div class="search_bar">
         <h2>Search Movies</h2>
-        <form id="search_form" class="form-row align-items-center" method="GET" action="movielist.html">
-            <div class="col-auto form-group">
-                <label for="title"><b>Title</b></label>
-                <input id="title" class="form-control" name="title" placeholder="Enter Movie Title" type="text">
-            </div>
-
-            <div class="col-auto form-group">
-                <label for="year">Year</label>
-                <input id="year" class="form-control" name="year" placeholder="Enter Year" type="text">
-            </div>
-
-            <div class="col-auto form-group">
-                <label for="director">Director</label>
-                <input id="director" class="form-control" name="director" placeholder="Enter Director" type="text">
-            </div>
-
-            <div class="col-auto form-group">
-                <label for="star">Star</label>
-                <input id="star" class="form-control" name="star" placeholder="Enter Star" type="text">
-            </div>
-
-            <div class="col-auto form-group">
-                <p></p>
-                <input type="submit" class="btn btn-info" value="Search">
-            </div>
+        <form id="search_form" class="form-inline" method="GET" action="movielist.html">
+            <input id="autocomplete" class="autocomplete-searchbox form-control" name="title" placeholder="Search By title" type="text">
+            <input type="submit" class="btn btn-info" value="Search">
         </form>
     </div>
 
@@ -79,6 +57,7 @@
 
 <!-- include jQuery-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.11/jquery.autocomplete.min.js"></script>
 <!-- include our own JS file -->
 <script src="index.js"></script>
 <script src="jump-movielist.js"></script>

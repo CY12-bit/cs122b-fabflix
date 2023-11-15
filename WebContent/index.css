@@ -67,11 +67,17 @@ h2 {
     color: #f6b33e;
 }
 
-.form-group {
-    margin: 12px;
+#autocomplete {
+    width: 90%;
+    margin-right: 10px;
 }
 
-.form-group label {
-    color: #f9e1c7;
-    font-size: 18px;
+.autocomplete-suggestions {
+    font-family: 'Gabarito', sans-serif;
+    background-color: #fff;
+    overflow: auto;
+}
+.autocomplete-selected {
+    background-color: #d2d2d2;
+
 }

@@ -18,7 +18,7 @@ function handleLookup(query, doneCallback) {
         "method": "GET",
         // generate the request url from the query.
         // escape the query string to avoid errors caused by special characters
-        "url": "hero-suggestion?query=" + escape(query),
+        "url": "api/movie-suggestion?title=" + encodeURI(query),
         "success": function(data) {
             // pass the data, query, and doneCallback function into the success handler
             handleLookupAjaxSuccess(data, query, doneCallback)
@@ -41,16 +41,14 @@ function handleLookup(query, doneCallback) {
 function handleLookupAjaxSuccess(data, query, doneCallback) {
     console.log("lookup ajax successful")
 
-    // parse the string into JSON
-    var jsonData = JSON.parse(data);
-    console.log(jsonData)
+    console.log(data)
 
     // TODO: if you want to cache the result into a global variable you can do it here
 
     // call the callback function provided by the autocomplete library
     // add "{suggestions: jsonData}" to satisfy the library response format according to
     //   the "Response Format" section in documentation
-    doneCallback( { suggestions: jsonData } );
+    doneCallback( { suggestions: data } );
 }
 
 
@@ -62,7 +60,7 @@ function handleLookupAjaxSuccess(data, query, doneCallback) {
  */
 function handleSelectSuggestion(suggestion) {
     // TODO: jump to the specific result page based on the selected suggestion
-
+    location.href = "single-movie.html?id="+suggestion["data"];
     console.log("you select " + suggestion["value"] + " with ID " + suggestion["data"]["heroID"])
 }
 
@@ -89,6 +87,7 @@ $('#autocomplete').autocomplete({
     deferRequestBy: 300,
     // there are some other parameters that you might want to use to satisfy all the requirements
     // TODO: add other parameters, such as minimum characters
+    minChars: 3,
 });
 
 
@@ -103,7 +102,7 @@ function handleNormalSearch(query) {
 // bind pressing enter key to a handler function
 $('#autocomplete').keypress(function(event) {
     // keyCode 13 is the enter key
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
         // pass the value of the input box to the handler function
         handleNormalSearch($('#autocomplete').val())
     }
