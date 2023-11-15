@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "edu.uci.ics.fabflixmobile.app-mergeDebugResources-28:/layout/movielist_row.xml",
+        "source": "edu.uci.ics.fabflixmobile.app-main-31:/layout/movielist_row.xml"
+    },
+    {
+        "merged": "edu.uci.ics.fabflixmobile.app-mergeDebugResources-28:/layout/activity_login.xml",
+        "source": "edu.uci.ics.fabflixmobile.app-main-31:/layout/activity_login.xml"
+    },
+    {
+        "merged": "edu.uci.ics.fabflixmobile.app-mergeDebugResources-28:/layout/activity_movielist.xml",
+        "source": "edu.uci.ics.fabflixmobile.app-main-31:/layout/activity_movielist.xml"
+    }
+]
