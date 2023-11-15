@@ -152,8 +152,16 @@ public class MoviesListServlet extends HttpServlet {
             // movie_query += orderByStr + " LIMIT " + (limit + 1) + " OFFSET " + (limit*pageNum);
             
             PreparedStatement prepared_movie_query = conn.prepareStatement(movie_query);
+            String match_pattern = "";
             if (val != null) {
-                prepared_movie_query.setString(1,val+"*");
+                String[] words = val.split("[ ]+");
+                for (String w : words) {
+                    if (w != "") {
+                        match_pattern += ("+" + w + "* ");
+                    }
+                }
+
+                prepared_movie_query.setString(1,match_pattern);
             }
             prepared_movie_query.setInt(2,limit+1);
             prepared_movie_query.setInt(3,limit*pageNum);
