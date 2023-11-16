@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                    >
+
+    <TextView
+            android:text="Super Man"
+            android:layout_width="305dp"
+            android:layout_height="49dp" android:id="@+id/movieTitle" tools:layout_editor_absoluteY="44dp"
+
+            android:textSize="32sp"
+            tools:layout_editor_absoluteX="42dp"/>
+    <TextView
+            android:text="Director  •  2003"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/directorYear" tools:layout_editor_absoluteY="100dp"
+            tools:layout_editor_absoluteX="42dp"/>
+
+    <TextView
+            android:text="Genre1, Genre 2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/genres" tools:layout_editor_absoluteY="128dp"
+            tools:layout_editor_absoluteX="42dp"/>
+    <TextView
+            android:text="All Stars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/allStars" tools:layout_editor_absoluteY="165dp"
+            tools:layout_editor_absoluteX="42dp"/>
+    <ListView
+            android:layout_width="217dp"
+            android:layout_height="542dp" tools:layout_editor_absoluteY="192dp" tools:layout_editor_absoluteX="42dp"
+            android:id="@+id/StarList"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
