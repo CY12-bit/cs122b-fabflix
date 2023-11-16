@@ -1,0 +1,8 @@
+*.iml
+.gradle
+.gradlew
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
