@@ -8,12 +8,20 @@
  */
 function handleLookup(query, doneCallback) {
     console.log("autocomplete initiated")
-    console.log("sending AJAX request to backend Java Servlet")
 
     // TODO: if you want to check past query results first, you can do it here
+    console.log('checking session data', query, sessionStorage.getItem(query))
+    if (sessionStorage.getItem(query) !== null) {
+        const dataString = sessionStorage.getItem(query);
+        // const data = dataString.split(";").map(movie => JSON.parse(movie));
+        const data = JSON.parse(dataString);
+        doneCallback( { suggestions: data } );
+        return;
+    }
 
     // sending the HTTP GET request to the Java Servlet endpoint hero-suggestion
     // with the query data
+    console.log("sending AJAX request to backend Java Servlet")
     jQuery.ajax({
         "method": "GET",
         // generate the request url from the query.
@@ -44,6 +52,11 @@ function handleLookupAjaxSuccess(data, query, doneCallback) {
     console.log(data)
 
     // TODO: if you want to cache the result into a global variable you can do it here
+    // const dataString = data.map(movie => JSON.stringify(movie)).join(';');
+    const dataString = JSON.stringify(data);
+
+    console.log('caching', query, dataString)
+    sessionStorage.setItem(query, dataString);
 
     // call the callback function provided by the autocomplete library
     // add "{suggestions: jsonData}" to satisfy the library response format according to
