@@ -64,6 +64,7 @@ public class MoviesListServlet extends HttpServlet {
                 while (sWords.next()) {
                     stopwords.add(sWords.getString("value"));
                 }
+                System.out.println("Retrieved stop words:" + stopwords.toString());
                 sWords.close();
                 stop_statement.close();
             }
@@ -150,9 +151,8 @@ public class MoviesListServlet extends HttpServlet {
                 else if (!stopWords.isEmpty()) { // If the keywords are empty but there are stopwords
                     like_pattern = "WHERE" + like_pattern.substring(3) + " ";
                 }
-                movie_query = String.format(movie_query,key_pattern,like_pattern);
             }
-
+            movie_query = String.format(movie_query,key_pattern,like_pattern);
             PreparedStatement prepared_movie_query = conn.prepareStatement(movie_query);
             int index = 1;
             if (!keywords.isEmpty()) {
@@ -166,6 +166,8 @@ public class MoviesListServlet extends HttpServlet {
 
             prepared_movie_query.setInt(index,limit+1);
             prepared_movie_query.setInt(index+1,limit*pageNum);
+
+            System.out.println(prepared_movie_query.toString());
 
             ResultSet movie_rs = prepared_movie_query.executeQuery();
 
