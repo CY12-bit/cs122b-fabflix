@@ -46,18 +46,21 @@ public class LoginServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
-        System.out.println("gRecaptchaResponse=" + gRecaptchaResponse);
-        try {
-            RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+        String client = request.getParameter("client");
 
-        } catch (Exception E){
-            JsonObject responseJsonObject = new JsonObject();
-            responseJsonObject.addProperty("status", "fail");
-            responseJsonObject.addProperty("message", "reCapta Failed");
-            System.out.println("ReCapta Failed" + E.getMessage());
-            out.write(responseJsonObject.toString());
-            out.close();
-            return ;
+        if (client == null || !client.equals("mobile")) {
+            try {
+                RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+
+            } catch (Exception E){
+                JsonObject responseJsonObject = new JsonObject();
+                responseJsonObject.addProperty("status", "fail");
+                responseJsonObject.addProperty("message", "reCapta Failed");
+                System.out.println("ReCapta Failed" + E.getMessage());
+                out.write(responseJsonObject.toString());
+                out.close();
+                return ;
+            }
         }
 
         // Get a connection from dataSource and let resource manager close the connection after usage.

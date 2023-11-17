@@ -11,12 +11,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
+import com.google.gson.JsonParser;
 import edu.uci.ics.fabflixmobile.data.NetworkManager;
 import edu.uci.ics.fabflixmobile.databinding.ActivityLoginBinding;
 import edu.uci.ics.fabflixmobile.ui.movielist.MovieListActivity;
 import java.util.HashMap;
 import java.util.Map;
 import edu.uci.ics.fabflixmobile.ui.urlContstants;
+import com.google.gson.JsonObject;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -47,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     public void login() {
-        message.setText("Trying to login");
+        // message.setText("Trying to login");
         // use the same network queue across our application
         final RequestQueue queue = NetworkManager.sharedManager(this).queue;
         // request type is POST
@@ -57,13 +59,20 @@ public class LoginActivity extends AppCompatActivity {
                 response -> {
                     // TODO: should parse the json response to redirect to appropriate functions
                     //  upon different response value.
-                    Log.d("login.success", response);
-                    //Complete and destroy login activity once successful
-                    finish();
-                    // initialize the activity(page)/destination
-                    Intent MovieListPage = new Intent(LoginActivity.this, MovieListActivity.class);
-                    // activate the list page.
-                    startActivity(MovieListPage);
+                    Log.d("login.response", response);
+                    JsonObject responseObj = JsonParser.parseString(response).getAsJsonObject();
+                    String status = responseObj.get("status").getAsString();
+                    if (status.equals("success")) {
+                        //Complete and destroy login activity once successful
+                        finish();
+                        // initialize the activity(page)/destination
+                        Intent MovieListPage = new Intent(LoginActivity.this, MovieListActivity.class);
+                        // activate the list page.
+                        startActivity(MovieListPage);
+                    } else {
+                        String resMessage = responseObj.get("message").getAsString();
+                        message.setText(resMessage);
+                    }
                 },
                 error -> {
                     // error
@@ -75,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                 final Map<String, String> params = new HashMap<>();
                 params.put("username", username.getText().toString());
                 params.put("password", password.getText().toString());
+                params.put("client", "mobile");
                 return params;
             }
         };
