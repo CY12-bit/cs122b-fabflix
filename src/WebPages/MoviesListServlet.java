@@ -1,6 +1,7 @@
 package WebPages;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import jakarta.servlet.ServletConfig;
@@ -33,6 +34,8 @@ public class MoviesListServlet extends HttpServlet {
     // IDK man
     private static final long serialVersionUID = 1L; // This does nothing
 
+    private static HashSet<String> stopwords = null;
+
     private DataSource dataSource;
 
     // Function initiates servlet?
@@ -44,64 +47,33 @@ public class MoviesListServlet extends HttpServlet {
         }
     }
 
-    /*
-    Project 1: Function will return results for movie list.
-    - Will query from multiple databases to return results in JSON ARRAY.
-     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json"); // Response mime type
 
         // Output stream to STDOUT
         PrintWriter out = response.getWriter(); // This will stream out static html code.
 
-
         // Get a connection from dataSource and let resource manager close the connection after usage.
         try (Connection conn = dataSource.getConnection()) {
-            Statement statement = conn.createStatement();
+
+            // If we haven't loaded the stopwords yet, we load them from the database
+            if (stopwords == null) {
+                Statement stop_statement = conn.createStatement();
+                stopwords = new HashSet<String>();
+                ResultSet sWords = stop_statement.executeQuery("SELECT * FROM INFORMATION_SCHEMA.INNODB_FT_DEFAULT_STOPWORD;");
+                while (sWords.next()) {
+                    stopwords.add(sWords.getString("value"));
+                }
+                sWords.close();
+                stop_statement.close();
+            }
 
             String movie_query = "SELECT * FROM movies"
-                    + " LEFT JOIN ratings ON ratings.movieId = movies.id";
+                    + " LEFT JOIN ratings ON ratings.movieId = movies.id" +
+                    "%1$s %2$s";
 
             String val = request.getParameter("title");
-            if (val != null) {
-                movie_query += " WHERE MATCH(title) AGAINST (? IN BOOLEAN MODE)";
-            }
-
-            /*
-            // Find the correct WHERE CLAUSE filters
-            ArrayList<String> where_cause = new ArrayList<String>();
-            ArrayList<Integer> parameter_presence = new ArrayList<Integer>();
-
-            final String[] categories = {"title", "year", "director", "star"};
-            int parameter_counter = 1;
-
-            // IN THE FUTURE, I WOULD NEED A HASTABLE WITH PARAMETERS AND SEPARATE SLOTS TO USE PREPAREDSTATEMENTS
-            for (String c: categories) {
-                String val = request.getParameter(c);
-                if (val == null) {
-                    parameter_presence.add(0);
-                    continue;
-                }
-                if (c.equals("title")) {
-                    where_cause.add(String.format("MATCH(title) AGAINST (? IN BOOLEAN MODE)", c));
-                }
-                else if (c.equals("director")) {
-                    where_cause.add(String.format("%1$s LIKE ?", c));
-                }
-                else if (c.equals("year")) {
-                    where_cause.add(String.format("%1$s = ?", c));
-                }
-                else {
-                    where_cause.add(String.format("EXISTS (SELECT * FROM %1$ss_in_movies JOIN %1$ss ON %1$ss.id = %1$ss_in_movies.%1$sId WHERE movieId = movies.id AND %1$ss.name LIKE ?)", c));
-                }
-                parameter_presence.add(parameter_counter);
-                parameter_counter++;
-            }
-
-            if (!where_cause.isEmpty()) {
-                movie_query += "\nWHERE " + String.join(" AND ",where_cause);
-            }
-            */
+            // If there is a title for us to do, let's add the necessary where cause
 
             String sortOrder = request.getParameter("sortOrder");
             String orderByStr = " ORDER BY rating DESC, title ";
@@ -149,42 +121,51 @@ public class MoviesListServlet extends HttpServlet {
             } catch (Exception e) {System.out.println(e.getMessage());}
 
             movie_query += orderByStr + "LIMIT ? OFFSET ?";
-            // movie_query += orderByStr + " LIMIT " + (limit + 1) + " OFFSET " + (limit*pageNum);
-            
-            PreparedStatement prepared_movie_query = conn.prepareStatement(movie_query);
-            String match_pattern = "";
+
+            HashSet<String> search_words = new HashSet<String>();
+            ArrayList<String> keywords = new ArrayList<String>();
+            ArrayList<String> stopWords = new ArrayList<String>();
+            String key_pattern = "";
+            String like_pattern = "";
             if (val != null) {
                 String[] words = val.split("[ ]+");
                 for (String w : words) {
                     if (w != "") {
-                        match_pattern += ("+" + w + "* ");
-                    }
-                }
-
-                prepared_movie_query.setString(1,match_pattern);
-            }
-            prepared_movie_query.setInt(2,limit+1);
-            prepared_movie_query.setInt(3,limit*pageNum);
-
-            /*
-            for (int counter = 0; counter < categories.length; counter++) {
-                if (parameter_presence.get(counter) != 0) {
-                    if (categories[counter].equals("year")) {
-                        prepared_movie_query.setInt(parameter_presence.get(counter), Integer.parseInt(request.getParameter("year")));
-                    }
-                    else {
-                        if (categories[counter].equals("title")) {
-                            prepared_movie_query.setString(parameter_presence.get(counter),request.getParameter(categories[counter])+"*");
-                        }
-                        else {
-                            prepared_movie_query.setString(parameter_presence.get(counter),"%" + request.getParameter(categories[counter])+"%");
+                        String tempWord = w.toLowerCase();
+                        if (!search_words.contains(tempWord)) {
+                            if (stopwords.contains(tempWord)) {
+                                stopWords.add("%"+w+"%");
+                                like_pattern += "AND title LIKE ?";
+                            }
+                            else {
+                                keywords.add("+"+w+"*");
+                            }
+                            search_words.add(w.toLowerCase());
                         }
                     }
                 }
+                if (!keywords.isEmpty()) {
+                    key_pattern = " WHERE MATCH(title) AGAINST (? IN BOOLEAN MODE)";
+                }
+                else if (!stopWords.isEmpty()) { // If the keywords are empty but there are stopwords
+                    like_pattern = "WHERE" + like_pattern.substring(3) + " ";
+                }
+                movie_query = String.format(movie_query,key_pattern,like_pattern);
             }
-            prepared_movie_query.setInt(parameter_counter,limit+1);
-            prepared_movie_query.setInt(parameter_counter+1,limit*pageNum);
-            */
+
+            PreparedStatement prepared_movie_query = conn.prepareStatement(movie_query);
+            int index = 1;
+            if (!keywords.isEmpty()) {
+                prepared_movie_query.setString(index,String.join(" ",keywords));
+                index++;
+            }
+            for (String s : stopWords) { // Add all the stop words to the LIKE operator
+                prepared_movie_query.setString(index,s);
+                index++;
+            }
+
+            prepared_movie_query.setInt(index,limit+1);
+            prepared_movie_query.setInt(index+1,limit*pageNum);
 
             ResultSet movie_rs = prepared_movie_query.executeQuery();
 
@@ -268,11 +249,8 @@ public class MoviesListServlet extends HttpServlet {
                 request.getServletContext().log("Error:", e);
                 // Set response status to 500 (Internal Server Error)
                 response.setStatus(500);
-
-
             } finally {
                 out.close();
-
             }
     }
 }
