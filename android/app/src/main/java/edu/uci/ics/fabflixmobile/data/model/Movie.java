@@ -9,19 +9,22 @@ public class Movie {
 
     private final String mid;
     private final String title;
-    private short year;
+    private Integer year;
     private String director;
 
     private HashMap<String,String> stars;
 
     private HashMap<Integer,String> genres;
 
-    public Movie(String mid, String title) {
+    public Movie(String mid, String title, Integer year) {
+        this.stars = new HashMap<String,String>();
+        this.genres = new HashMap<Integer,String>();
+        this.year = year;
         this.mid = mid;
         this.title = title;
     }
 
-    public void setYear(short yr) {
+    public void setYear(Integer yr) {
         this.year = yr;
     }
 
@@ -39,12 +42,13 @@ public class Movie {
 
     public String getName() { return title; }
 
-    public short getYear() {
+    public Integer getYear() {
         return year;
     }
     public String getDirector() {return director; }
 
-    public HashMap<String,String> returnStars() { return stars; }
+    public HashMap<String,String> getStars() { return stars; }
 
+    public HashMap<Integer,String> getGenres() {return genres; }
 
 }

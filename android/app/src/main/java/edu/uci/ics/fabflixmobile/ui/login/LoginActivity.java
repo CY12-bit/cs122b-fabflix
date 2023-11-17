@@ -16,6 +16,7 @@ import edu.uci.ics.fabflixmobile.databinding.ActivityLoginBinding;
 import edu.uci.ics.fabflixmobile.ui.movielist.MovieListActivity;
 import java.util.HashMap;
 import java.util.Map;
+import edu.uci.ics.fabflixmobile.ui.urlContstants;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -27,11 +28,6 @@ public class LoginActivity extends AppCompatActivity {
       In Android, localhost is the address of the device or the emulator.
       To connect to your machine, you need to use the below IP address
      */
-    private final String host = "10.0.2.2";
-    private final String port = "8080";
-    private final String domain = "cs122b_projects_war";
-    private final String baseURL = "http://" + host + ":" + port + "/" + domain;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         // request type is POST
         final StringRequest loginRequest = new StringRequest(
                 Request.Method.POST,
-                baseURL + "/api/login",
+                urlContstants.baseURL + "/api/login",
                 response -> {
                     // TODO: should parse the json response to redirect to appropriate functions
                     //  upon different response value.
