@@ -15,9 +15,9 @@ import com.android.volley.toolbox.StringRequest;
 import edu.uci.ics.fabflixmobile.R;
 import edu.uci.ics.fabflixmobile.data.NetworkManager;
 import edu.uci.ics.fabflixmobile.data.model.Movie;
-import org.json.JSONArray; // Not the com.google ones
-import org.json.JSONObject;
-import org.json.JSONException;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import edu.uci.ics.fabflixmobile.ui.urlContstants;
 
 import java.util.ArrayList;
@@ -29,19 +29,17 @@ public class MovieListActivity extends AppCompatActivity {
     private void retrieveMovies(String page) {
         final RequestQueue queue = NetworkManager.sharedManager(this).queue;
 
-        if (page == null) {
-            page = "1";
-        }
         final StringRequest movieRequest = new StringRequest(
                 Request.Method.GET,
-                urlContstants.baseURL + "/api/movielist?page="+page+"&limit=10",
+                urlContstants.baseURL + "/api/movielist?page="+page+"&records=10",
                 response -> {
                     Log.d("Received Movies", response);
                     finish();
                     try {
-                        loadMovies(new JSONArray(response));
+                        JsonArray movies = JsonParser.parseString(response).getAsJsonArray();
+                        loadMovies(movies);
                     } catch (Exception E) {
-                        Log.d("JSON Parse Error", response);
+                        Log.d("JSON Parse Error", E.getMessage());
                     }
                 },
                 error -> {
@@ -53,38 +51,33 @@ public class MovieListActivity extends AppCompatActivity {
 
     // Function creates an array of movie objects and
     // inserts them into a list view
-    private void loadMovies(JSONArray ms) throws JSONException {
+    private void loadMovies(JsonArray ms) {
         final ArrayList<Movie> movies = new ArrayList<Movie>();
 
-        for (int c = 0; c < ms.length(); c++) {
-            JSONObject m = ms.getJSONObject(c);
+        for (int c = 0; c < ms.size(); c++) {
+            JsonObject m = ms.get(c).getAsJsonObject();
+            String tempId = m.get("movie_id").getAsString();
+            String tempName = m.get("movie_title").getAsString();
+            Integer tempYear = Integer.parseInt(m.get("movie_year").getAsString());
 
-            String tempId = m.getString("movie_id");
-            String tempName = m.getString("movie_title");
-            Integer tempYear = m.getInt("movie_year");
-
-            String tempDirector;
-            try {tempDirector = m.getString("movie_director"); }
-            catch (Exception e) {tempDirector = null; }
-            JSONArray tempGenres;
-            try { tempGenres = m.getJSONArray("movie_genres"); }
-            catch (Exception e) { tempGenres = null; }
-            JSONArray tempStars;
-            try { tempStars = m.getJSONArray("movie_stars"); }
-            catch (Exception e) { tempStars = null; }
+            String tempDirector = m.get("movie_director").getAsString();
+            JsonArray tempGenres = m.getAsJsonArray("movie_genres");
+            JsonArray tempStars = m.getAsJsonArray("movie_stars");
 
             Movie tempMovie = new Movie(tempId,tempName,tempYear);
+
             if (tempDirector != null) { tempMovie.setDirector(tempDirector); }
             if (tempGenres != null) {
-                for (int i = 0; i < tempGenres.length(); i++) {
-                    JSONObject tempGenre = tempGenres.getJSONObject(i);
-                    tempMovie.addGenre(tempGenre.getInt("genre_id"), tempGenre.getString("genre_name"));
+                for (int i = 0; i < tempGenres.size(); i++) {
+                    JsonObject tempGenre = tempGenres.get(i).getAsJsonObject();
+                    tempMovie.addGenre(Integer.parseInt(tempGenre.get("genre_id").getAsString()),
+                            tempGenre.get("genre_name").getAsString());
                 }
             }
             if (tempStars != null) {
-                for (int i = 0; i < tempStars.length(); i++) {
-                    JSONObject tempStar = tempStars.getJSONObject(i);
-                    tempMovie.addStar(tempStar.getString("star_id"), tempStar.getString("star_name"));
+                for (int i = 0; i < tempStars.size(); i++) {
+                    JsonObject tempStar = tempStars.get(i).getAsJsonObject();
+                    tempMovie.addStar(tempStar.get("star_id").getAsString(), tempStar.get("star_name").getAsString());
                 }
             }
 
@@ -107,7 +100,7 @@ public class MovieListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movielist);
         // TODO: this should be retrieved from the backend server
         // By default the next page is one
-        retrieveMovies("1");
+        retrieveMovies("0");
     }
 
 

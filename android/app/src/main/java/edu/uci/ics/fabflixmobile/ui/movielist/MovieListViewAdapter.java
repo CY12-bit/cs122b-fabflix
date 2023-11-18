@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.chip.Chip;
 
 import java.util.ArrayList;
 
@@ -18,8 +20,12 @@ public class MovieListViewAdapter extends ArrayAdapter<Movie> {
 
     // View lookup cache
     private static class ViewHolder {
-        TextView title;
-        TextView subtitle;
+        TextView movie_title;
+        TextView movie_info;
+
+        //ChipGroup genres;
+
+        //ChipGroup stars;
     }
 
     public MovieListViewAdapter(Context context, ArrayList<Movie> movies) {
@@ -39,8 +45,11 @@ public class MovieListViewAdapter extends ArrayAdapter<Movie> {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.movielist_row, parent, false);
-            viewHolder.title = convertView.findViewById(R.id.title);
-            viewHolder.subtitle = convertView.findViewById(R.id.subtitle);
+            viewHolder.movie_title = convertView.findViewById(R.id.movie_title);
+            viewHolder.movie_info = convertView.findViewById(R.id.movie_info);
+            //viewHolder.genres = convertView.findViewById(R.id.genres);
+            //viewHolder.stars = convertView.findViewById(R.id.stars);
+
             // Cache the viewHolder object inside the fresh view
             convertView.setTag(viewHolder);
         } else {
@@ -49,8 +58,9 @@ public class MovieListViewAdapter extends ArrayAdapter<Movie> {
         }
         // Populate the data from the data object via the viewHolder object
         // into the template view.
-        viewHolder.title.setText(movie.getName());
-        viewHolder.subtitle.setText(movie.getYear() + "");
+        viewHolder.movie_title.setText(movie.getName());
+        viewHolder.movie_info.setText(movie.getDirector() + " | " + movie.getYear());
+        // viewHolder.subtitle.setText(movie.getYear() + "");
         // Return the completed view to render on screen
         return convertView;
     }
