@@ -17,6 +17,8 @@ import edu.uci.ics.fabflixmobile.databinding.ActivityLoginBinding;
 import edu.uci.ics.fabflixmobile.ui.movielist.MovieListActivity;
 import java.util.HashMap;
 import java.util.Map;
+
+import edu.uci.ics.fabflixmobile.ui.search.SearchActivity;
 import edu.uci.ics.fabflixmobile.ui.urlContstants;
 import com.google.gson.JsonObject;
 
@@ -57,8 +59,6 @@ public class LoginActivity extends AppCompatActivity {
                 Request.Method.POST,
                 urlContstants.baseURL + "/api/login",
                 response -> {
-                    // TODO: should parse the json response to redirect to appropriate functions
-                    //  upon different response value.
                     Log.d("login.response", response);
                     JsonObject responseObj = JsonParser.parseString(response).getAsJsonObject();
                     String status = responseObj.get("status").getAsString();
@@ -66,9 +66,9 @@ public class LoginActivity extends AppCompatActivity {
                         //Complete and destroy login activity once successful
                         finish();
                         // initialize the activity(page)/destination
-                        Intent MovieListPage = new Intent(LoginActivity.this, MovieListActivity.class);
+                        Intent SearchPage = new Intent(LoginActivity.this, SearchActivity.class);
                         // activate the list page.
-                        startActivity(MovieListPage);
+                        startActivity(SearchPage);
                     } else {
                         String resMessage = responseObj.get("message").getAsString();
                         message.setText(resMessage);

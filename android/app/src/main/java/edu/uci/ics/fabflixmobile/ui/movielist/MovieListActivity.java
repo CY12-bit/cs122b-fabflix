@@ -1,6 +1,7 @@
 package edu.uci.ics.fabflixmobile.ui.movielist;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -24,6 +25,19 @@ import java.util.ArrayList;
 
 public class MovieListActivity extends AppCompatActivity {
 
+    private String movieQuery;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_movielist);
+        // TODO: this should be retrieved from the backend server
+        Intent intent = getIntent();
+        movieQuery = intent.getStringExtra("movieQuery");
+        Log.d("movielist", "movieQuery: " + movieQuery);
+        // By default the next page is one
+        retrieveMovies("0");
+    }
+
     // Function retrieves movies from database
     // If successful, instantly loads them into app
     private void retrieveMovies(String page) {
@@ -31,9 +45,9 @@ public class MovieListActivity extends AppCompatActivity {
 
         final StringRequest movieRequest = new StringRequest(
                 Request.Method.GET,
-                urlContstants.baseURL + "/api/movielist?page="+page+"&records=10",
+                urlContstants.baseURL + "/api/movielist?title="+movieQuery+"&page="+page+"&records=10",
                 response -> {
-                    Log.d("Received Movies", response);
+                    Log.d("movielist", response);
                     JsonArray movies = JsonParser.parseString(response).getAsJsonArray();
                     loadMovies(movies);
                 },
@@ -88,16 +102,4 @@ public class MovieListActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
         });
     }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movielist);
-        // TODO: this should be retrieved from the backend server
-        // By default the next page is one
-        retrieveMovies("0");
-    }
-
-
-
 }

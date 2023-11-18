@@ -17,19 +17,33 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintHorizontal_bias="0.498"
             android:layout_marginTop="28dp"/>
-    <Button
-            android:text="Search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/button" tools:layout_editor_absoluteY="364dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_bias="0.211" app:layout_constraintEnd_toEndOf="parent"/>
+
     <EditText
-            android:layout_width="277dp"
-            android:layout_height="41dp"
+            android:id="@+id/movieQuery"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="160dp"
+            android:layout_marginEnd="24dp"
+            android:hint="@string/search_movie"
             android:inputType="text"
-            android:text="search title"
-            android:ems="10"
-            android:id="@+id/movieQuery" tools:layout_editor_absoluteY="312dp"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:selectAllOnFocus="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title2" app:layout_constraintHorizontal_bias="0.0"/>
+    <Button
+            android:id="@+id/searchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="48dp"
+            android:layout_marginBottom="64dp"
+            android:text="@string/search"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/movieQuery"
+            app:layout_constraintVertical_bias="0.034" app:layout_constraintHorizontal_bias="0.522"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
