@@ -34,17 +34,12 @@ public class MovieListActivity extends AppCompatActivity {
                 urlContstants.baseURL + "/api/movielist?page="+page+"&records=10",
                 response -> {
                     Log.d("Received Movies", response);
-                    finish();
-                    try {
-                        JsonArray movies = JsonParser.parseString(response).getAsJsonArray();
-                        loadMovies(movies);
-                    } catch (Exception E) {
-                        Log.d("JSON Parse Error", E.getMessage());
-                    }
+                    JsonArray movies = JsonParser.parseString(response).getAsJsonArray();
+                    loadMovies(movies);
                 },
                 error -> {
                     // error
-                    Log.d("login.error", error.toString());
+                    Log.d("movielist.error", error.toString());
                 });
         queue.add(movieRequest);
     }
