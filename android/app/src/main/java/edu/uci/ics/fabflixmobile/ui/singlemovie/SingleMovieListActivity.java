@@ -48,7 +48,8 @@ public class SingleMovieListActivity extends AppCompatActivity {
                 urlContstants.baseURL + "/api/single-movie?id="+movieId,
                 response -> {
                     Log.d("single-movie", response);
-                    JsonObject single_movie_object = JsonParser.parseString(response).getAsJsonObject();
+                    JsonArray single_movie_array = JsonParser.parseString(response).getAsJsonArray();
+                    JsonObject single_movie_object = single_movie_array.get(0).getAsJsonObject();
                     loadMovieInfo(single_movie_object);
                     populateMoviePage();
                 },
@@ -83,8 +84,12 @@ public class SingleMovieListActivity extends AppCompatActivity {
         if (tempStars != null) {
             for (int i = 0; i < tempStars.size(); i++) {
                 JsonObject tempStar = tempStars.get(i).getAsJsonObject();
+                String birthYear = null;
+                if (tempStar.has("birthYear")) {
+                    birthYear = tempStar.get("birthYear").getAsString();
+                }
                 tempMovie.addStar(tempStar.get("id").getAsString(), tempStar.get("name").getAsString(),
-                        tempStar.get("birthYear").toString());
+                        birthYear);
             }
         }
 

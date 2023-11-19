@@ -22,8 +22,8 @@ public class MovieListViewAdapter extends ArrayAdapter<Movie> {
     private static class ViewHolder {
         TextView movie_title;
         TextView movie_info;
-        ChipGroup genres;
-        ChipGroup stars;
+        TextView genres;
+        TextView stars;
     }
 
     public MovieListViewAdapter(Context context, ArrayList<Movie> movies) {
@@ -59,23 +59,18 @@ public class MovieListViewAdapter extends ArrayAdapter<Movie> {
         viewHolder.movie_title.setText(movie.getName());
         viewHolder.movie_info.setText(movie.getDirector() + " | " + movie.getYear());
 
-        viewHolder.genres.removeAllViews(); // Not sure how we can just keep the genres already in there.
-        viewHolder.stars.removeAllViews();
+        String genreStr = "Genres: ";
+        for (String[] g : movie.getGenres()) {
+            genreStr += g[1];
+        }
 
-        for (String[] s : movie.getGenres()) {
-            Chip genre_chip = new Chip(viewHolder.genres.getContext());
-            genre_chip.setText(s[1]);
-            genre_chip.setChipBackgroundColorResource(R.color.teal_200);
-            genre_chip.setTextColor(getContext().getResources().getColor(R.color.white));
-            viewHolder.genres.addView(genre_chip);
-        }
+        String starStr = "Stars: ";
         for (String[] s : movie.getStars()) {
-            Chip star_chip = new Chip(viewHolder.stars.getContext());
-            star_chip.setText(s[1]);
-            star_chip.setChipBackgroundColorResource(R.color.purple_200);
-            star_chip.setTextColor(getContext().getResources().getColor(R.color.white));
-            viewHolder.stars.addView(star_chip);
+            starStr += s[1];
         }
+
+        viewHolder.genres.setText(genreStr);
+        viewHolder.stars.setText(starStr);
 
         // Return the completed view to render on screen
         return convertView;

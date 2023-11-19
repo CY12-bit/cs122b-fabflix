@@ -17,22 +17,35 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"/>
-    <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" android:id="@+id/contents">
-        <com.google.android.material.chip.ChipGroup
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" android:id="@+id/stars"
-                android:textAlignment="center">
+    <TextView
+            android:id="@+id/stars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+    />
+    <TextView
+            android:id="@+id/genres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"/>
+<!--    <LinearLayout-->
+<!--            android:orientation="vertical"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent" android:id="@+id/contents">-->
+<!--        <com.google.android.material.chip.ChipGroup-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent" android:id="@+id/stars"-->
+<!--                android:textAlignment="center"-->
+<!--                android:focusable="false"-->
+<!--                android:focusableInTouchMode="false" />-->
+<!--        <com.google.android.material.chip.ChipGroup-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent" android:id="@+id/genres"-->
+<!--                android:textAlignment="center"-->
+<!--                android:focusable="false"-->
+<!--                android:focusableInTouchMode="false"/>-->
 
-        </com.google.android.material.chip.ChipGroup>
-        <com.google.android.material.chip.ChipGroup
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" android:id="@+id/genres"
-                android:textAlignment="center">
 
-        </com.google.android.material.chip.ChipGroup>
-    </LinearLayout>
+<!--    </LinearLayout>-->
 
 </LinearLayout>

@@ -23,7 +23,6 @@ import edu.uci.ics.fabflixmobile.databinding.ActivityMovielistBinding;
 import edu.uci.ics.fabflixmobile.ui.singlemovie.SingleMovieListActivity;
 import edu.uci.ics.fabflixmobile.ui.urlContstants;
 import java.util.ArrayList;
-import android.widget.Toast;
 
 public class MovieListActivity extends AppCompatActivity {
 
@@ -136,13 +135,14 @@ public class MovieListActivity extends AppCompatActivity {
         }
 
         MovieListViewAdapter adapter = new MovieListViewAdapter(this, movies);
-        ListView listView = findViewById(R.id.list);
+        ListView listView = findViewById(R.id.movielist);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Movie movie = movies.get(position);
             @SuppressLint("DefaultLocale") String message = String.format("Clicked on position: %d, name: %s, %d", position, movie.getName(), movie.getYear());
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-            toSingleMovie(movie.getId());
+            //Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            Log.d("movielist", message);
+           toSingleMovie(movie.getId());
 
         });
 
