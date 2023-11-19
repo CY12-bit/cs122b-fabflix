@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import edu.uci.ics.fabflixmobile.R;
-import edu.uci.ics.fabflixmobile.data.model.Movie;
-import edu.uci.ics.fabflixmobile.ui.movielist.MovieListViewAdapter;
 
 import java.util.ArrayList;
 
@@ -39,7 +37,7 @@ public class SingleMovieListViewAdaptor extends ArrayAdapter<String[]> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.singlemovielist_row, parent, false);
             viewHolder.star_name = convertView.findViewById(R.id.star_name);
-            viewHolder.star_year = convertView.findViewById(R.id.star_year);
+            viewHolder.star_year = convertView.findViewById(R.id.star_birthYear);
 
             // Cache the viewHolder object inside the fresh view
             convertView.setTag(viewHolder);

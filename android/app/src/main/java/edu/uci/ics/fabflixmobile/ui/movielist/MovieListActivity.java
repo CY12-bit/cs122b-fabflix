@@ -53,9 +53,24 @@ public class MovieListActivity extends AppCompatActivity {
 
         final Button prev_button = binding.prevButton;
         prev_button.setOnClickListener(view -> prevPage());
+        prev_button.setEnabled(false);
         final Button next_button = binding.nextButton;
         next_button.setOnClickListener(view -> nextPage());
         System.out.println("Established pagination");
+    }
+
+    private void setPrevButton(boolean enable) {
+        final Button prev_button = findViewById(R.id.prev_button);
+        if (prev_button.isEnabled() != enable) {
+            prev_button.setEnabled(enable);
+        }
+    }
+
+    private void setNextButton(boolean enable) {
+        final Button next_button = findViewById(R.id.next_button);
+        if (next_button.isEnabled() != enable) {
+            next_button.setEnabled(enable);
+        }
     }
 
     private void nextPage() {
@@ -63,12 +78,16 @@ public class MovieListActivity extends AppCompatActivity {
             retrieveMovies(page_num+1);
             page_num +=1;
         }
+        setPrevButton(true);
     }
 
     private void prevPage() {
         if (page_num > 0) {
             retrieveMovies(page_num-1);
             page_num -=1;
+            if (page_num == 0) {
+                setPrevButton(false);
+            }
         }
     }
 
@@ -131,7 +150,10 @@ public class MovieListActivity extends AppCompatActivity {
         list_size = movies.size();
 
         if (list_size > 10) {
+            setNextButton(true);
             movies.remove(movies.size() - 1);
+        } else {
+            setNextButton(false);
         }
 
         MovieListViewAdapter adapter = new MovieListViewAdapter(this, movies);
@@ -142,7 +164,7 @@ public class MovieListActivity extends AppCompatActivity {
             @SuppressLint("DefaultLocale") String message = String.format("Clicked on position: %d, name: %s, %d", position, movie.getName(), movie.getYear());
             //Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
             Log.d("movielist", message);
-           toSingleMovie(movie.getId());
+            toSingleMovie(movie.getId());
 
         });
 

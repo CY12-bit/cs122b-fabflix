@@ -14,15 +14,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:textSize="25sp" android:text="Clinton Boook"/>
+                android:textSize="16sp" android:text="Clinton Boook" android:fontFamily="serif"
+                android:lineSpacingExtra="8sp" android:paddingTop="5sp" android:paddingBottom="5sp"
+                android:paddingLeft="15sp"/>
         <Space
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:layout_weight="1"/>
         <TextView
-                android:id="@+id/star_year"
+                android:id="@+id/star_birthYear"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black" android:text="1908" android:minWidth="80sp"/>
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black" android:text="1908"
+                android:textAlignment="center" android:textStyle="italic" android:typeface="normal"
+                android:paddingTop="5sp" android:paddingBottom="5sp" android:maxWidth="50sp"
+                android:paddingRight="15sp"/>
     </LinearLayout>
 
 </LinearLayout>

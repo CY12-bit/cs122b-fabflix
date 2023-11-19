@@ -13,7 +13,7 @@
             android:textSize="25sp"/>
 
     <TextView
-            android:id="@+id/star_year"
+            android:id="@+id/star_birthYear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"/>
@@ -21,13 +21,13 @@
             android:id="@+id/stars"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
+            android:textColor="@color/purple_500"
     />
     <TextView
             android:id="@+id/genres"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/black"/>
+            android:textColor="@color/teal_700"/>
 <!--    <LinearLayout-->
 <!--            android:orientation="vertical"-->
 <!--            android:layout_width="match_parent"-->

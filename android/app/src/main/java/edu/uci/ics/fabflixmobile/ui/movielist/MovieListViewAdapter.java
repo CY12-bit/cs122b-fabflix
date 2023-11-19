@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.chip.Chip;
 
 import java.util.ArrayList;
 
@@ -44,7 +42,7 @@ public class MovieListViewAdapter extends ArrayAdapter<Movie> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.movielist_row, parent, false);
             viewHolder.movie_title = convertView.findViewById(R.id.star_name);
-            viewHolder.movie_info = convertView.findViewById(R.id.star_year);
+            viewHolder.movie_info = convertView.findViewById(R.id.star_birthYear);
             viewHolder.genres = convertView.findViewById(R.id.genres);
             viewHolder.stars = convertView.findViewById(R.id.stars);
 
@@ -59,18 +57,18 @@ public class MovieListViewAdapter extends ArrayAdapter<Movie> {
         viewHolder.movie_title.setText(movie.getName());
         viewHolder.movie_info.setText(movie.getDirector() + " | " + movie.getYear());
 
-        String genreStr = "Genres: ";
+        StringBuilder genreStr = new StringBuilder();
         for (String[] g : movie.getGenres()) {
-            genreStr += g[1];
+            genreStr.append(", ").append(g[1]);
         }
 
-        String starStr = "Stars: ";
+        StringBuilder starStr = new StringBuilder();
         for (String[] s : movie.getStars()) {
-            starStr += s[1];
+            starStr.append(", ").append(s[1]);
         }
 
-        viewHolder.genres.setText(genreStr);
-        viewHolder.stars.setText(starStr);
+        viewHolder.genres.setText("Genres: " + genreStr.toString().replaceFirst(",",""));
+        viewHolder.stars.setText("Stars: " + starStr.toString().replaceFirst(",",""));
 
         // Return the completed view to render on screen
         return convertView;

@@ -17,7 +17,6 @@ import edu.uci.ics.fabflixmobile.R;
 import edu.uci.ics.fabflixmobile.data.NetworkManager;
 import edu.uci.ics.fabflixmobile.data.model.Movie;
 import edu.uci.ics.fabflixmobile.databinding.ActivitySingleMovieBinding;
-import edu.uci.ics.fabflixmobile.ui.movielist.MovieListViewAdapter;
 import edu.uci.ics.fabflixmobile.ui.urlContstants;
 
 public class SingleMovieListActivity extends AppCompatActivity {
