@@ -22,10 +22,8 @@ public class MovieListViewAdapter extends ArrayAdapter<Movie> {
     private static class ViewHolder {
         TextView movie_title;
         TextView movie_info;
-
-        //ChipGroup genres;
-
-        //ChipGroup stars;
+        ChipGroup genres;
+        ChipGroup stars;
     }
 
     public MovieListViewAdapter(Context context, ArrayList<Movie> movies) {
@@ -45,10 +43,10 @@ public class MovieListViewAdapter extends ArrayAdapter<Movie> {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.movielist_row, parent, false);
-            viewHolder.movie_title = convertView.findViewById(R.id.movie_title);
-            viewHolder.movie_info = convertView.findViewById(R.id.movie_info);
-            //viewHolder.genres = convertView.findViewById(R.id.genres);
-            //viewHolder.stars = convertView.findViewById(R.id.stars);
+            viewHolder.movie_title = convertView.findViewById(R.id.star_name);
+            viewHolder.movie_info = convertView.findViewById(R.id.star_year);
+            viewHolder.genres = convertView.findViewById(R.id.genres);
+            viewHolder.stars = convertView.findViewById(R.id.stars);
 
             // Cache the viewHolder object inside the fresh view
             convertView.setTag(viewHolder);
@@ -60,7 +58,25 @@ public class MovieListViewAdapter extends ArrayAdapter<Movie> {
         // into the template view.
         viewHolder.movie_title.setText(movie.getName());
         viewHolder.movie_info.setText(movie.getDirector() + " | " + movie.getYear());
-        // viewHolder.subtitle.setText(movie.getYear() + "");
+
+        viewHolder.genres.removeAllViews(); // Not sure how we can just keep the genres already in there.
+        viewHolder.stars.removeAllViews();
+
+        for (String[] s : movie.getGenres()) {
+            Chip genre_chip = new Chip(viewHolder.genres.getContext());
+            genre_chip.setText(s[1]);
+            genre_chip.setChipBackgroundColorResource(R.color.teal_200);
+            genre_chip.setTextColor(getContext().getResources().getColor(R.color.white));
+            viewHolder.genres.addView(genre_chip);
+        }
+        for (String[] s : movie.getStars()) {
+            Chip star_chip = new Chip(viewHolder.stars.getContext());
+            star_chip.setText(s[1]);
+            star_chip.setChipBackgroundColorResource(R.color.purple_200);
+            star_chip.setTextColor(getContext().getResources().getColor(R.color.white));
+            viewHolder.stars.addView(star_chip);
+        }
+
         // Return the completed view to render on screen
         return convertView;
     }

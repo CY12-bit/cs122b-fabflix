@@ -3,8 +3,8 @@ package edu.uci.ics.fabflixmobile.ui.movielist;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,28 +19,65 @@ import edu.uci.ics.fabflixmobile.data.model.Movie;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import edu.uci.ics.fabflixmobile.databinding.ActivityMovielistBinding;
+import edu.uci.ics.fabflixmobile.ui.singlemovie.SingleMovieListActivity;
 import edu.uci.ics.fabflixmobile.ui.urlContstants;
-
 import java.util.ArrayList;
+import android.widget.Toast;
 
 public class MovieListActivity extends AppCompatActivity {
 
     private String movieQuery;
+    private Integer page_num;
+    private int list_size;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+
         setContentView(R.layout.activity_movielist);
         // TODO: this should be retrieved from the backend server
-        Intent intent = getIntent();
+
         movieQuery = intent.getStringExtra("movieQuery");
         Log.d("movielist", "movieQuery: " + movieQuery);
-        // By default the next page is one
-        retrieveMovies("0");
+
+        // Retrieve the movies from the database and load it into the app
+        retrieveMovies(page_num);
+
+        // Am I allowed to change the ContextView?
+        ActivityMovielistBinding binding = ActivityMovielistBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        page_num = intent.getIntExtra("page_num",0);
+
+        final Button prev_button = binding.prevButton;
+        prev_button.setOnClickListener(view -> prevPage());
+        final Button next_button = binding.nextButton;
+        next_button.setOnClickListener(view -> nextPage());
+        System.out.println("Established pagination");
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    private void nextPage() {
+        if (list_size > 10) {
+            retrieveMovies(page_num+1);
+            page_num +=1;
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void prevPage() {
+        if (page_num > 0) {
+            retrieveMovies(page_num-1);
+            page_num -=1;
+        }
     }
 
     // Function retrieves movies from database
     // If successful, instantly loads them into app
-    private void retrieveMovies(String page) {
+    private void retrieveMovies(Integer page) {
         final RequestQueue queue = NetworkManager.sharedManager(this).queue;
 
         final StringRequest movieRequest = new StringRequest(
@@ -79,7 +116,7 @@ public class MovieListActivity extends AppCompatActivity {
             if (tempGenres != null) {
                 for (int i = 0; i < tempGenres.size(); i++) {
                     JsonObject tempGenre = tempGenres.get(i).getAsJsonObject();
-                    tempMovie.addGenre(Integer.parseInt(tempGenre.get("genre_id").getAsString()),
+                    tempMovie.addGenre(tempGenre.get("genre_id").getAsString(),
                             tempGenre.get("genre_name").getAsString());
                 }
             }
@@ -93,6 +130,12 @@ public class MovieListActivity extends AppCompatActivity {
             movies.add(tempMovie);
         }
 
+        list_size = movies.size();
+
+        if (list_size > 10) {
+            movies.remove(movies.size() - 1);
+        }
+
         MovieListViewAdapter adapter = new MovieListViewAdapter(this, movies);
         ListView listView = findViewById(R.id.list);
         listView.setAdapter(adapter);
@@ -100,6 +143,17 @@ public class MovieListActivity extends AppCompatActivity {
             Movie movie = movies.get(position);
             @SuppressLint("DefaultLocale") String message = String.format("Clicked on position: %d, name: %s, %d", position, movie.getName(), movie.getYear());
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            toSingleMovie(movie.getId());
+
         });
+
+    }
+
+    private void toSingleMovie(String movieId) {
+        finish();
+        System.out.println("Going to Single Star Page");
+        Intent SingleMoviePage = new Intent(this, SingleMovieListActivity.class);
+        SingleMoviePage.putExtra("movie-id",movieId);
+        startActivity(SingleMoviePage);
     }
 }

@@ -12,26 +12,32 @@
 
     <ListView
             android:id="@+id/list"
-            android:layout_width="356dp"
-            android:layout_height="649dp"
+            android:layout_width="350dp"
+            android:layout_height="520dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.493"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="32dp"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.304"/>
-    <Button
-            android:layout_width="91dp"
-            android:layout_height="48dp" android:id="@+id/next_button"
-            android:text="next" app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="670dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="229dp" android:layout_marginEnd="97dp"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="8dp"/>
-    <Button
-            android:layout_width="91dp"
-            android:layout_height="48dp" android:id="@+id/prev_button"
-            android:text="prev" app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="670dp" android:layout_marginEnd="243dp"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="83dp" app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="8dp"/>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="221dp"
+            android:layout_height="41dp"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="535dp" app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="55dp" android:layout_marginEnd="55dp" android:id="@+id/page_buttons">
+        <Button
+                android:text="Prev"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" android:id="@+id/prev_button"
+        />
+        <Space
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:layout_weight="1"/>
+        <Button
+                android:text="NEXT"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" android:id="@+id/next_button"
+        />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
