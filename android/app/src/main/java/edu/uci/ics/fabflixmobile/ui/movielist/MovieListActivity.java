@@ -37,6 +37,7 @@ public class MovieListActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
+        // Not sure if needed but if I just have binding.getRoot() in the beginning, it has 2 'resource fail to close' errors.
         setContentView(R.layout.activity_movielist);
         // TODO: this should be retrieved from the backend server
 
@@ -58,8 +59,6 @@ public class MovieListActivity extends AppCompatActivity {
         System.out.println("Established pagination");
     }
 
-
-    @SuppressLint("SetTextI18n")
     private void nextPage() {
         if (list_size > 10) {
             retrieveMovies(page_num+1);
@@ -67,7 +66,6 @@ public class MovieListActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private void prevPage() {
         if (page_num > 0) {
             retrieveMovies(page_num-1);
@@ -77,6 +75,7 @@ public class MovieListActivity extends AppCompatActivity {
 
     // Function retrieves movies from database
     // If successful, instantly loads them into app
+    @SuppressLint("SetTextI18n")
     private void retrieveMovies(Integer page) {
         final RequestQueue queue = NetworkManager.sharedManager(this).queue;
 
@@ -149,6 +148,7 @@ public class MovieListActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("SetTextI18n")
     private void toSingleMovie(String movieId) {
         finish();
         System.out.println("Going to Single Star Page");
