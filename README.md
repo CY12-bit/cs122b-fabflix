@@ -1,4 +1,4 @@
-demo video link: https://youtu.be/20gYDr3Eh2U
+demo video link: 
 
 ### Member contribution
 
@@ -18,6 +18,11 @@ Colin:
   - CastParser
   - MovieObject
   - xmlParser
+- Android
+  - Movie model
+  - MovieListActivity, MovieListViewAdaptor, activity_movielist.xml
+  - SingleMovieListActivity, SingleMovieListViewAdaptor, activity_single_movie.xml, singlemovielist_row.xml
+  - urlConstants
 - 'Add to Cart' Functionality
 - Implemented Batch Insertion Optimization for Parsers
 - Implemented Multi-Threading Optimization in MovieParser
@@ -52,6 +57,10 @@ Michelle:
   - addStar (JS/HTML)
   - dashboard (JS/HTML)
   - basic CSS
+- Android
+  - NukeSSLCerts, NetworkManager, LoginActivity, activity_login.xml
+  - SearchActivity, activity_search.xml
+  - AndroidManifest.xml
 
 Both:
 - User Servlet
@@ -60,6 +69,7 @@ Both:
 - create_table.sql
 - setting up aws + maven project
 - git
+- movielist_row.xml
 
 ### Files that use PreparedStatements
 - Almost all files in src (except User,Movie,MovieObject,Actor,RecaptchaConstraints,JumpServlet)

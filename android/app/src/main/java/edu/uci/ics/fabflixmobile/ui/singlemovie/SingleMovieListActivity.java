@@ -17,7 +17,7 @@ import edu.uci.ics.fabflixmobile.R;
 import edu.uci.ics.fabflixmobile.data.NetworkManager;
 import edu.uci.ics.fabflixmobile.data.model.Movie;
 import edu.uci.ics.fabflixmobile.databinding.ActivitySingleMovieBinding;
-import edu.uci.ics.fabflixmobile.ui.urlContstants;
+import edu.uci.ics.fabflixmobile.ui.urlConstants;
 
 public class SingleMovieListActivity extends AppCompatActivity {
 
@@ -44,7 +44,7 @@ public class SingleMovieListActivity extends AppCompatActivity {
 
         final StringRequest singleMovieRequest = new StringRequest(
                 Request.Method.GET,
-                urlContstants.baseURL + "/api/single-movie?id="+movieId,
+                urlConstants.baseURL + "/api/single-movie?id="+movieId,
                 response -> {
                     Log.d("single-movie", response);
                     JsonArray single_movie_array = JsonParser.parseString(response).getAsJsonArray();

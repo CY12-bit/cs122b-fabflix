@@ -14,12 +14,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.JsonParser;
 import edu.uci.ics.fabflixmobile.data.NetworkManager;
 import edu.uci.ics.fabflixmobile.databinding.ActivityLoginBinding;
-import edu.uci.ics.fabflixmobile.ui.movielist.MovieListActivity;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import edu.uci.ics.fabflixmobile.ui.search.SearchActivity;
-import edu.uci.ics.fabflixmobile.ui.urlContstants;
+import edu.uci.ics.fabflixmobile.ui.urlConstants;
 import com.google.gson.JsonObject;
 
 public class LoginActivity extends AppCompatActivity {
@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         // request type is POST
         final StringRequest loginRequest = new StringRequest(
                 Request.Method.POST,
-                urlContstants.baseURL + "/api/login",
+                urlConstants.baseURL + "/api/login",
                 response -> {
                     Log.d("login.response", response);
                     JsonObject responseObj = JsonParser.parseString(response).getAsJsonObject();

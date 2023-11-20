@@ -21,7 +21,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import edu.uci.ics.fabflixmobile.databinding.ActivityMovielistBinding;
 import edu.uci.ics.fabflixmobile.ui.singlemovie.SingleMovieListActivity;
-import edu.uci.ics.fabflixmobile.ui.urlContstants;
+import edu.uci.ics.fabflixmobile.ui.urlConstants;
 import java.util.ArrayList;
 
 public class MovieListActivity extends AppCompatActivity {
@@ -99,7 +99,7 @@ public class MovieListActivity extends AppCompatActivity {
 
         final StringRequest movieRequest = new StringRequest(
                 Request.Method.GET,
-                urlContstants.baseURL + "/api/movielist?title="+movieQuery+"&page="+page+"&records=10",
+                urlConstants.baseURL + "/api/movielist?title="+movieQuery+"&page="+page+"&records=10",
                 response -> {
                     Log.d("movielist", response);
                     JsonArray movies = JsonParser.parseString(response).getAsJsonArray();
