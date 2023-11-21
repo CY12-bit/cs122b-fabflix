@@ -1,4 +1,4 @@
-demo video link: 
+demo video link: https://youtu.be/HiRNnu2Y_xg
 
 ### Member contribution
 
@@ -8,6 +8,7 @@ Colin:
   - Movie Class
   - Payment
   - Genre
+  - full text search
 - HTML/CSS/JS
   - Confirmation (HTML)
   - Index (HTML)
@@ -57,6 +58,7 @@ Michelle:
   - addStar (JS/HTML)
   - dashboard (JS/HTML)
   - basic CSS
+  - autocomplete (frontend + backend)
 - Android
   - NukeSSLCerts, NetworkManager, LoginActivity, activity_login.xml
   - SearchActivity, activity_search.xml
