@@ -1,5 +1,6 @@
 package WebPages;
 
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import com.google.gson.JsonArray;
@@ -19,6 +20,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.concurrent.TimeUnit;
 
 /*
 
@@ -38,16 +40,34 @@ public class MoviesListServlet extends HttpServlet {
 
     private DataSource dataSource;
 
+    private FileWriter timeLog = null;
+
     // Function initiates servlet?
     public void init(ServletConfig config) {
+        try {
+            super.init(config);
+        } catch (Exception ignore) {}
+
         try {
             dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb");
         } catch (NamingException e) {
             e.printStackTrace();
         }
+
+        String contextPath = getServletContext().getRealPath("/");
+        String xmlFilePath=contextPath+"timeLog.txt";
+        System.out.println(xmlFilePath);
+        try {
+            timeLog = new FileWriter(xmlFilePath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        long servletStartTime = System.nanoTime();
+        long totalJDBCTime = 0;
         response.setContentType("application/json"); // Response mime type
 
         // Output stream to STDOUT
@@ -169,7 +189,10 @@ public class MoviesListServlet extends HttpServlet {
 
             System.out.println(prepared_movie_query.toString());
 
+            long jdbcStart = System.nanoTime();
             ResultSet movie_rs = prepared_movie_query.executeQuery();
+            long jdbcEnd = System.nanoTime();
+            totalJDBCTime += jdbcEnd - jdbcStart;
 
             JsonArray movieList = new JsonArray();
 
@@ -188,13 +211,17 @@ public class MoviesListServlet extends HttpServlet {
                     "GROUP BY a.id, a.name, a.birthYear\n" +
                     "ORDER BY numMovies DESC\n" +
                     "LIMIT 3";
+            PreparedStatement prep_genre_query = conn.prepareStatement(genre_query);
+            PreparedStatement prep_star_query = conn.prepareStatement(stars_query);
 
             while (movie_rs.next()) {
                 String movie_id = movie_rs.getString("id");
 
-                PreparedStatement prep_query = conn.prepareStatement(genre_query);
-                prep_query.setString(1, movie_id);
-                ResultSet temp_set = prep_query.executeQuery();
+                prep_genre_query.setString(1, movie_id);
+                jdbcStart = System.nanoTime();
+                ResultSet temp_set = prep_genre_query.executeQuery();
+                jdbcEnd = System.nanoTime();
+                totalJDBCTime += jdbcEnd - jdbcStart;
 
                 JsonArray genre_array = new JsonArray();
                 while (temp_set.next()) {
@@ -204,9 +231,11 @@ public class MoviesListServlet extends HttpServlet {
                     genre_array.add(temp_object);
                 }
 
-                prep_query = conn.prepareStatement(stars_query);
-                prep_query.setString(1,movie_id);
-                temp_set = prep_query.executeQuery();
+                prep_star_query.setString(1,movie_id);
+                jdbcStart = System.nanoTime();
+                temp_set = prep_star_query.executeQuery();
+                jdbcEnd = System.nanoTime();
+                totalJDBCTime += jdbcEnd - jdbcStart;
 
                 JsonArray stars_array = new JsonArray();
                 while (temp_set.next()) {
@@ -232,9 +261,11 @@ public class MoviesListServlet extends HttpServlet {
                 jsonObject.add("movie_stars", stars_array);
 
                 movieList.add(jsonObject);
-                prep_query.close();
                 temp_set.close();
             }
+            prep_star_query.close();
+            prep_genre_query.close();
+            prepared_movie_query.close();
             movie_rs.close();
             conn.close();
             // Write JSON string to output
@@ -242,17 +273,31 @@ public class MoviesListServlet extends HttpServlet {
             // Set response status to 200 (OK)
             response.setStatus(200);
         } catch (Exception e) {
-                // Write error message JSON object to output
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("errorMessage", e.getMessage());
-                out.write(jsonObject.toString());
+            // Write error message JSON object to output
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("errorMessage", e.getMessage());
+            out.write(jsonObject.toString());
 
-                // Log error to localhost log
-                request.getServletContext().log("Error:", e);
-                // Set response status to 500 (Internal Server Error)
-                response.setStatus(500);
-            } finally {
-                out.close();
-            }
+            // Log error to localhost log
+            request.getServletContext().log("Error:", e);
+            // Set response status to 500 (Internal Server Error)
+            response.setStatus(500);
+        } finally {
+            out.close();
+        }
+        long servletEndTime = System.nanoTime();
+        long totalServletTime = servletEndTime - servletStartTime;
+
+        // System.out.println("ts: " + TimeUnit.NANOSECONDS.toMillis(totalServletTime) + "; tj: "+ TimeUnit.NANOSECONDS.toMillis(totalJDBCTime) + "\n");
+        timeLog.write("ts: " + TimeUnit.NANOSECONDS.toMillis(totalServletTime) + "; tj: "+ TimeUnit.NANOSECONDS.toMillis(totalJDBCTime) + "\n");
+    }
+
+    public void destroy() {
+        try {
+            timeLog.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        super.destroy();
     }
 }
