@@ -52,7 +52,7 @@ public class ActorParser extends DefaultHandler {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(
-                    "jdbc:" + DBInfo.dbtype + "://localhost:3306/" + DBInfo.dbname,
+                    "jdbc:" + DBInfo.dbtype + "://172.31.0.193:3306/" + DBInfo.dbname,
                     DBInfo.username, DBInfo.password);
         } catch (Exception e) {
             connection = null;

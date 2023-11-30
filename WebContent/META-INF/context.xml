@@ -12,24 +12,26 @@
               username="mytestuser"
               password="My6$Password"
               url="jdbc:mysql://localhost:3306/moviedb?autoReconnect=true&amp;allowPublicKeyRetrieval=true&amp;useSSL=false&amp;cachePrepStmts=true"/>
+
     <!-- Defines a Data Source Connecting to Master Instance -->
-    <!--<Resource name="jdbc/moviedb_master"
+    <Resource name="jdbc/moviedb_master"
               auth="Container"
               driverClassName="com.mysql.cj.jdbc.Driver"
               factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
               maxTotal="100" maxIdle="30" maxWaitMillis="10000"
               type="javax.sql.DataSource"
-              username="root"
-              password=""
-              url="jdbc:mysql://172.31.7.179:3306/moviedb?autoReconnect=true&amp;allowPublicKeyRetrieval=true&amp;useSSL=false&amp;cachePrepStmts=true"/>-->
+              username="mytestuser"
+              password="My6$Password"
+              url="jdbc:mysql://172.31.0.193:3306/moviedb?autoReconnect=true&amp;allowPublicKeyRetrieval=true&amp;useSSL=false&amp;cachePrepStmts=true"/>
+
     <!-- Defines a Data Source Connecting to Slave Instance -->
-    <!-- <Resource name="jdbc/moviedb_slave"
+    <Resource name="jdbc/moviedb_slave"
               auth="Container"
               driverClassName="com.mysql.cj.jdbc.Driver"
               factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
               maxTotal="100" maxIdle="30" maxWaitMillis="10000"
               type="javax.sql.DataSource"
-              username="root"
-              password=""
-              url="jdbc:mysql://172.31.9.74:3306/moviedb?autoReconnect=true&amp;allowPublicKeyRetrieval=true&amp;useSSL=false&amp;cachePrepStmts=true"/> -->
+              username="mytestuser_readOnly"
+              password="My6$Password"
+              url="jdbc:mysql://172.31.9.74:3306/moviedb?autoReconnect=true&amp;allowPublicKeyRetrieval=true&amp;useSSL=false&amp;cachePrepStmts=true"/>
 </Context>

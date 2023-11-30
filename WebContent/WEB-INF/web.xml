@@ -19,8 +19,22 @@
 
     <!-- Register the DataSource which defined in META-INF/context.xml-->
     <resource-ref>
-        <description>MySQL DataSource example</description>
+        <description>MySQL Local Instance</description>
         <res-ref-name>jdbc/moviedb</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+
+    <resource-ref>
+        <description>MySQL Master Instance</description>
+        <res-ref-name>jdbc/moviedb_master</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+
+    <resource-ref>
+        <description>MySQL Slave Instance</description>
+        <res-ref-name>jdbc/moviedb_slave</res-ref-name>
         <res-type>javax.sql.DataSource</res-type>
         <res-auth>Container</res-auth>
     </resource-ref>
