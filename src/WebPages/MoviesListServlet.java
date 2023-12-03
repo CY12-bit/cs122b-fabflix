@@ -187,8 +187,6 @@ public class MoviesListServlet extends HttpServlet {
             prepared_movie_query.setInt(index,limit+1);
             prepared_movie_query.setInt(index+1,limit*pageNum);
 
-            System.out.println(prepared_movie_query.toString());
-
             long jdbcStart = System.nanoTime();
             ResultSet movie_rs = prepared_movie_query.executeQuery();
             long jdbcEnd = System.nanoTime();
