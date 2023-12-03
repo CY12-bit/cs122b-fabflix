@@ -165,7 +165,7 @@ public class BrowseGenreServlet extends HttpServlet{
 
             movie_statement.close();
             movie_data.close();
-            conn.close();
+            // conn.close();
 
             // Write JSON string to output
             out.write(resArray.toString());

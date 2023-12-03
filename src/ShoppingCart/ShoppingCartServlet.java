@@ -98,7 +98,7 @@ public class ShoppingCartServlet extends HttpServlet {
                 cart.add(cart_item);
             }
 
-            conn.close();
+            // conn.close();
 
             // Write JSON string to output
             saleData.add("cart", cart);

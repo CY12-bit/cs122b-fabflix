@@ -265,7 +265,7 @@ public class MoviesListServlet extends HttpServlet {
             prep_genre_query.close();
             prepared_movie_query.close();
             movie_rs.close();
-            conn.close();
+            // conn.close();
             // Write JSON string to output
             out.write(movieList.toString());
             // Set response status to 200 (OK)

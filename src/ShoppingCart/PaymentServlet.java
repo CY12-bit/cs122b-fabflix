@@ -105,7 +105,7 @@ public class PaymentServlet extends HttpServlet {
 
             credit_data.close();
             credit_statement.close();
-            conn.close();
+            // conn.close();
 
             out.write(responseJsonObject.toString());
             response.setStatus(200);

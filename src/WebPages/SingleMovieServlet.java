@@ -127,7 +127,7 @@ public class SingleMovieServlet extends HttpServlet {
             genre_statement.close();
             star_data.close();
             star_statement.close();
-            conn.close();
+            // conn.close();
 
             // Write JSON string to output
             out.write(jsonArray.toString());
