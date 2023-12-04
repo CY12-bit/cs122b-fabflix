@@ -6,6 +6,8 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class TimeLogParser {
+    // Before running, make sure the timeLog.txt is not readonly
+    // sudo chmod 744 /var/lib/tomcat10/timeLog.txt
     public static void main(String[] args) {
         try {
             Scanner userInput = new Scanner(System.in);
