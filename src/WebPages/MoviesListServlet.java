@@ -191,8 +191,6 @@ public class MoviesListServlet extends HttpServlet {
             prepared_movie_query.setInt(index,limit+1);
             prepared_movie_query.setInt(index+1,limit*pageNum);
 
-            System.out.println(prepared_movie_query.toString());
-
             long jdbcStart = System.nanoTime();
             ResultSet movie_rs = prepared_movie_query.executeQuery();
             long jdbcEnd = System.nanoTime();
@@ -271,7 +269,7 @@ public class MoviesListServlet extends HttpServlet {
             prep_genre_query.close();
             prepared_movie_query.close();
             movie_rs.close();
-            conn.close();
+            // conn.close();
             // Write JSON string to output
             out.write(movieList.toString());
             // Set response status to 200 (OK)

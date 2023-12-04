@@ -103,7 +103,7 @@ public class LoginServlet extends HttpServlet {
 
             user_data.close();
             user_statement.close();
-            conn.close();
+            // conn.close();
             out.write(responseJsonObject.toString());
             response.setStatus(200);
 
