@@ -1,5 +1,6 @@
 package WebPages;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -55,7 +56,10 @@ public class MoviesListServlet extends HttpServlet {
         }
 
         String contextPath = getServletContext().getRealPath("/");
-        String xmlFilePath=contextPath+"timeLog.txt";
+        String webapps = contextPath.substring(0, contextPath.indexOf("webapps")+8);
+        System.out.println(webapps);
+        String xmlFilePath=webapps+"timeLog.txt";
+        //String xmlFilePath = "/Users/michellelin/Desktop/ICS/cs122b/cs122a-projects/timeLog.txt";
         System.out.println(xmlFilePath);
         try {
             timeLog = new FileWriter(xmlFilePath);
