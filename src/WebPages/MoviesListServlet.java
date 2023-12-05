@@ -291,7 +291,7 @@ public class MoviesListServlet extends HttpServlet {
         long totalServletTime = servletEndTime - servletStartTime;
 
         // System.out.println("ts: " + TimeUnit.NANOSECONDS.toMillis(totalServletTime) + "; tj: "+ TimeUnit.NANOSECONDS.toMillis(totalJDBCTime) + "\n");
-        timeLog.write("ts: " + TimeUnit.NANOSECONDS.toMillis(totalServletTime) + "; tj: "+ TimeUnit.NANOSECONDS.toMillis(totalJDBCTime) + "\n");
+        timeLog.write(totalServletTime + ";"+ totalJDBCTime + "\n");
     }
 
     public void destroy() {
