@@ -1,77 +1,87 @@
-demo video link: https://youtu.be/HiRNnu2Y_xg
-
-### Member contribution
-
-Colin:
-- Servlets
-  - MovieList
-  - Movie Class
-  - Payment
-  - Genre
-  - full text search
-- HTML/CSS/JS
-  - Confirmation (HTML)
-  - Index (HTML)
-  - Payment (HTML/CSS/JS)
-  - Shopping Cart (JS)
-- Parser
-  - MovieParser
-  - CastParser
-  - MovieObject
-  - xmlParser
-- Android
-  - Movie model
-  - MovieListActivity, MovieListViewAdaptor, activity_movielist.xml
-  - SingleMovieListActivity, SingleMovieListViewAdaptor, activity_single_movie.xml, singlemovielist_row.xml
-  - urlConstants
-- 'Add to Cart' Functionality
-- Implemented Batch Insertion Optimization for Parsers
-- Implemented Multi-Threading Optimization in MovieParser
-- 'Proceed to Payment' and 'Place Order' functionality
-- Jump to MovieList Page from single pages
-- Setting up Recaptcha on Google
-- Adding HTTPS
-
-Michelle:
-- Servlets
-  - SingleMovie, SingleStar
-  - MovieList (Sorting, Pagination)
-  - Jump
-  - LoginFilter, Login
-  - BrowseGenre, BrowseTitle
-  - UpdateSecurePassword (User and Employee)
-  - RecaptchaConstraints, RecaptchaVerifyUtils
-  - DashboardServlet
-  - Employee, EmployeeLoginFilter, EmployeeLoginServlet
-- Parser
-  - ActorParser
-  - Actor
-  - DBInfo
-  - StarInMovie
-  - CastParser2
-- HTML/CSS/JS
-  - Index (CSS)
-  - Login (HTML, JS) (User & Employees)
-  - Single Movie Page (JS, HTML)
-  - Single Star Page (JS/HTML/CSS)
-  - addMovie (JS/HTML)
-  - addStar (JS/HTML)
-  - dashboard (JS/HTML)
-  - basic CSS
-  - autocomplete (frontend + backend)
-- Android
-  - NukeSSLCerts, NetworkManager, LoginActivity, activity_login.xml
-  - SearchActivity, activity_search.xml
-  - AndroidManifest.xml
-
-Both:
-- User Servlet
-- Shopping Cart (Servlet, JS)
-- movielist.js
-- create_table.sql
-- setting up aws + maven project
-- git
-- movielist_row.xml
+# General
+  - #### Team: `the-party-parrots`
+  - #### Names:
+    - Colin Yee
+    - Michelle Lin
+  - #### Project 5 Video Demo Link:
+    - https://youtu.be/HiRNnu2Y_xg
+  - #### Collaborations and Work Distributions:
+    - Servlets
+      - MovieList (Colin, Michelle)
+      - SingleMovie (Michelle)
+      - SingleStar (Michelle)
+      - Payment (Colin)
+      - ShoppingCart (Michelle)
+      - GenreServlet (Colin)
+      - Jump (Michelle)
+      - LoginFilter, Login (Michelle)
+      - UpdateSecurePassword (Michelle)
+      - BrowseGenre, BrowseTitle (Michelle)
+      - RecaptchaConstraints, RecaptchaVerifyUtils (Michelle)
+      - EmployeeLoginFilter, EmployeeLoginServlet (Michelle)
+      - MovieSuggestion (Colin, Michelle)
+    - Classes
+      - Movie (Colin)
+      - User (Michelle, Colin)
+      - Employee (Michelle)
+      - Actor (Michelle)
+      - MovieObject (Colin)
+      - StarInMovie (Michelle)
+    - JS/HTML/CSS
+      - `index` (Colin, Michelle)
+      - `_dashboard` (Michelle)
+      - `jump-movielist.js` (Michelle)
+      - `login` (Michelle)
+      - `movielist` (Michelle, Colin)
+      - `payment` (Colin)
+      - `navbar.css` (Michelle)
+      - `shoppingcart` (Michelle, Colin)
+      - `single-movie` (Michelle)
+      - `single-star` (Michelle)
+    - Parser
+      - ActorParser (Michelle)
+      - MovieParser (Colin)
+      - CastParser2 (Michelle)
+      - CastParser (Colin)
+      - xmlParser (Colin, Michelle)
+      - TimeLogParser (Michelle)
+    - SQL Files
+      - create_table.sql (Colin, Michelle)
+      - full_text.sql (Michelle)
+      - stored-procedure.sql (Michelle, Colin)
+      - column_triggers.sql (Colin)
+    - Files
+      - .gitignore (Michelle)
+      - pom.xml (Michelle)
+      - context.xml (Michelle, Colin)
+      - web.xml (Michelle, Colin)
+    - Android
+      - MovieListActivity, MovieListViewAdaptor, activity_movielist.xml (Colin)
+      - SingleMovieListActivity, SingleMovieListViewAdaptor, activity_single_movie.xml, singlemovielist_row.xml (Colin)
+      - urlConstants (Colin)
+      - NukeSSLCerts, NetworkManager, LoginActivity, activity_login.xml (Michelle)
+      - SearchActivity, activity_search.xml (Michelle)
+      - AndroidManifest.xml (Michelle)
+      - movielist_row.xml (Michelle, Colin)
+    - Functionality
+      - Add to Cart (Colin)
+      - Proceed to Payment & Place Order (Colin)
+      - Recaptcha (Colin)
+      - HTTPS (Colin)
+      - Parser Optimizations (Colin)
+        - Batch Insertion
+        - Multi-Threading
+      - GET/POSTs (Michelle, Colin)
+      - Advanced Jump Functionality (Michelle)
+      - Search Autocomplete (Michelle)
+      - Full Text Search (Colin)
+      - Login In (Michelle)
+      - Pagination, Sorting (Michelle)
+    - Performance Tuning and Scaling
+      - JDBC Connection Pooling (Colin)
+      - Master-Slave Replication (Colin)
+      - Load Balancer (Colin)
+      - JMETER & Time Measurements (Michelle)
 
 ### Files that use PreparedStatements
 - Almost all files in src (except User,Movie,MovieObject,Actor,RecaptchaConstraints,JumpServlet)
@@ -91,3 +101,61 @@ Both:
   
 ### Inconsistency Report
 - located in movieLogs.txt, castLogs.txt, and actorLogs.txt
+
+# Connection Pooling
+  - #### Include the filename/path of all code/configuration files in GitHub of using JDBC Connection Pooling.
+      * `\src\Browse\BrowseGenreServlet.java`
+      * `\src\Browse\BrowseTitleServlet.java`
+      * `\src\Browse\GenreServlet.java`
+      * `\src\Employee\UpdateSecurePassword.java`
+      * `\src\Login\UpdateSecurePassword.java`
+      * `\src\Employee\DashboardServlet.java`
+      * `\src\Employee\EmployeeLoginServlet.java`
+      * `\src\Login\LoginServlet.java`
+      * `\src\Parse\ActorParser.java`
+      * `\src\Parse\CastParser2.java`
+      * `\src\Parse\MovieParser.java`
+      * `\src\Search\MovieSuggestion.java`
+      * `\src\ShoppingCart\PaymentServlet.java`
+      * `\src\ShoppingCart\ShoppingCartServlet.java`
+      * `\src\WebPages\MovieListServlet.java`
+      * `\src\WebPages\SingleMovieServlet.java`
+      * `\src\WebPages\SingleStarServlet.java`
+      - #### Explain how Connection Pooling is utilized in the Fabflix code.
+          A Connection Pooling prevents us from opening and closing a database connection for every request. In Fabflix, the first request makes
+          a connection to the database and future requests use the same connection. If the connection is being used, it would create a new connection.
+          There is a limit to the number of connections (100)
+      - #### Explain how Connection Pooling works with two backend SQL.
+          Because there are two databases, there will be at most two connection pools.
+
+- # Master/Slave
+  - #### Include the filename/path of all code/configuration files in GitHub of routing queries to Master/Slave SQL.
+    * `\src\Employee\DashboardServlet.java`
+    * `\src\ShoppingCart\PaymentServlet.java`
+
+- #### How read/write requests were routed to Master/Slave SQL?
+    There are 3 database connections stated in `context.xml`:
+    1. LocalHost Connection (on the instance)
+    2. Master Connection (only to the master database)
+    3. Slave Connection (only to the slave database)
+    
+    When there is a servlet that inserts or updates rows in the moviedb database, the servlet would create a Master Connection. If the servlet only reads from the databse, it would create a LocalHost Connection (which connects to either instance).
+
+- # JMeter TS/TJ Time Logs
+  - #### Instructions of how to use the `log_processing.*` script to process the JMeter logs.
+
+
+- # JMeter TS/TJ Time Measurement Report
+
+| **Single-instance Version Test Plan**          | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
+|------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
+| Case 1: HTTP/1 thread                          | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 2: HTTP/10 threads                        | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 3: HTTPS/10 threads                       | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 4: HTTP/10 threads/No connection pooling  | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+
+| **Scaled Version Test Plan**                   | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
+|------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
+| Case 1: HTTP/1 thread                          | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 2: HTTP/10 threads                        | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 3: HTTP/10 threads/No connection pooling  | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
