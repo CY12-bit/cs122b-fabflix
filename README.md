@@ -148,14 +148,14 @@
 - # JMeter TS/TJ Time Measurement Report
 
 | **Single-instance Version Test Plan**          | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
-|------------------------------------------------|------------------------------|--------------------------|-------------------------------------|---------------------------|--------------|
-| Case 1: HTTP/1 thread                          | ![](/Users/michellelin/Desktop/ICS/cs122b/cs122a-projects/http_1thread.png)   | 226ms                    | 120ms                               | 119ms                     | ??           |
-| Case 2: HTTP/10 threads                        | ![](http_10threads.png)   | 1174ms                   | 997ms                               | 995ms                     | ??           |
-| Case 3: HTTPS/10 threads                       | ![](https_10threads.png)   | 2484ms                   | 2348ms                              | 2346ms                    | ??           |
-| Case 4: HTTP/10 threads/No connection pooling  | ![](http_10threads_no_cp.png)   | 1206ms                   | 1070ms                              | 1068ms                    | ??           |
+|------------------------------------------------|-----------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
+| Case 1: HTTP/1 thread                          | ![](http_1thread.png)   | 29ms                       | 3.53ms                              | 2.98ms                    | ??           |
+| Case 2: HTTP/10 threads                        | ![](http_10threads.png)  | 40ms                       | 11.11ms                             | 10.55ms                   | ??           |
+| Case 3: HTTPS/10 threads                       | ![](https_10threads.png)  | 40ms                       | 12.83ms                             | 12.21ms                   | ??           |
+| Case 4: HTTP/10 threads/No connection pooling  | ![](http_10threads_nocp.png)  | 43ms                       | 13.71ms                             | 13.10ms                   | ??           |
 
-| **Scaled Version Test Plan**                   | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
-|------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
-| Case 1: HTTP/1 thread                          | ![](path to image in img/)   | 49ms                       | 3.3ms                               | 2.8ms                     | ??           |
-| Case 2: HTTP/10 threads                        | ![](path to image in img/)   | 52ms                       | 6.9ms                               | 6.4ms                     | ??           |
-| Case 3: HTTP/10 threads/No connection pooling  | ![](path to image in img/)   | 56ms                       | 6.2ms                               | 5.7                       | ??           |
+| **Scaled Version Test Plan**                   | **Graph Results Screenshot**        | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
+|------------------------------------------------|-------------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
+| Case 1: HTTP/1 thread                          | ![](scaled_http_1thread.png)        | 49ms                       | 3.3ms                               | 2.8ms                     | ??           |
+| Case 2: HTTP/10 threads                        | ![](scaled_http_10threads.png)      | 53ms                       | 6.9ms                               | 6.4ms                     | ??           |
+| Case 3: HTTP/10 threads/No connection pooling  | ![](scaled_http_10threads_nocp.png) | 61ms                       | 6.2ms                               | 5.7                       | ??           |
