@@ -29,8 +29,8 @@ public class TimeLogParser {
                 totalJDBCTime += jdbcTime;
                 count++;
             }
-            System.out.println("Average Servlet Time: " + TimeUnit.NANOSECONDS.toMillis(totalServletTime/count) + "ms");
-            System.out.println("Average JDBC Time: " + TimeUnit.NANOSECONDS.toMillis(totalJDBCTime/count) + "ms");
+            System.out.println("Average Servlet Time: " + totalServletTime/count/1_000_000.0 + "ms");
+            System.out.println("Average JDBC Time: " + totalJDBCTime/count/1_000_000.0 + "ms");
 
             myReader.close();
         } catch (FileNotFoundException e) {

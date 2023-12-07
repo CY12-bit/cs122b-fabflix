@@ -156,6 +156,6 @@
 
 | **Scaled Version Test Plan**                   | **Graph Results Screenshot**        | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
 |------------------------------------------------|-------------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
-| Case 1: HTTP/1 thread                          | ![](performanceTesting/scaled-instance/scaled_http_1thread.png)        | 49ms                       | 3.3ms                               | 2.8ms                     | ??           |
-| Case 2: HTTP/10 threads                        | ![](performanceTesting/scaled-instance/scaled_http_10threads.png)      | 53ms                       | 6.9ms                               | 6.4ms                     | ??           |
-| Case 3: HTTP/10 threads/No connection pooling  | ![](performanceTesting/scaled-instance/scaled_http_10threads_nocp.png) | 61ms                       | 6.2ms                               | 5.7                       | ??           |
+| Case 1: HTTP/1 thread                          | ![](performanceTesting/scaled-instance/scaled_http_1thread.png)        | 49ms                       | 3.5ms                               | 3.1ms                     | ??           |
+| Case 2: HTTP/10 threads                        | ![](performanceTesting/scaled-instance/scaled_http_10threads.png)      | 53ms                       | 9.4ms                               | 8.5ms                     | ??           |
+| Case 3: HTTP/10 threads/No connection pooling  | ![](performanceTesting/scaled-instance/scaled_http_10threads_nocp.png) | 61ms                       | 6.2ms                               | 5.7ms                     | ??           |
