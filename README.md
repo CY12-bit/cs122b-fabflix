@@ -6,7 +6,7 @@
   - #### Project 5 Video Demo Link:
     - Note: our demo is formatted weirdly format as the single instance is on michelle's aws and the load balancer + master/slave is on colin's so we first show the single instance the scaled versions
       - also michelle's jmeter doesn't work so colin is running jmeter against michelle's instance as well
-    - https://youtu.be/LPqw59Vymd0
+    - https://www.youtube.com/watch?v=Zag2AkGfciY
       - [0:00](https://youtu.be/Zag2AkGfciY?si=zB2tHZlziuNKCfqJ) showing single instance on aws + login (michelle's laptop)
       - [0:20](https://youtu.be/Zag2AkGfciY?si=tKjcdZi5_5ofmto7&t=20) running JMeter for the _https_ single instance (colin's laptop)
       - [5:30](https://youtu.be/Zag2AkGfciY?si=tKjcdZi5_5ofmto7&t=330) Jmeter finish + get log file onto michelle's local computer
