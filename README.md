@@ -4,7 +4,17 @@
     - Colin Yee
     - Michelle Lin
   - #### Project 5 Video Demo Link:
-    - https://youtu.be/HiRNnu2Y_xg
+    - Note: our demo is formatted weirdly format as the single instance is on michelle's aws and the load balancer + master/slave is on colin's so we first show the single instance the scaled versions
+      - also michelle's jmeter doesn't work so colin is running jmeter against michelle's instance as well
+    - https://youtu.be/LPqw59Vymd0
+      - [0:00](https://youtu.be/Zag2AkGfciY?si=zB2tHZlziuNKCfqJ) showing single instance on aws + login (michelle's laptop)
+      - [0:20](https://youtu.be/Zag2AkGfciY?si=tKjcdZi5_5ofmto7&t=20) running JMeter for the _https_ single instance (colin's laptop)
+      - [5:30](https://youtu.be/Zag2AkGfciY?si=tKjcdZi5_5ofmto7&t=330) Jmeter finish + get log file onto michelle's local computer
+      - [7:50](https://youtu.be/Zag2AkGfciY?si=tKjcdZi5_5ofmto7&t=470) run the time parsing for single instance (michelle's laptop)
+      - [8:30](https://youtu.be/Zag2AkGfciY?si=tKjcdZi5_5ofmto7&t=510) showing the load balancer, master, slave on aws (colin's computer)
+      - [9:10](https://youtu.be/Zag2AkGfciY?si=tKjcdZi5_5ofmto7&t=550) run jmeter test on scaled instance
+      - [14:50](https://youtu.be/Zag2AkGfciY?si=tKjcdZi5_5ofmto7&t=890) test finishes + show time log + get file on local machine
+      - [19:05](https://youtu.be/Zag2AkGfciY?si=tKjcdZi5_5ofmto7&t=1145) get time log files on michell's laptop + parse them
   - #### Collaborations and Work Distributions:
     - Servlets
       - MovieList (Colin, Michelle)
@@ -143,7 +153,8 @@
 
 - # JMeter TS/TJ Time Logs
   - #### Instructions of how to use the `log_processing.*` script to process the JMeter logs.
-
+    - to run `log_processing.java` on the command line first compile the java file then run the compiled java code. if on intellij, open the file and run the current file
+    - then the program will prompt you to the path of file you want to parse (the file must be in start;end format)
 
 - # JMeter TS/TJ Time Measurement Report
 

@@ -3,9 +3,8 @@ package Parse;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
-public class TimeLogParser {
+public class log_processing {
     // Before running, make sure the timeLog.txt is not readonly
     // sudo chmod 744 /var/lib/tomcat10/timeLog.txt
     public static void main(String[] args) {
