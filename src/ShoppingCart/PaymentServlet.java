@@ -29,7 +29,7 @@ public class PaymentServlet extends HttpServlet {
     // Function initiates servlet?
     public void init(ServletConfig config) {
         try {
-            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb");
+            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb_master");
         } catch (NamingException e) {
             e.printStackTrace();
         }
@@ -105,7 +105,7 @@ public class PaymentServlet extends HttpServlet {
 
             credit_data.close();
             credit_statement.close();
-            conn.close();
+            // conn.close();
 
             out.write(responseJsonObject.toString());
             response.setStatus(200);

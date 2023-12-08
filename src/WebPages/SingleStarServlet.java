@@ -103,7 +103,7 @@ public class SingleStarServlet extends HttpServlet {
             star_data.close();
             movie_statement.close();
             movie_data.close();
-            conn.close();
+            // conn.close();
 
             // Write JSON string to output
             out.write(resArray.toString());

@@ -49,7 +49,7 @@ public class CastParser extends DefaultHandler {
         if (parser_conn == null) {
             Class.forName("com.mysql.cj.jdbc.Driver");
             parser_conn = DriverManager.getConnection(
-                    "jdbc:" + DBInfo.dbtype + "://localhost:3306/" + DBInfo.dbname,
+                    "jdbc:" + DBInfo.dbtype + "://172.31.0.193:3306/" + DBInfo.dbname,
                     DBInfo.username, DBInfo.password);
             parser_conn.setAutoCommit(false);
         }
